@@ -1,0 +1,124 @@
+---
+- name: Check instance directory
+  stat: path="/sw/jboss/domains/{{ instance_nm }}"
+  register: file_status
+
+#- debug: var=file_status
+- name: Make instance directory if not exist
+  file:
+    path: "/sw/jboss/domains/{{ instance_nm }}"
+    state: directory
+    owner: jboss
+    group: was
+    mode: 0700
+  when: file_status.stat.exists == false
+  
+- name: Unzip instance tar
+  unarchive:
+    src: instance.tar.gz
+    dest: "/sw/jboss/domains/{{ instance_nm }}/"
+    owner: jboss
+    group: was
+
+- name: Unzip data tar
+  unarchive:
+    src: standalone-data.tar.gz
+    dest: "/sw/jboss/domains/{{ instance_nm }}/data/"
+    owner: jboss
+    group: was
+
+- name: Copy shell template
+  template:
+    src: "{{ item }}"
+    dest: "/sw/jboss/domains/{{ instance_nm }}/"
+    owner: jboss
+    group: was
+    mode: 0700
+  with_items:
+    - env.sh
+    - create-datasource.sh
+    - restart-by-cf.sh
+    - setEnv.sh
+    - shutdown.sh
+
+- name: Copy config template
+  template:
+    src: standalone-ha.xml
+    dest: "/sw/jboss/domains/{{ instance_nm }}/configuration/"
+    owner: jboss
+    group: was
+    mode: 0640
+
+- name: Make deployment directory
+  file:
+    path: "{{ deployment_dir }}/{{ deployment_war }}"
+    state: directory
+    owner: jboss
+    group: was
+    mode: 0750
+
+- name: Make log directory
+  file:
+    path: "/logs/jboss/{{ instance_nm }}"
+    state: directory
+    owner: jboss
+    group: was
+    mode: 0750
+
+- name: Make logs symbolic link
+  file:
+    src: "/logs/jboss/{{ instance_nm }}"
+    dest: "/sw/jboss/domains/{{ instance_nm }}/logs"
+    state: link
+    owner: jboss
+    group: was
+
+- name: add environment variables
+  lineinfile:
+    path: "/home/jboss/.bashrc"
+    state: present
+    line: "{{ item }}"
+  with_items:
+    - "umask 027"
+    - ''
+    - "alias rm='rm -i'"
+    - "alias cp='cp -i'"
+    - "alias mv='mv -i'"
+    - ''
+    - "# JBoss aliases"
+    - "alias dom='cd /sw/jboss/domains'"
+    - "alias s1='cd /sw/jboss/domains/{{ instance_nm }}'"
+    - "#alias ksn='./kill.sh; ./start.sh; ./nohup.sh'"
+    - "#alias kst='./kill.sh; ./start.sh; ./tail.sh'"
+    - ''
+    - "alias jboot='sudo systemctl start jboss-{{ instance_nm }}'"
+    - "alias jdown='sudo systemctl stop jboss-{{ instance_nm }}'"
+    - "alias jstat='sudo systemctl status jboss-{{ instance_nm }}'"
+    - ''
+    - "# PATH"
+    - "export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk"
+    - "export PATH=$JAVA_HOME/bin:/usr/sbin:$PATH"
+    - ''
+    - "# PetraSafer LIB PATH"
+    - "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/sw/petra"
+    - "export PC_CONF_FILE=/sw/petra/petra_cipher_api.conf"
+
+# 디렉토리 및 파일의 Other 퍼미션 제거
+- name: change directory permission
+  command: find /sw/jboss/domains/{{ instance_nm }} -type d -exec chmod 0700 {} \;
+
+- name: change file permission
+  command: find /sw/jboss/domains/{{ instance_nm }} -type f -exec chmod go-rwx {} \;
+
+# systemd 등록
+- name: Deliver service file
+  template: src=jboss.service dest=/lib/systemd/system/jboss-{{ instance_nm }}.service mode=0644
+
+- name: register service file to systemd
+  systemd: daemon_reload=yes
+
+- name: enable service
+  systemd: name=jboss-{{ instance_nm }}.service enabled=yes
+
+- name: make sure the service is running
+  systemd: name=jboss-{{ instance_nm }}.service state=restarted

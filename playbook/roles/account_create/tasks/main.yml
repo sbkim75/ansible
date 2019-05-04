@@ -1,0 +1,372 @@
+
+# maria
+- name: add group "dba"
+  group: 
+    name: dba 
+    gid: 600 
+    state: present
+  tags: maria, oracle
+
+- name: add user "maria"
+  user: 
+    name: maria
+    group: dba
+    uid: 602 
+    state: present 
+    shell: /bin/bash 
+    home: /home/maria
+    createhome: yes
+  tags: maria
+
+- name: make maira directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: maria
+    group: dba
+  with_items:
+    - /sw/maria
+    - /logs/maria
+    - /data1/maria
+  tags: maria
+
+
+# oracle 
+- name: add group "dba"
+  group: 
+    name: dba 
+    gid: 600 
+    state: present
+  tags: oracle
+
+- name: add user "oracle"
+  user: 
+    name: oracle
+    group: dba
+    uid: 601
+    state: present 
+    shell: /bin/bash 
+    home: /home/oracle
+    createhome: yes
+  tags: maria
+
+- name: make oracle directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: oracle
+    group: dba
+  with_items:
+    - /sw/oracle
+    - /logs/oracle
+    - /data1/oracle
+  tags: oracle
+
+# maxgauge 
+- name: add group "dba"
+  group: 
+    name: dba 
+    gid: 600 
+    state: present
+  tags: maxgauge
+
+- name: add user "maxgauge"
+  user: 
+    name: maxgauge
+    group: dba
+    uid: 1201
+    state: present 
+    shell: /bin/bash 
+    home: /home/maxgauge
+    createhome: yes
+  tags: maxgauge
+
+- name: make maxgauge directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: maxgauge
+    group: dba
+  with_items:
+    - /sw/maxgauge
+    - /logs/maxgauge
+  tags: maxgauge
+
+# jboss
+- name: add group "was"
+  group: 
+    name: was 
+    gid: 700 
+    state: present
+  tags: jboss
+
+- name: add user "jboss"
+  user: 
+    name: jboss
+    group: was
+    uid: 701
+    state: present 
+    shell: /bin/bash 
+    home: /home/jboss
+    createhome: yes
+  tags: jboss
+
+- name: make jboss directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: jboss
+    group: was
+  with_items:
+    - /sw/jboss
+    - /logs/jboss
+  tags: jboss
+
+# spideradm
+- name: add group "was"
+  group: 
+    name: was 
+    gid: 700 
+    state: present
+  tags: spideradm
+
+- name: add user "spideradm"
+  user: 
+    name: spideradm
+    group: was
+    uid: 705 
+    state: present 
+    shell: /bin/bash 
+    home: /home/spideradm
+    createhome: yes
+  tags: spideradm
+
+- name: make spideradm directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: spideradm
+    group: was
+  with_items:
+    - /sw/spider
+    - /logs/spider
+  tags: spideradm
+
+# fdsadm
+- name: add group "was"
+  group: 
+    name: was 
+    gid: 700 
+    state: present
+  tags: fdsadm
+
+- name: add user "fdsadm"
+  user: 
+    name: fdsadm
+    group: was
+    uid: 707 
+    state: present 
+    shell: /bin/bash 
+    home: /home/fdsadm
+    createhome: yes
+  tags: fdsadm
+
+- name: make fdsadm directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: fdsadm
+    group: was
+  with_items:
+    - /sw/fds
+    - /logs/fds
+    - /data1/fds
+  tags: fdsadm
+
+# smsadm, xpushadm
+- name: add group "sol"
+  group: 
+    name: sol 
+    gid: 1100 
+    state: present
+  tags: smsadm, xpushadm
+
+- name: add user "smsadm"
+  user: 
+    name: smsadm
+    group: sol
+    uid: 1102 
+    state: present 
+    shell: /bin/bash 
+    home: /home/smsadm
+    createhome: yes
+  tags: smsadm
+
+- name: make smsadm directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: smsadm
+    group: sol
+  with_items:
+    - /sw/SKTelink
+    - /logs/SKTelink
+  tags: smsadm
+
+- name: add user "xpushadm"
+  user: 
+    name: xpushadm
+    group: sol
+    uid: 1105 
+    state: present 
+    shell: /bin/bash 
+    home: /home/xpushadm
+    createhome: yes
+  tags: xpushadm
+
+- name: make xpushadm directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: xpushadm
+    group: sol
+  with_items:
+    - /sw/xpush
+    - /logs/xpush
+  tags: xpushadm
+
+  # khansys
+- name: add group "was"
+  group: 
+    name: was 
+    gid: 700 
+    state: present
+  tags: khansys
+
+- name: add user "khansys"
+  user: 
+    name: khansys
+    group: was
+    uid: 710 
+    state: present 
+    shell: /bin/bash 
+    home: /home/khansys
+    createhome: yes
+  tags: khansys
+
+- name: make khansys directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: khansys
+    group: was
+  with_items:
+    - /sw/khan
+  tags: khansys
+
+# chn
+- name: add group "chn"
+  group: 
+    name: chn 
+    gid: 800 
+    state: present
+  tags: cruzadm, cruzsim, cruzeai, cruzmci, hanacard
+
+- name: add user "cruzadm"
+  user: 
+    name: cruzadm
+    group: chn
+    uid: 804 
+    state: present 
+    shell: /bin/bash 
+    home: /home/cruzadm
+    createhome: yes
+  tags: cruzadm
+
+- name: make cruzadm directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: cruzadm
+    group: chn
+  with_items:
+    - /sw/cruzes
+    - /logs/cruzes
+  tags: cruzadm
+
+- name: add user "cruzsim"
+  user: 
+    name: cruzsim
+    group: chn
+    uid: 805 
+    state: present 
+    shell: /bin/bash 
+    home: /home/cruzsim
+    createhome: yes
+  tags: cruzsim
+
+- name: make cruzsim directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: cruzsim
+    group: chn
+  with_items:
+    - /sw/cruzsim
+    - /logs/cruzsim
+  tags: cruzsim
+
+- name: add user "cruzeai"
+  user: 
+    name: cruzeai
+    group: chn
+    uid: 804 
+    state: present 
+    shell: /bin/bash 
+    home: /home/cruzeai
+    createhome: yes
+  tags: cruzeai
+
+- name: make cruzeai directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: cruzeai
+    group: chn
+  with_items:
+    - /sw/cruzeai
+    - /logs/cruzeai
+  tags: cruzeai
+
+- name: add user "cruzmci"
+  user: 
+    name: cruzmci
+    group: chn
+    uid: 802
+    state: present 
+    shell: /bin/bash 
+    home: /home/cruzmci
+    createhome: yes
+  tags: cruzmci
+
+- name: make cruzmci directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: cruzmci
+    group: chn
+  with_items:
+    - /sw/cruzmci
+    - /logs/cruzmci
+  tags: cruzmci
+
+- name: add user "hanacard"
+  user: 
+    name: hanacard
+    group: chn
+    uid: 806
+    state: present 
+    shell: /bin/bash 
+    home: /data1/hanacard
+    createhome: yes
+  tags: hanacard

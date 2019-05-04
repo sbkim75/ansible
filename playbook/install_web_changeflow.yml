@@ -1,0 +1,16 @@
+---
+- hosts: bsv-fq-test01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars:
+    install_user: "cfadm"
+    install_uid: "1001"
+    install_group: "apache"
+    install_gid: "703"
+    install_dir: "/sw/changeflow"
+    log_dir: "/logs/changeflow/agent"
+
+  roles:
+    - changeflow

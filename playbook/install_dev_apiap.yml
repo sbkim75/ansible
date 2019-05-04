@@ -1,0 +1,18 @@
+---
+- hosts: bdv-fq-apiap01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files: 
+    - inventories/dev/group_vars/apiap_mod_cluster.yml
+    - inventories/dev/group_vars/apiap_tomcat_datasource.yml
+    - inventories/dev/host_vars/bdv-fq-apiap01.yml
+
+  roles:
+    #- zabbix
+    #- jdk1.8
+    #- ipa-client
+    #- tomcat
+    #- mod_cluster_jk
+    - tomcat-datasource

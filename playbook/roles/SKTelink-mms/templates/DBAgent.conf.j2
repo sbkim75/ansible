@@ -1,0 +1,197 @@
+##############################################################
+# Java & Agent 설치 디렉토리 Path
+###############################################################
+JAVA_HOME=/usr/java/latest
+AGENT_HOME=/sw/SKTelink/mms
+
+###############################################################
+# Agent 서버 목록을 조회하기 위한 Noti 서버 IP/PORT 정보
+###############################################################
+NOTI_SERVER_IP={{NOTI_SERVER_IP}} 
+NOTI_SERVER_PORT={{NOTI_SERVER_PORT}}
+
+###############################################################
+# Agent 힙메모리 알람 문자
+# 
+# HEAPMEM_ALRAM : 사용가능한 메모리가 설정값 이하로 덜어졌을 경우 알람 발생
+#       - eg. HEAPMEM_ALRAM=10 이면 사용가능한 힙메모리가 10%이하로 남으면 알람 문자 발송
+#
+###############################################################
+HEAPMEM_ALRAM=10
+
+###############################################################
+# Agent 전송 제한 설정
+#
+# SUBMIT_STOP_FLAG : 전송 제한 사용 여부 설정 및 전송 제한에 따른 미전송 메시지 처리
+#      - 0 : 전송 제한 미설정
+#      - 1 : 전송 제한 설정. 단, 전송 제한 시간 이후 미전송된 메시지 일괄 전송
+#      - 2 : 전송 제한 설정. 단, 전송 제한 시간 이후 미전송된 메시지 일괄 실패 
+#
+# SUBMIT_STOP_START_HOUR, SUBMIT_STOP_END_HOUR
+# SUBMIT_STOP_START_MINUTE, SUBMIT_STOP_END_MINUTE : 전송 제한 시간 설정(24시간 기준)
+#       - eg. SUBMIT_STOP_START_HOUR=22, SUBMIT_STOP_START_MINUTE=10,
+#             SUBMIT_STOP_END_HOUR=08, SUBMIT_STOP_END_MINUTE=20 이면 22시 10분 부터 08시 20분까지 전송 제한 
+#
+# IGNORE_DATA_HOUR : 설정(단위:시간)값 이전에 요청된 메시지에 대한 실패 처리
+#                    (기준: TBL_SUBMIT_QUEUE의 RESERVED_DTTM 필드 값)
+#                    단, 값을 0으로 설정하면 실패 처리하지 않음.
+#
+###############################################################
+SUBMIT_STOP_FLAG=0
+SUBMIT_STOP_START_HOUR=00
+SUBMIT_STOP_START_MINUTE=00
+
+SUBMIT_STOP_END_HOUR=00
+SUBMIT_STOP_END_MINUTE=00
+
+IGNORE_DATA_HOUR=24
+
+###############################################################
+# Agent 이력 테이블 관리
+#  - TBL_SUBMIT QUEUE : 전송 테이블
+#  - TBL_MSG_HIST     : 이력 테이블
+#
+# TABLE_MOVE_ENABLE : 이력 테이블 사용 여부 설정
+#       - TRUE  : 이력 테이블 사용
+#       - FALSE : 이력 테이블 미사용
+#
+# MOVE_START_HOUR, MOVE_END_HOUR 
+# MOVE_START_MINTE, MOVE_END_MINUTE : 전송 -> 이력 테이블로 Row 이동 시간 설정(24시간 기준)
+#       - 실시간 이동   : MOVE_START_HOUR=00, MOVE_START_MINTE=00, MOVE_END_HOUR=24, MOVE_END_MINUTE=00로 기입
+#       - 특정시간 이동 : MOVE_START_HOUR=02, MOVE_START_MINTE=00, MOVE_END_HOUR=09, MOVE_END_MINUTE=00 이면 02시부터 09시까지 전송 -> 이력 테이블로 Row 이동
+#
+# HIST_TABLE_TYPE : 이력 테이블 생성 형식. 해당하는 이력테이블이 미 존재하면 자동 생성한다.
+#       - 0 : TBL_MSG_HIST  하나의 이력테이블에 모든 이력을 저장
+#       - 1 : TLB_MSG_HIST_YYYYMM   CMP_MSG_DTTM(G/W로 전송시점)을 기준으로 이력테이블을 월마다 자동생성 및 분리
+#
+# ETC_COLUMN_USE  : 사용자 추가 필드에 대한 사용 여부 설정
+#       - TURE  : 사용자 추가 필드 사용(예:ETC_CHAR_1 등) 단, 전송 테이블 생성시 추가필드(6가지)를 모두 생성해야 됨.
+#       - FALSE : 사용자 추가 필드 미사용 
+#
+# CHAR_SET : 사용자 시스템 캐릭터 셋 설정(EUC-KR, MS949, UTF-8 등)
+#
+# MULTI_BYTE_CHARSET_USE : 다국어를 지원하지 않는 DB에서 다국어 전송을 위해 전송테이블을 NVARCHAR로 생성 하였을 경우 해당 값을 TRUE설정해야 이력 테이블도 NVARCHAR형식으로 생성 됨
+#       - TRUE : 이력 테이블의 SND_MSG, MSG_TITLE 컬럼을 NVARCHAR 형식으로 생성
+#       - FALSE : 이력 테이블의 SND_MSG, MSG_TITLE 컬럼을 VARCHAR 형식으로 생성
+# 
+################################################################
+TABLE_MOVE_ENABLE=TRUE
+
+MOVE_START_HOUR=00
+MOVE_START_MINUTE=00
+
+MOVE_END_HOUR=24
+MOVE_END_MINUTE=00
+
+HIST_TABLE_TYPE=0
+ETC_COLUMN_USE=TRUE
+
+CHAR_SET=EUC-KR
+MULTI_BYTE_CHARSET_USE=FALSE
+
+###############################################################
+# Agent 인증 및 버전 정보
+# CLIENT_TYPE : DBAgent의 Client Type
+#     - 00 : DB Agent (HTTP)
+#     - 05 : DB Agent (TCP/IP)
+#     - 06 : 직접연동
+###############################################################
+USER_ID={{USER_ID}}
+AGENT_ID={{AGENT_ID}}
+USER_PW={{USER_PW}}
+
+CLIENT_TYPE=05
+
+###############################################################
+# 메시지 전송 정보
+# SUBMIT_PERIOD : SMS 전송 주기 (ms 단위)
+# SUBMIT_TPS    : SMS 전송 최대 TPS
+#    - AgentServer 와의 연동을 통해 Runtime 시 변경 될 수 있음
+###############################################################
+SUBMIT_PERIOD=1000
+SUBMIT_TPS=4
+
+###############################################################
+# 연동 제어 정보
+# SESSION_IDLE_SECONDS  : Session Idle Seconds (초 단위)
+#     - AgentServer와 한동안 메시지가 없는 경우 Alive 메시지 전송 주기
+# CONNECTION_TIMEOUT    : Connection 요청에 대한 Timeout (ms 단위)
+# MESSAGE_TIMEOUT       : Message 요청에 대한 응답 Timeout (ms 단위)
+# CHECK_PERIOD          : TCP 세션 및 THREAD 상태 감시 주기(ms 단위, Default 5초)
+###############################################################
+SESSION_IDLE_SECONDS=30
+CONNECTION_TIMEOUT=10000
+MESSAGE_TIMEOUT=10000
+CHECK_PERIOD=5000
+
+###############################################################
+# SELECT 옵션 설정
+# HINT_INDEX_NAME       : Submit Table에 설정된 Index명(미 기입 시 Hint를 주지 않음)
+# SELECT_COUNT          : Select Row 수(Default: 1000)
+###############################################################
+HINT_INDEX_NAME=IDX_SUBMIT_QUEUE_1
+SELECT_COUNT=1000
+
+###############################################################
+# DBMS 설정
+# DB_DRIVER_CLASS : JDBC Driver Class Name
+# DB_URL          : JDBC Connection URL
+# DB_USER_ID      : DB User ID
+# DB_PASSWORD     : DB User Password
+# DB_TBL_NAME     : Submit Table Name(전송 테이블 명)
+# DB_TBL_HIST_NAME: History Table Name(이력 테이블 명)
+# DB_POOL_SIZE    : DB Connection Pool Size
+###############################################################
+# Oracle DBMS Setting
+#DB_DRIVER_CLASS=oracle.jdbc.driver.OracleDriver
+#DB_URL=jdbc:oracle:thin:@127.0.0.1:1521:ora81
+#DB_USER_ID=db_account_id
+#DB_PASSWORD=db_account_password
+#DB_TBL_NAME=TBL_SUBMIT_QUEUE
+#DB_TBL_HIST_NAME=TBL_MSG_HIST
+#DB_POOL_SIZE=8
+
+# Altibase DBMS Setting
+#DB_DRIVER_CLASS=Altibase.jdbc.driver.AltibaseDriver
+#DB_URL=jdbc:Altibase://127.0.0.1:20300/mmsgw
+#DB_USER_ID=db_account_id
+#DB_PASSWORD=db_account_password
+#DB_TBL_NAME=TBL_SUBMIT_QUEUE
+#DB_TBL_HIST_NAME=TBL_MSG_HIST
+#DB_POOL_SIZE=8
+
+# MySql DBMS Setting
+DB_DRIVER_CLASS={{DB_DRIVER_CLASS}}
+DB_URL={{DB_URL}}
+DB_USER_ID={{DB_USER_ID}}
+DB_PASSWORD={{DB_PASSWORD}}
+DB_TBL_NAME={{DB_TBL_NAME}}
+DB_TBL_HIST_NAME={{DB_TBL_HIST_NAME}}
+DB_POOL_SIZE={{DB_POOL_SIZE}}
+
+# MS_SQL-2005 이상 DBMS Setting
+#DB_DRIVER_CLASS=com.microsoft.sqlserver.jdbc.SQLServerDriver
+#DB_URL=jdbc:sqlserver://127.0.0.1:1433;DatabaseName=mmsgw
+#DB_USER_ID=db_account_id
+#DB_PASSWORD=db_account_password
+#DB_TBL_NAME=TBL_SUBMIT_QUEUE
+#DB_TBL_HIST_NAME=TBL_MSG_HIST
+#DB_POOL_SIZE=8
+
+# MS_SQL-2000 DBMS Setting
+#DB_DRIVER_CLASS=com.microsoft.jdbc.sqlserver.SQLServerDriver
+#DB_URL=jdbc:sqlserver://127.0.0.1:1433;DatabaseName=mmsgw
+#DB_USER_ID=db_account_id
+#DB_PASSWORD=db_account_password
+#DB_TBL_NAME=TBL_SUBMIT_QUEUE
+#DB_TBL_HIST_NAME=TBL_MSG_HIST
+#DB_POOL_SIZE=8
+
+# DB2 DBMS Setting
+#DB_DRIVER_CLASS=com.ibm.db2.jcc.DB2Driver
+#DB_URL=jdbc:db2://127.0.0.1:50000/mmsgw
+#DB_USER_ID=db_account_id
+#DB_PASSWORD=db_account_password
+#DB_TBL_NAME=TBL_SUBMIT_QUEUE
+#DB_TBL_HIST_NAME=TBL_MSG_HIST
+#DB_POOL_SIZE=8

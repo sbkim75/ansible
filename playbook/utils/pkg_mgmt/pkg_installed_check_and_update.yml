@@ -1,0 +1,21 @@
+---
+- hosts: localhost 
+  remote_user: finadm
+  vars_prompt:
+    - name: "package"
+      prompt: "Enter the User"
+      private: no 
+  tasks:
+  - name: Package {{ package }} installed Check
+    shell: rpm -q "{{ package }}" |grep "not installed" |wc -l
+    register: pkg_check
+  - name: Print Package Installed
+    debug:
+      msg: '{{ pkg_check.stdout }}'
+  - name: Update {{ package }} Packages
+    yum:
+      name: "{{ package }}"
+      state: latest
+    become: True
+    when: 
+      - pkg_check.stdout == "0"

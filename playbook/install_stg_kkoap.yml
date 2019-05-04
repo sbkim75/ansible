@@ -1,0 +1,18 @@
+---
+- hosts: bsv-fq-kkoap01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files: 
+    - inventories/common/group_vars/passwd-vars.yml
+    - inventories/stg/host_vars/bsv-fq-kkoap01.yml
+
+  roles:
+    - passwd-root.finadm
+    - netbackup-agent
+    - zabbix 
+    - ipa-client
+    - fusioninventory-agent
+    - jdk1.8
+    - tomcat

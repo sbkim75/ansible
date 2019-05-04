@@ -1,0 +1,11 @@
+---
+- hosts: bpv-fq-jhdb01, bpp-fq-mcsbi01, bpv-fq-etlsv01, bpv-fq-udbsv01, bpv-fq-masdb01, bpv-fq-masdb02, bpv-fq-masdb03, bpv-fq-chndb01, bpv-fq-chndb02, bpv-fq-mssdb01, bpv-fq-mssdb02, bpv-fq-mhasv01, bpv-fq-stgdb01, bpv-fq-stgdb02, bpv-fq-fisdb01, bpv-fq-fisdb02, bpv-fq-fisdb03, bpp-fq-fpsdb01, bpp-fq-fpsdb02, bpp-fq-oprdb01, bpp-fq-facdb01, bpp-fq-facdb02
+  remote_user: finadm
+
+  tasks:
+  - name: "dbadm"
+    user:
+      name: dbadm
+      uid: 502
+      group: wheel
+    become: true 

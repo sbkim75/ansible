@@ -1,0 +1,220 @@
+# Password policy (kccheon)
+# python -c 'import crypt; print crypt.crypt("finnq!@34", "$6$kccheon$")'
+# $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0
+usergroup:
+  oracle:
+    user: oracle
+    group: dba
+    uid: 601
+    gid: 600
+  maria:
+    user: maria
+    group: dba
+    uid: 602
+    gid: 600
+  maxgauge:
+    user: maxgauge
+    group: dba
+    uid: 1201
+    gid: 600
+  jboss:
+    user: jboss
+    group: was
+    uid: 701
+    gid: 700
+  nexcoreadm:
+    user: nexcoreadm
+    group: was
+    uid: 702
+    gid: 700
+  spideradm:
+    user: spideradm
+    group: was
+    uid: 705
+    gid: 700
+  khan:
+    user: khan
+    group: was
+    uid: 706
+    gid: 700
+  fdsadm:
+    user: fdsadm
+    group: was
+    uid: 707
+    gid: 700
+  khanapm:
+    user: khanapm
+    group: was
+    uid: 720
+    gid: 700
+  khansys:
+    user: khansys
+    group: was
+    uid: 710
+    gid: 700
+  redis:
+    user: redis
+    group: redis
+    uid: 493
+    gid: 493
+  chronograf:
+    user: chronograf
+    group: chronograf
+    uid: 495
+    gid: 495
+  influxdb:
+    user: influxdb
+    group: influxdb
+    uid: 496
+    gid: 496
+  haproxy:
+    user: haproxy
+    group: haproxy
+    uid: 188
+    gid: 188
+  rabbitmq:
+    user: rabbitmq
+    group: rabbitmq
+    uid: 497
+    gid: 497
+  apache:
+    user: apache
+    group: apache
+    uid: 703
+    gid: 703
+  jenkins:
+    user: jenkins
+    group: apache
+    uid: 704
+    gid: 703
+  cruzeai:
+    user: cruzeai
+    group: chn
+    uid: 801
+    gid: 800
+  cruzmci:
+    user: cruzmci
+    group: chn
+    uid: 802
+    gid: 800
+  cruzfep:
+    user: cruzfep
+    group: chn
+    uid: 803
+    gid: 800
+  cruzadm:
+    user: cruzadm
+    group: chn
+    uid: 804
+    gid: 800
+  cruzsim:
+    user: cruzsim
+    group: chn
+    uid: 805
+    gid: 800
+  hanacard:
+    user: hanacard
+    group: chn
+    uid: 806
+    gid: 800
+  softcamp:
+    user: softcamp
+    group: sec
+    uid: 901
+    gid: 900
+  petra:
+    user: petra
+    group: sec
+    uid: 903
+    gid: 900
+  sparrow:
+    user: sparrow
+    group: sec
+    uid: 904
+    gid: 900
+  metaadm:
+    user: metaadm
+    group: meta
+    uid: 902
+    gid: 902
+  cfadm:
+    user: cfadm
+    group: mng
+    uid: 1001
+    gid: 1000
+  wiseuadm:
+    user: wiseuadm
+    group: sol
+    uid: 1101
+    gid: 1100
+  smsadm:
+    user: smsadm
+    group: sol
+    uid: 1102
+    gid: 1100
+  ecrmadm:
+    user: ecrmadm
+    group: sol
+    uid: 1103
+    gid: 1100
+  etladm:
+    user: etladm
+    group: sol
+    uid: 1104
+    gid: 1100
+  xpushadm:
+    user: xpushadm
+    group: sol
+    uid: 1105
+    gid: 1100
+  kswadm:
+    user: kswadm
+    group: sol
+    uid: 1106
+    gid: 1100
+  amladm:
+    user: amladm
+    group: was
+    uid: 709
+    gid: 700
+  rbaadm:
+    user: rbaadm
+    group: was
+    uid: 711
+    gid: 700
+  ocradm:
+    user: ocradm
+    group: was
+    uid: 712
+    gid: 700
+  loadrunner:
+    user: loadrunner
+    group: loadrunner
+    uid: 1200 
+    gid: 1200
+  graylog:
+    user: graylog
+    group: sol
+    uid: 1106 
+    gid: 1100
+  mongod:
+    user: mongod
+    group: sol
+    uid: 1107 
+    gid: 1100
+  elasticsearch:
+    user: elasticsearch
+    group: sol
+    uid: 1108 
+    gid: 1100
+  svn:
+    user: svn
+    group: sol
+    uid: 1109 
+    gid: 1100
+
+  kcbftp:
+    user: kcbftp
+    group: chn
+    uid: 1110 
+    gid: 800

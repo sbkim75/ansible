@@ -1,0 +1,11 @@
+# file: jboss-ews common yml
+# common install vars
+SVC_WEB_HOME: /sw/jboss-ews
+INSTALL_OWNER: apache
+INSTALL_GROUP: apache
+GID: 703
+UID: 703
+JBCS_HTTPD_DIR_NAME: jbcs-httpd24-2.4
+INSTANCE_SERVER_DIR: /sw/jboss-ews/servers
+SVC_USER: nobody
+SVC_GROUP: nobody

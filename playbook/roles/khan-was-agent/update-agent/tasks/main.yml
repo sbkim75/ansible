@@ -1,0 +1,28 @@
+---
+- name: Unzip file into khan-agent directory
+  unarchive:
+    src: roles/khan-was-agent/agent-files/files/{{ khan_was_agent_zip }}
+    dest: /tmp
+    owner: "{{ install_user }}"
+    group: "{{ install_group }}"
+
+- name: Copy new version jar file
+  command: cp -p /tmp/khan-agent/{{ khan_was_agent_jar }} {{ update_dir }}/{{ khan_was_agent_jar }}
+  when: current_version == ""
+
+- name: Copy new version jar file
+  shell: cp -p /tmp/khan-agent/{{ khan_was_agent_jar }} {{ update_dir }}/{{ current_version }}
+  when: current_version != ""
+
+- name: Deliver current version file
+  template:
+    src: roles/khan-was-agent/agent-files/templates/current.version
+    dest: "{{ update_dir }}/current.version"
+    owner: "{{ install_user }}"
+    group: "{{ install_group }}"
+    mode: 0640
+
+- name: Remove install file in /tmp
+  file:
+    path: /tmp/khan-agent
+    state: absent

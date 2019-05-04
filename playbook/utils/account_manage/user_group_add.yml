@@ -1,0 +1,26 @@
+---
+- hosts: bpv-fq-pibdb01, bpv-fq-pibdb02
+  remote_user: finadm
+  vars_prompt:
+    - name: "user_name"
+      prompt: "Enter the User"
+      private: no
+    - name: "user_password"
+      prompt: "Enter passsword variable (ex : username+XXXX <--here )"
+      private: no
+
+  vars_files:
+    - /root/playbook/utils/account_manage/usergroup_list.yml
+  tasks:
+  - name: " Group add or Check if group exists"
+    group: 
+      name: "{{ vars['usergroup'][user_name]['group'] }}"
+      gid: "{{ vars['usergroup'][user_name]['gid'] }}"
+    become: true
+  - name: "User : {{ user_name }} create"
+    user:
+      name: "{{ vars['usergroup'][user_name]['user'] }}"
+      uid: "{{ vars['usergroup'][user_name]['uid'] }}" 
+      group: "{{ vars['usergroup'][user_name]['group'] }}"
+      password: "{{ (user_name+user_password) | password_hash('sha512') }}"
+    become: true 

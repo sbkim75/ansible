@@ -1,0 +1,31 @@
+---
+- name: "change /etc/hosts"
+  lineinfile:
+    path: /etc/hosts
+    state: present
+    regexp: "^{{ ansible_eth0['ipv4']['address'] }}"
+    line: "{{ ansible_eth0['ipv4']['address'] }}  {{ ansible_hostname }} {{ ansible_hostname }}.finnq.com"
+
+- name: "Add ipasv01.finnq.com - /etc/hosts"
+  lineinfile:
+    path: /etc/hosts
+    state: present
+    line: "{{ item }}"
+  with_items:
+    - "## IPA(Ldap) server ##"
+    - "172.27.105.221  ipasv01.finnq.com"
+
+- name: Install ipa-client
+  yum:
+    name: ipa-client
+    state: present
+
+- name: Config ipa-client (non-interactive)
+  shell: "ipa-client-install --server=ipasv01.finnq.com --domain=ipasv01.finnq.com --realm=IPASV01.FINNQ.COM -p admin -w {{ ipa_pass }} --mkhomedir --no-ntp -U"
+  ignore_errors: true
+  notify: 
+  - restart dbus
+  - restart oddjobd
+  - restart systemd-logind
+  - stop ntpd
+  - disable ntpd

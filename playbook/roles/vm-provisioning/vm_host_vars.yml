@@ -1,0 +1,65 @@
+---
+- name: create host_vars file
+  hosts: localhost
+
+  vars_prompt:
+    - name: "hostname"
+      prompt: "Enter VM hostname"
+      private: no
+
+    - name: "zone"
+      prompt: "Enter Zone (ex: prd | dev | stg )"
+      private: no
+
+  tasks:
+  - name: "Create host_vars File | {{zone}}/{{ hostname }}.yml"
+    copy:
+      src: /root/playbook/yjpark/host_vars/bdv-fq-SAMPLE.yml
+      dest: /root/playbook/yjpark/host_vars/{{zone}}/{{ hostname }}.yml
+
+- name: Enter Configuration
+  hosts: localhost
+
+  vars_prompt:
+    - name: "vm_cpu"
+      prompt: "Enter CPU Core count"
+      private: no
+    - name: "vm_mem"
+      prompt: "Enter Memory Size (Unit:MB)"
+      private: no
+    - name: "vm_vswitch"
+      prompt: "Enter vSwitch name (ex: 내부망 | DMZ망 | 개발/테스트_DMZ망 | 개발/테스트망 | 보안관리망)"
+      private: no
+    - name: "vm_disk_datastore"
+      prompt: "Enter datastore name(ex: IBS | IBS2 | OPR | SEC | STG | STG1 | VMM | DEV | DMZ )"
+      private: no
+    - name: "vm_ip"
+      prompt: "Enter VM IP"
+      private: no
+    - name: "vm_netmask"
+      prompt: "Enter VM Netmask"
+      private: no
+    - name: "vm_gateway"
+      prompt: "Enter VM Gateway"
+      private: no
+    - name: "vm_esxi"
+      prompt: "Enter ESXI Location(ex: bpp-fq-esx21.finnq.com )"
+      private: no
+    - name: "vm_hostname"
+      prompt: "Enter VM Hostname"
+      private: no
+  tasks:
+  - lineinfile:
+      path: /root/playbook/yjpark/host_vars/{{ vm_hostname }}.yml
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    with_items:
+      - { regexp: '^vm_cpu: 3', line: 'vm_cpu: {{ vm_cpu }}' }
+      - { regexp: '^vm_mem: 4096', line: 'vm_mem: {{ vm_mem }}' }
+      - { regexp: '^vm_vswitch: 개발/테스트망', line: 'vm_vswitch: {{ vm_vswitch }}' }
+      - { regexp: '^vm_disk_datastore: STG1', line: 'vm_disk_datastore: {{ vm_disk_datastore }}' }
+      - { regexp: '^vm_ip: 172.27.123.100', line: 'vm_ip: {{ vm_ip }}' }
+      - { regexp: '^vm_netmask: 255.255.255.128', line: 'vm_netmask: {{ vm_netmask }}' }
+      - { regexp: '^vm_gateway: 172.27.123.1', line: 'vm_gateway: {{ vm_gateway }}' }
+      - { regexp: '^vm_esxi: bpp-fq-esx22.finnq.com', line: 'vm_esxi: {{ vm_esxi }}' }
+      - { regexp: '^vm_hostname: bdv-fq-yjpark', line: 'vm_hostname: {{ vm_hostname }}' }

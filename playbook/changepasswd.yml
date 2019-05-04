@@ -1,0 +1,14 @@
+# playbook 동작 방법
+# passwd-vars.yml 파일이 vault 암호화가 되있기 때문에
+# ansible-playbbok install_example.yml --ask-vault-pass    >> 명령어로 실행
+---
+- hosts: prd-linux
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files: 
+    - inventories/common/group_vars/passwd-vars.yml
+
+  roles:
+    - passwd-root.finadm

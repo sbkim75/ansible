@@ -1,0 +1,119 @@
+---
+- name: add user "rbaadm"
+  user: name=rbaadm group=was uid=711 state=present shell=/bin/bash home=/home/rbaadm createhome=yes
+
+- name: make /sw/rba/webapps /sw/rba/batch directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    group: was
+    owner: tomcat
+  with_items:
+    - /sw/rba/webapps
+    - /sw/rba/batch
+
+- name: "AS-IS webapps Directory안 파일 삭제"
+  shell: /bin/rm -rf /sw/rba/webapps/*
+
+- name: "AS-IS batch Directory안 파일 삭제"
+  shell: /bin/rm -rf /sw/rba/batch/*
+
+- name: copy STG_rba tarball
+  copy:
+    src: sw/rba/webapps/PRISM_AML_RBA_S_rba.tar
+    dest: /sw/rba/webapps
+    group: was
+    owner: tomcat
+    mode: 0644
+  notify: restart tomcat
+  when:
+    - ansible_hostname | search("^bs")
+
+- name: copy PRD_rba tarball
+  copy:
+    src: sw/rba/webapps/PRISM_AML_RBA_P_rba.tar
+    dest: /sw/rba/webapps
+    group: was
+    owner: tomcat
+    mode: 0644
+  notify: restart tomcat
+  when:
+    - ansible_hostname | search("^bp")
+
+- name: copy STG_batch tarball
+  copy:
+    src: sw/rba/batch/WLF_batch_S.tar
+    dest: /sw/rba/batch
+    group: was
+    owner: tomcat
+    mode: 0644
+  notify: restart tomcat
+  when:
+    - ansible_hostname | search("^bs")
+
+- name: copy PRD_batch tarball
+  copy:
+    src: sw/rba/batch/WLF_batch_P.tar
+    dest: /sw/rba/batch
+    group: was
+    owner: tomcat
+    mode: 0644
+  notify: restart tomcat
+  when:
+    - ansible_hostname | search("^bp")
+
+- name: extract STG_rba tarball
+  unarchive:
+    src: /sw/rba/webapps/PRISM_AML_RBA_S_rba.tar
+    dest: /sw/rba/webapps
+    keep_newer: yes
+    remote_src: yes
+    group: was
+    owner: tomcat
+  when:
+    - ansible_hostname | search("^bs")
+
+- name: extract PRD_rba tarball
+  unarchive:
+    src: /sw/rba/webapps/PRISM_AML_RBA_P_rba.tar
+    dest: /sw/rba/webapps
+    keep_newer: yes
+    remote_src: yes
+    group: was
+    owner: tomcat
+  when:
+    - ansible_hostname | search("^bp")
+
+- name: extract STG_batch tarball
+  unarchive:
+    src: /sw/rba/batch/WLF_batch_S.tar
+    dest: /sw/rba/batch
+    keep_newer: yes
+    remote_src: yes
+    group: was
+    owner: tomcat
+  when:
+    - ansible_hostname | search("^bs")
+
+- name: extract PRD_batch tarball
+  unarchive:
+    src: /sw/rba/batch/WLF_batch_P.tar
+    dest: /sw/rba/batch
+    keep_newer: yes
+    remote_src: yes
+    group: was
+    owner: tomcat
+  when:
+    - ansible_hostname | search("^bp")
+
+- name: STG configure tomcat server
+  template: src=stg_server.xml dest=/sw/tomcat/conf/server.xml
+  notify: restart tomcat
+  when:
+    - ansible_hostname | search("^bs")
+
+- name: PRD configure tomcat server
+  template: src=prd_server.xml dest=/sw/tomcat/conf/server.xml
+  notify: restart tomcat
+  when:
+    - ansible_hostname | search("^bp")

@@ -1,0 +1,13 @@
+[Unit]
+Description=Nexcore Batch Agent
+After=syslog.target network.target
+
+[Service]
+Type=forking
+ExecStart=/sw/nexcore/scheduler-agent-4.0/startup.sh
+ExecStop=/sw/nexcore/scheduler-agent-4.0/shutdown.sh
+User={{ install_user }}
+Group=was
+
+[Install]
+WantedBy=multi-user.target

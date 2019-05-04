@@ -1,0 +1,7 @@
+---
+- hosts: [graylog-collector]
+  remote_user: finadm
+
+  tasks:
+  - name: Service Retart
+    service: name=collector-sidecar state=restarted

@@ -1,0 +1,31 @@
+---
+- name: Make upload directory
+  file:
+    path: /sw/jboss/upload
+    state: directory
+    owner: jboss
+    group: was
+    mode: 0750
+
+- name: copy patch file
+  copy:
+    src: "{{ item }}"
+    dest: /sw/jboss/upload/
+    owner: jboss
+    group: was
+    mode: 0640
+  with_items:
+    - jboss-eap-6.4.1.CP.zip
+    - jboss-eap-6.4.2.CP.zip
+    - jboss-eap-6.4.3.CP.zip
+    - jboss-eap-6.4.4.CP.zip
+    - jboss-eap-6.4.5.CP.zip
+    - jboss-eap-6.4.6.CP.zip
+    - jboss-eap-6.4.7.CP.zip
+    - jboss-eap-6.4.8.CP.zip
+
+- name: jboss engine backup
+  shell: cp -a /sw/jboss/jboss-eap-6.4 /sw/jboss/jboss-eap-6.4_before-patch.`date +%Y%m%d_%H%M%S`
+
+- name: jboss engine patch
+  shell: su - jboss -c '/sw/jboss/jboss-eap-6.4/bin/jboss-cli.sh --command="patch apply --override-all /sw/jboss/upload/jboss-eap-{{ patch_no }}.CP.zip"'

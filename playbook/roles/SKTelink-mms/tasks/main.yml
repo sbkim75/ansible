@@ -1,0 +1,61 @@
+---
+#- include_role:
+#  name: jdk1.7
+
+- name: add group "sol"
+  group: name=sol gid=1100 state=present
+  
+- name: add user "smsadm"
+  user: name=smsadm group=sol uid=1102 state=present shell=/bin/bash home=/home/smsadm createhome=yes
+
+- name: make sms directory
+  file:
+    path: /sw/SKTelink/mms
+    state: directory
+    group: sol
+    owner: smsadm
+
+- name: Extract mms.tar from files
+  unarchive: 
+    src: mms.tar
+    dest: /sw/SKTelink/mms
+    owner: smsadm
+    group: sol
+
+- name: make sms logs directory
+  file:
+    path: /logs/SKTelink/mms
+    state: directory
+    group: sol
+    owner: smsadm
+
+- name: Configure DBAgent.conf
+  template:
+    src: DBAgent.conf.j2
+    dest: /sw/SKTelink/mms/conf/DBAgent.conf
+    owner: smsadm
+    group: sol
+
+- name: Configure log4j.properties
+  template:
+    src: log4j.properties.j2
+    dest: /sw/SKTelink/mms/conf/log4j.properties
+    owner: smsadm
+    group: sol
+
+- name: copy mms.service
+  copy:
+    src: "{{ item }}"
+    dest: /usr/lib/systemd/system/{{ item }}
+    mode: 0644
+  with_items:
+    - mms.service
+
+- name: register service file to systemd
+  systemd: daemon_reload=yes
+
+- name: make sure the mms service is running
+  systemd: name=mms state=restarted
+
+- name: enable service mms and ensure it
+  systemd: name=mms enabled=yes

@@ -1,0 +1,19 @@
+---
+# file: inventories/dev/group_vars/apiap_mod_cluster.yml
+
+# server.xml
+onModcluster: True
+proxyList: 223.39.114.114:6366
+balancer: balancer_api
+loadBalancingGroup: G_api
+
+# setmodenv.sh
+httpd_main_hosts: '"223.39.114.114:443"'
+onModJk: False
+httpd_hosts:
+lb_worker:
+ajp_port: 8009
+context_name: /
+
+# startup.sh
+onKHANagent: True

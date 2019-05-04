@@ -1,0 +1,625 @@
+# This is the default ansible 'hosts' file.
+#
+# It should live in /etc/ansible/hosts
+#
+#   - Comments begin with the '#' character
+#   - Blank lines are ignored
+#   - Groups of hosts are delimited by [header] elements
+#   - You can enter hostnames or ip addresses
+#   - A hostname/ip can be a member of multiple groups
+ 
+# Ex 1: Ungrouped hosts, specify before any group headers.
+
+## green.example.com
+## blue.example.com
+## 192.168.100.1
+## 192.168.100.10
+
+# Ex 2: A collection of hosts belonging to the 'webservers' group
+
+## [webservers]
+## alpha.example.org
+## beta.example.org
+## 192.168.1.100
+## 192.168.1.110
+
+# If you have multiple hosts following a pattern you can specify
+# them like this:
+
+## www[001:006].example.com
+
+# Ex 3: A collection of database servers in the 'dbservers' group
+
+## [dbservers]
+## 
+## db01.intranet.mydomain.net
+## db02.intranet.mydomain.net
+## 10.25.1.56
+## 10.25.1.57
+
+# Here's another example of host ranges, this time there are no
+# leading 0s:
+
+## db-[99:101]-node.example.com
+
+[localhost]
+127.0.0.1 ansible_connection=local
+
+[ansible]
+bpv-fq-anssv01
+
+[dev-linux]
+bdv-fq-testweb ansible_port=22 ansible_user=finadm
+bdv-fq-wsmsv01 ansible_port=22 ansible_user=finadm
+#bdv-fq-testvm02 ansible_port=22 ansible_user=finadm
+#bdv-fq-testvm01 ansible_port=22 ansible_user=finadm
+bdv-fq-fiabt01 ansible_port=22 ansible_user=finadm
+bdv-fq-spksv01 ansible_port=22 ansible_user=finadm
+bdv-fq-kkoap01 ansible_port=22 ansible_user=finadm
+bdv-fq-bnkap01 ansible_port=22 ansible_user=finadm
+bdv-fq-fpsap01 ansible_port=22 ansible_user=finadm
+bdv-fq-masap01 ansible_port=22 ansible_user=finadm
+bdv-fq-unfdb01 ansible_port=22 ansible_user=finadm
+bdv-fq-chnap01 ansible_port=22 ansible_user=finadm
+bdv-fq-fdssv01 ansible_port=22 ansible_user=finadm
+bdv-fq-etlsv01 ansible_port=22 ansible_user=finadm
+bdv-fq-fpsdb01 ansible_port=22 ansible_user=finadm
+bdv-fq-dbcsv01 ansible_port=22 ansible_user=finadm
+bdv-fq-ftpsv01 ansible_port=22 ansible_user=finadm
+bdv-fq-cbsap01 ansible_port=22 ansible_user=finadm
+bdv-fq-wsmsv01 ansible_port=22 ansible_user=finadm
+bdv-fq-fisap01 ansible_port=22 ansible_user=finadm
+bdv-fq-fisdb01 ansible_port=22 ansible_user=finadm
+bdv-fq-facdb01 ansible_port=22 ansible_user=finadm
+bdv-fq-mcsbi01 ansible_port=22 ansible_user=finadm
+#bdv-fq-olabi01 ansible_port=22 ansible_user=finadm
+bdv-fq-pibap01 ansible_port=22 ansible_user=finadm
+bdv-fq-unfwb01 ansible_port=22 ansible_user=finadm
+bdv-fq-amlsv01 ansible_port=22 ansible_user=finadm
+bdv-fq-rbasv01 ansible_port=22 ansible_user=finadm
+bdv-fq-ocrsv01 ansible_port=22 ansible_user=finadm
+bdv-fq-apiap01 ansible_port=22 ansible_user=finadm
+bdv-fq-pibbt01 ansible_port=22 ansible_user=finadm
+bdv-fq-spdsv01 ansible_port=22 ansible_user=finadm
+bdv-fq-fiaap01 ansible_port=22 ansible_user=finadm
+bdv-fq-fiawb01 ansible_port=22 ansible_user=finadm
+
+[dev-linux-noctl]
+bdv-fq-fpsap01 ansible_port=22 ansible_user=finadm
+bdv-fq-masap01 ansible_port=22 ansible_user=finadm
+#bdv-fq-unfdb01 ansible_port=22 ansible_user=finadm
+bdv-fq-chnap01 ansible_port=22 ansible_user=finadm
+bdv-fq-fdssv01 ansible_port=22 ansible_user=finadm
+bdv-fq-etlsv01 ansible_port=22 ansible_user=finadm
+#bdv-fq-fpsdb01 ansible_port=22 ansible_user=finadm
+bdv-fq-dbcsv01 ansible_port=22 ansible_user=finadm
+bdv-fq-ftpsv01 ansible_port=22 ansible_user=finadm
+bdv-fq-cbsap01 ansible_port=22 ansible_user=finadm
+bdv-fq-wsmsv01 ansible_port=22 ansible_user=finadm
+bdv-fq-fisap01 ansible_port=22 ansible_user=finadm
+#bdv-fq-fisdb01 ansible_port=22 ansible_user=finadm
+#bdv-fq-facdb01 ansible_port=22 ansible_user=finadm
+#bdv-fq-mcsbi01 ansible_port=22 ansible_user=finadm
+#bdv-fq-olabi01 ansible_port=22 ansible_user=finadm
+bdv-fq-pibap01 ansible_port=22 ansible_user=finadm
+bdv-fq-unfwb01 ansible_port=22 ansible_user=finadm
+bdv-fq-amlsv01 ansible_port=22 ansible_user=finadm
+bdv-fq-rbasv01 ansible_port=22 ansible_user=finadm
+bdv-fq-ocrsv01 ansible_port=22 ansible_user=finadm
+bdv-fq-apiap01 ansible_port=22 ansible_user=finadm
+bdv-fq-pibbt01 ansible_port=22 ansible_user=finadm
+bdv-fq-spdsv01 ansible_port=22 ansible_user=finadm
+bdv-fq-fiaap01 ansible_port=22 ansible_user=finadm
+bdv-fq-fiawb01 ansible_port=22 ansible_user=finadm
+
+[dev-win]
+bdv-fq-facap01 ansible_port=22 ansible_user=finadm
+bdv-fq-pdfsv01 ansible_port=22 ansible_user=finadm
+
+[stg-linux]
+bsv-fq-bnkap01 ansible_port=22 ansible_user=finadm
+bsv-fq-fiabt01 ansible_port=22 ansible_user=finadm
+bsv-fq-fiaap01 ansible_port=22 ansible_user=finadm
+bsv-fq-fiawb01 ansible_port=22 ansible_user=finadm
+bsv-fq-kkoap01 ansible_port=22 ansible_user=finadm
+bsv-fq-spdsv01 ansible_port=22 ansible_user=finadm
+bsv-fq-apiap01 ansible_port=22 ansible_user=finadm
+bsv-fq-apidb01 ansible_port=22 ansible_user=finadm
+bsv-fq-apiwb01 ansible_port=22 ansible_user=finadm
+bsv-fq-log01 ansible_port=22 ansible_user=finadm
+bsv-fq-jh01 ansible_port=2222 ansible_user=finadm
+bsv-fq-jhdb01 ansible_port=2222 ansible_user=finadm
+bsv-fq-wsmsv01 ansible_port=22 ansible_user=finadm
+bsv-fq-masap01 ansible_port=22 ansible_user=finadm
+bsv-fq-cbsap01 ansible_port=22 ansible_user=finadm
+bsv-fq-fisap01 ansible_port=22 ansible_user=finadm
+bsv-fq-mbwap01 ansible_port=22 ansible_user=finadm
+bsv-fq-fpsap01 ansible_port=22 ansible_user=finadm
+bsv-fq-batap01 ansible_port=22 ansible_user=finadm
+#bsv-fq-chnap01 ansible_port=22 ansible_user=finadm
+bsv-fq-fepap01 ansible_port=22 ansible_user=finadm
+bsv-fq-fepap02 ansible_port=22 ansible_user=finadm
+bsv-fq-mssap01 ansible_port=22 ansible_user=finadm
+bsv-fq-fdssv01 ansible_port=22 ansible_user=finadm
+bsv-fq-masdb01 ansible_port=22 ansible_user=finadm
+bsv-fq-chndb01 ansible_port=22 ansible_user=finadm
+bsv-fq-mssdb01 ansible_port=22 ansible_user=finadm
+bsv-fq-fisdb01 ansible_port=22 ansible_user=finadm
+bsv-fq-fpsdb01 ansible_port=22 ansible_user=finadm
+bsv-fq-apmsv01 ansible_port=22 ansible_user=finadm
+bsv-fq-maswb01 ansible_port=22 ansible_user=finadm
+bsv-fq-owswb01 ansible_port=22 ansible_user=finadm
+bsv-fq-amlsv01 ansible_port=22 ansible_user=finadm
+bsv-fq-rbasv01 ansible_port=22 ansible_user=finadm
+bsv-fq-ocrsv01 ansible_port=22 ansible_user=finadm
+bsv-fq-ftpsv01 ansible_port=22 ansible_user=finadm
+bsv-fq-facdb01 ansible_port=22 ansible_user=finadm
+bsv-fq-pibap01 ansible_port=22 ansible_user=finadm
+bsv-fq-graylog01 ansible_port=22 ansible_user=finadm
+bsv-fq-graylog02 ansible_port=22 ansible_user=finadm
+bsv-fq-pibdb01 ansible_port=22 ansible_user=finadm
+bsv-fq-pibbt01 ansible_port=22 ansible_user=finadm
+bsv-fq-mciap01 ansible_port=22 ansible_user=finadm
+bsv-fq-mciap02 ansible_port=22 ansible_user=finadm
+bsv-fq-eaiap01 ansible_port=22 ansible_user=finadm
+bsv-fq-eaiap02 ansible_port=22 ansible_user=finadm
+#bsv-fq-test01 ansible_port=22 ansible_user=finadm
+
+[stg-linux-noctl]
+bsv-fq-jh01 ansible_port=2222 ansible_user=finadm
+bsv-fq-jhdb01 ansible_port=2222 ansible_user=finadm
+bsv-fq-wsmsv01 ansible_port=22 ansible_user=finadm
+bsv-fq-masap01 ansible_port=22 ansible_user=finadm
+bsv-fq-cbsap01 ansible_port=22 ansible_user=finadm
+bsv-fq-fisap01 ansible_port=22 ansible_user=finadm
+bsv-fq-mbwap01 ansible_port=22 ansible_user=finadm
+bsv-fq-fpsap01 ansible_port=22 ansible_user=finadm
+bsv-fq-batap01 ansible_port=22 ansible_user=finadm
+#bsv-fq-chnap01 ansible_port=22 ansible_user=finadm
+bsv-fq-fepap01 ansible_port=22 ansible_user=finadm
+bsv-fq-fepap02 ansible_port=22 ansible_user=finadm
+bsv-fq-mssap01 ansible_port=22 ansible_user=finadm
+bsv-fq-fdssv01 ansible_port=22 ansible_user=finadm
+#bsv-fq-masdb01 ansible_port=22 ansible_user=finadm
+#bsv-fq-chndb01 ansible_port=22 ansible_user=finadm
+#bsv-fq-mssdb01 ansible_port=22 ansible_user=finadm
+#bsv-fq-fisdb01 ansible_port=22 ansible_user=finadm
+#bsv-fq-fpsdb01 ansible_port=22 ansible_user=finadm
+bsv-fq-apmsv01 ansible_port=22 ansible_user=finadm
+bsv-fq-maswb01 ansible_port=22 ansible_user=finadm
+bsv-fq-owswb01 ansible_port=22 ansible_user=finadm
+bsv-fq-amlsv01 ansible_port=22 ansible_user=finadm
+bsv-fq-rbasv01 ansible_port=22 ansible_user=finadm
+bsv-fq-ocrsv01 ansible_port=22 ansible_user=finadm
+bsv-fq-ftpsv01 ansible_port=22 ansible_user=finadm
+#bsv-fq-facdb01 ansible_port=22 ansible_user=finadm
+bsv-fq-pibap01 ansible_port=22 ansible_user=finadm
+bsv-fq-graylog01 ansible_port=22 ansible_user=finadm
+bsv-fq-graylog02 ansible_port=22 ansible_user=finadm
+#bsv-fq-pibdb01 ansible_port=22 ansible_user=finadm
+bsv-fq-pibbt01 ansible_port=22 ansible_user=finadm
+
+bsv-fq-mciap01 ansible_port=22 ansible_user=finadm
+bsv-fq-mciap02 ansible_port=22 ansible_user=finadm
+bsv-fq-eaiap01 ansible_port=22 ansible_user=finadm
+bsv-fq-eaiap02 ansible_port=22 ansible_user=finadm
+
+[stg-web]
+bsv-fq-maswb01 ansible_port=22 ansible_user=finadm
+bsv-fq-owswb01 ansible_port=22 ansible_user=finadm
+
+[stg-db]
+bsv-fq-fdssv01 ansible_port=22 ansible_user=finadm
+bsv-fq-masdb01 ansible_port=22 ansible_user=finadm
+bsv-fq-chndb01 ansible_port=22 ansible_user=finadm
+bsv-fq-mssdb01 ansible_port=22 ansible_user=finadm
+bsv-fq-fisdb01 ansible_port=22 ansible_user=finadm
+bsv-fq-fpsdb01 ansible_port=22 ansible_user=finadm 
+bsv-fq-facdb01 ansible_port=22 ansible_user=finadm
+
+[stg-win]
+bsv-fq-facap01
+bsv-fq-lrcsv01
+
+
+[prd-linux]
+bpv-fq-fdssv01
+bpv-fq-zabsv02
+bpv-fq-jhsc01
+#bpv-fq-testjh01
+bpv-fq-fdsdb02
+bpv-fq-spdsv01
+bpv-fq-fdsdb02
+bpv-fq-fdsdb01
+bpv-fq-fdsap03
+bpv-fq-fdsap02
+bpv-fq-fdsap01
+bpv-fq-kkoap02
+bpv-fq-kkoap01
+bpv-fq-zepap01
+bpv-fq-ftpsv01 ansible_port=22
+bpv-fq-repsv01
+bpv-fq-mbwap01
+bpv-fq-mbwap02
+bpv-fq-masap01
+bpv-fq-masap02
+#bpv-fq-masap03
+#bpv-fq-masap04
+bpv-fq-masdb01
+bpv-fq-masdb02
+bpv-fq-masdb03
+bpv-fq-fpsap01
+bpv-fq-fpsap02
+bpp-fq-fpsdb01
+bpp-fq-fpsdb02
+bpv-fq-batap01
+bpv-fq-batap02
+bpp-fq-fepap01
+bpp-fq-fepap02
+bpv-fq-mciap01
+bpv-fq-eaiap01
+bpv-fq-chndb01
+bpv-fq-chndb02
+bpv-fq-apsap01
+bpv-fq-apsap02
+bpv-fq-mssap01
+bpv-fq-mssap02
+bpv-fq-mssdb01
+bpv-fq-mssdb02
+bpv-fq-fdssv01
+bpv-fq-dbcsv01
+bpv-fq-dbcsv02
+bpv-fq-ecman01
+bpv-fq-scmsv01
+bpv-fq-udbsv01
+bpv-fq-scasv01
+bpv-fq-iamsv01
+bpv-fq-etlsv01
+bpv-fq-stgdb01
+bpp-fq-oprdb01
+bpp-fq-log01	
+bpv-fq-cbsap01
+bpv-fq-cbsap02
+bpv-fq-wsmsv01
+bpv-fq-wsmsv02
+bpv-fq-fisap01
+bpv-fq-fisap02
+bpv-fq-fisdb01
+bpv-fq-fisdb02
+bpv-fq-fisdb03
+bpp-fq-facdb01
+bpp-fq-facdb02
+bpp-fq-olabi01
+bpp-fq-mcsbi01
+#bpv-fq-dnsvt01
+bpv-fq-drmsv01
+bpv-fq-jh01		
+jirasv01
+#bpv-fq-anssv01
+bpv-fq-apmsv01
+bpv-fq-jhdb01
+bpv-fq-maswb01
+bpv-fq-maswb02
+bpv-fq-maswb03
+bpv-fq-maswb04
+bpv-fq-owswb01
+bpv-fq-owswb02
+bpv-fq-ecmga01
+bpv-fq-ecmga02
+bpv-fq-erpwb01
+bpv-fq-prxsv01
+bpv-fq-zabsv01
+bpv-fq-stgdb02
+bpv-fq-mhasv01
+bpv-fq-wiksv01
+#bpv-fq-petsv01
+bpv-fq-amlsv01
+bpv-fq-amlsv02
+bpv-fq-rbasv01
+bpv-fq-ocrsv01
+bpv-fq-ocrsv02
+bpv-fq-gryha01
+bpv-fq-gryha02
+bpv-fq-grylg01
+bpv-fq-grylg02
+bpv-fq-grylg03
+bpv-fq-gryes01
+bpv-fq-gryes02
+bpv-fq-gryes03
+ipasv01.finnq.com
+bpv-fq-gitsv01
+bpv-fq-jensv01
+bpv-fq-pibap01
+bpv-fq-pibap02
+bpv-fq-pibbt01
+bpv-fq-pibbt02
+bpv-fq-pibdb01
+bpv-fq-pibdb02
+bpv-fq-glpsv01
+bpv-fq-mciap02
+bpv-fq-mciap03
+bpv-fq-mciap04
+bpv-fq-eaiap02
+bpv-fq-eaiap03
+bpv-fq-eaiap04
+bpv-fq-nxssv01
+bpv-fq-kibap01
+
+[prd-linux-noctl]
+bpv-fq-ftpsv01 ansible_port=22
+bpv-fq-repsv01
+bpv-fq-mbwap01
+bpv-fq-mbwap02
+bpv-fq-masap01
+bpv-fq-masap02
+#bpv-fq-masap03
+#bpv-fq-masap04
+#bpv-fq-masdb01
+#bpv-fq-masdb02
+#bpv-fq-masdb03
+bpv-fq-fpsap01
+bpv-fq-fpsap02
+#bpp-fq-fpsdb01
+#bpp-fq-fpsdb02
+bpv-fq-batap01
+bpv-fq-batap02
+bpp-fq-fepap01
+bpp-fq-fepap02
+bpv-fq-mciap01
+bpv-fq-eaiap01
+#bpv-fq-chndb01
+#bpv-fq-chndb02
+bpv-fq-apsap01
+bpv-fq-apsap02
+bpv-fq-mssap01
+bpv-fq-mssap02
+#bpv-fq-mssdb01
+#bpv-fq-mssdb02
+bpv-fq-fdssv01
+bpv-fq-dbcsv01
+bpv-fq-dbcsv02
+bpv-fq-ecman01
+bpv-fq-scmsv01
+bpv-fq-udbsv01
+bpv-fq-scasv01
+bpv-fq-iamsv01
+#bpv-fq-etlsv01
+#bpv-fq-stgdb01
+#bpp-fq-oprdb01
+bpp-fq-log01	
+bpv-fq-cbsap01
+bpv-fq-cbsap02
+bpv-fq-wsmsv01
+bpv-fq-wsmsv02
+#bpv-fq-fisdb01
+#bpv-fq-fisdb02
+#bpv-fq-fisdb03
+bpv-fq-zepap01
+#bpp-fq-facdb01
+#bpp-fq-facdb02
+#bpp-fq-olabi01
+#bpp-fq-mcsbi01
+#bpv-fq-dnsvt01
+bpv-fq-drmsv01
+bpv-fq-jh01		
+jirasv01
+#bpv-fq-anssv01
+bpv-fq-apmsv01
+bpv-fq-jhdb01
+bpv-fq-maswb01
+bpv-fq-maswb02
+bpv-fq-maswb03
+bpv-fq-maswb04
+bpv-fq-owswb01
+bpv-fq-owswb02
+bpv-fq-ecmga01
+bpv-fq-ecmga02
+bpv-fq-erpwb01
+bpv-fq-prxsv01
+bpv-fq-zabsv01
+bpv-fq-stgdb02
+bpv-fq-mhasv01
+bpv-fq-wiksv01
+#bpv-fq-petsv01
+bpv-fq-amlsv01
+bpv-fq-amlsv02
+bpv-fq-rbasv01
+bpv-fq-ocrsv01
+bpv-fq-ocrsv02
+bpv-fq-grylg01
+bpv-fq-gryes01
+bpv-fq-gitsv01
+bpv-fq-jensv01
+bpv-fq-pibap01
+bpv-fq-pibap02
+bpv-fq-pibbt01
+bpv-fq-pibbt02
+bpv-fq-pibdb01
+bpv-fq-pibdb02
+bpv-fq-glpsv01
+bpv-fq-nxssv01
+
+[prd-win]
+bpp-fq-bak01	
+bpv-fq-cmsdb01
+bpp-fq-facap01
+bpp-fq-facap02
+bpv-fq-pdfsv01
+bpv-fq-picsv01
+
+
+[prd-maswb]
+bpv-fq-maswb[01:04]
+
+[prd-masap]
+bpv-fq-masap[01:02]
+
+[prd-masdb]
+bpv-fq-masdb[01:03]
+
+[prd-ors]
+bpv-fq-amlsv01
+bpv-fq-amlsv02
+bpv-fq-rbasv01
+bpv-fq-ocrsv01
+bpv-fq-ocrsv02
+
+[prd-pibap-servers]
+bpv-fq-pibap[01:02]
+
+[prd-pibbt-servers]
+bpv-fq-pibbt[01:02]
+
+[prd-pibdb-servers]
+bpv-fq-pibdb[01:02]
+
+[logpress-agent]
+bpp-fq-fepap01
+bpp-fq-fepap02
+bpp-fq-fpsdb01
+bpp-fq-fpsdb02
+bpp-fq-oprdb01
+bpv-fq-apsap01
+bpv-fq-apsap02
+bpv-fq-batap01
+bpv-fq-batap02
+bpv-fq-cbsap01
+bpv-fq-cbsap02
+bpv-fq-mciap01
+bpv-fq-eaiap01
+bpv-fq-chndb02
+bpv-fq-dbcsv01
+bpv-fq-dbcsv02
+#bpv-fq-dnsvt01
+bpv-fq-drmsv01
+bpv-fq-ecman01
+bpv-fq-ecmga01
+bpv-fq-ecmga02
+bpv-fq-etlsv01
+bpv-fq-fdssv01
+bpv-fq-fisap01
+bpv-fq-fisap02
+bpv-fq-fisdb01
+bpv-fq-fisdb02
+bpv-fq-fisdb03
+bpv-fq-fpsap01
+bpv-fq-fpsap02
+bpv-fq-ftpsv01
+bpv-fq-iamsv01
+bpv-fq-masap01
+bpv-fq-masap02
+#bpv-fq-masap03
+#bpv-fq-masap04
+bpv-fq-masdb01
+bpv-fq-masdb02
+bpv-fq-masdb03
+bpv-fq-maswb01
+bpv-fq-maswb02
+bpv-fq-maswb03
+bpv-fq-maswb04
+bpv-fq-mbwap01
+bpv-fq-mbwap02
+bpv-fq-mssap01
+bpv-fq-mssap02
+bpv-fq-mssdb01
+bpv-fq-mssdb02
+bpv-fq-owswb01
+bpv-fq-owswb02
+bpv-fq-scasv01
+bpv-fq-scmsv01
+bpv-fq-stgdb01
+bpv-fq-udbsv01
+bpv-fq-wsmsv01
+bpv-fq-wsmsv02
+
+[template]
+172.27.104.107 ansible_port=22
+
+[sftp-server]
+bdv-fq-unfwb01
+bdv-fq-fpsap01
+bdv-fq-fisap01
+bsv-fq-maswb01
+bsv-fq-batap01
+bsv-fq-fisap01
+bpv-fq-mbwap01
+bpv-fq-mbwap02
+bpv-fq-maswb01
+bpv-fq-maswb02
+bpv-fq-maswb03
+bpv-fq-maswb04
+bpv-fq-batap01
+bpv-fq-fisap01
+bpp-fq-fepap01
+bpp-fq-fepap02
+
+[logpresso_del]
+bpv-fq-masdb01
+bpv-fq-masdb02
+bpv-fq-masdb03
+bpp-fq-fpsdb01
+bpp-fq-fpsdb02
+bpv-fq-batap01
+bpv-fq-batap02
+bpp-fq-fepap01
+bpp-fq-fepap02
+bpv-fq-chndb01
+bpv-fq-chndb02
+bpv-fq-apsap01
+bpv-fq-apsap02
+bpv-fq-mssap01
+bpv-fq-mssap02
+bpv-fq-mssdb01
+bpv-fq-mssdb02
+bpv-fq-dbcsv02
+bpv-fq-ecman01
+bpv-fq-scmsv01
+bpv-fq-udbsv01
+bpv-fq-scasv01
+bpv-fq-etlsv01
+bpv-fq-stgdb01
+bpp-fq-oprdb01
+bpv-fq-ftpsv01
+bpv-fq-drmsv01
+bpv-fq-ecmga01
+bpv-fq-ecmga02
+bpv-fq-maswb01
+bpv-fq-maswb02
+bpv-fq-maswb03
+bpv-fq-maswb04
+bpv-fq-owswb01
+bpv-fq-owswb02
+
+[logpress_del_win]
+bpp-fq-bak01
+bpv-fq-picsv01
+
+[stg-aml-servers]
+bsv-fq-amlsv01 ansible_port=22 ansible_user=finadm
+
+[stg-rba-servers]
+bsv-fq-rbasv01 ansible_port=22 ansible_user=finadm
+
+[prd-aml-servers]
+bpv-fq-amlsv01 ansible_port=2222 ansible_user=finadm
+bpv-fq-amlsv02 ansible_port=2222 ansible_user=finadm
+
+
+[prd-rba-servers]
+bpv-fq-rbasv01 ansible_port=2222 ansible_user=finadm
+
+[graylog-collector]
+bpv-fq-cbsap01
+bpv-fq-cbsap02
+bpv-fq-fisap01
+bpv-fq-fisap02
+bpv-fq-kkoap01
+bpv-fq-kkoap02
+bpv-fq-masap01
+bpv-fq-masap02
+bpv-fq-owswb01
+bpv-fq-owswb02
+bpv-fq-pibap01
+bpv-fq-pibap02
+bpv-fq-pibap01
+bpv-fq-pibap02

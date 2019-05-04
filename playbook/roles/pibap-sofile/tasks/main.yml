@@ -1,0 +1,15 @@
+- name: make /sw/tomcat/shared/lib  directory
+  file:
+    path: /sw/tomcat/shared/lib
+    state: directory
+    owner: tomcat
+    group: was
+
+- name: Copy .so파일 -> /sw/tomcat/shared/lib
+  copy: src=sw/tomcat/shared/lib/{{ item }} dest=/sw/tomcat/shared/lib owner=tomcat group=was
+  with_items:
+    - libklib.so
+    - libnperm.so
+    - libNSaferJNI.so
+    - libnsafer.so
+    - libpcjapi.so  

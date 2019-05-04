@@ -1,0 +1,20 @@
+# Systemd unit file for httpd
+[Unit]
+Description=Apache Web Server
+After=network-online.target
+ 
+[Service]
+Type=forking
+
+ExecStart={{ WEB_INSTANCE_DIR }}/apachectl start
+ExecStop={{ WEB_INSTANCE_DIR }}/apachectl stop
+ExecReload={{ WEB_INSTANCE_DIR }}/apachectl restart
+
+# set ulimits on service with systemd
+PrivateTmp=true
+LimitNOFILE=65536
+LimitNPROC=16384
+LimitMEMLOCK=infinity
+ 
+[Install]
+WantedBy=multi-user.target

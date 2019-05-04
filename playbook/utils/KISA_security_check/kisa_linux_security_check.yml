@@ -1,0 +1,41 @@
+---
+- hosts: [prd-linux]
+  remote_user: finadm
+  become: True
+  tasks:
+  - name: make directory
+    file:
+      path: /tmp/kisa
+      state: directory
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: copy audit file
+    copy: src=./KISA-linux.tar.gz dest=/tmp/kisa mode=0755
+
+  - name: unzip audit file
+    unarchive:
+      src: /tmp/kisa/KISA-linux.tar.gz
+      dest: /tmp/kisa
+      extra_opts: [--strip-components=1]
+      keep_newer: yes
+      remote_src: yes
+      mode: 0755
+
+  - name: excute audit process
+    command: /tmp/kisa/SS_AS-linux-64
+    become: true
+
+  - name: find result file name
+    find:
+      path: /tmp/kisa
+      patterns: "0_SERVER_REPORT*"
+    register: result_filename
+
+  - name: copy audit file
+    fetch:
+      src: "{{ item.path }}"
+      dest: /tmp/kisa/
+      flat: yes
+    with_items: "{{ result_filename.files }}"

@@ -1,0 +1,13 @@
+---
+- hosts: bpv-fq-nxssv01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - jdk1.8
+    - zabbix
+    - ipa-client
+    - fusioninventory-agent
+    - netbackup-agent
+    - nexus

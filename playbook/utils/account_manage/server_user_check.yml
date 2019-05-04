@@ -1,0 +1,65 @@
+---
+- hosts: new-stg-linux, bdv-fq-amlsv01, bdv-fq-ocrsv01, bdv-fq-rbasv01, bpv-fq-mhasv01, bpv-fq-stgdb02, bpv-fq-zabsv01, bpv-fq-wiksv01, bpv-fq-petsv01 
+  remote_user: finadm
+  vars:
+    hostname: "{{ ansible_hostname }}"
+    date: "{{ ansible_date_time.date }}"
+  vars_files: 
+    - /root/playbook/utils/account_manage/usergroup_list.yml
+  tasks:
+    - name: Create /tmp/server_user.txt file 
+      file:
+        path: "{{ '/tmp/' + hostname + '_account_' + date + '.txt' }}"
+        state: touch
+        mode: 0600
+      changed_when: True
+    - name: " Check if user exists "
+      shell: id -u "{{ item }}"
+      ignore_errors: true
+      with_items: "{{ usergroup }}"
+      register: user_info
+    - name: "서버 별 계정정보 파일 기록"
+      lineinfile:
+        path: "{{ '/tmp/' + hostname + '_account_' + date + '.txt' }}"
+        state: present
+        line: "{{ item.item }}"
+      become: True
+      when: item.rc == 0
+      with_items: "{{ user_info.results }}"
+    - name: "계정정보 파일 Ansible /tmp/server_account로 취합"
+      fetch:
+        src: "{{ '/tmp/' + hostname + '_account_' + date + '.txt' }}"
+        dest: "{{ '/tmp/server_account/' + hostname + '_account_' + date + '.txt' }}"
+        flat: yes
+      become: True
+
+- hosts: localhost                                                                                                                                   
+  remote_user: finadm
+  tasks:
+    - shell: "ansible localhost -m setup -a 'filter=ansible_date_time'"
+    - shell: "ansible bpv-fq-jh01 -m setup -a 'filter=ansible_date_time'"
+    - name: "/tmp/server_account 파일 tar로 압축"
+      archive:
+        path: /tmp/server_account
+        dest: /tmp/server_account_{{ ansible_date_time.date }}.tar
+        mode: 0600
+
+- hosts: bpv-fq-jh01
+  remote_user: finadm
+  tasks:
+    - name: "bpv-fq-jh01 서버 petra 홈디렉토리로 copy"
+      copy:
+        src: /tmp/server_account_{{ ansible_date_time.date }}.tar
+        dest: /home/petra/
+        owner: petra
+        group: sec
+      become: True
+    - name: "server_account_{{ ansible_date_time.date }}.tar 파일 압축 해제"
+      unarchive:
+        src: /home/petra/server_account_{{ ansible_date_time.date }}.tar
+        dest: /home/petra/
+        owner: petra
+        group: sec
+        remote_src: yes
+      become: True
+

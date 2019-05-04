@@ -1,0 +1,10 @@
+---
+- hosts: new-stg-linux
+  remote_user: finadm
+
+
+  tasks:
+
+  - name: check hostname
+    debug:
+      msg: "{{ ansible_hostname }}"

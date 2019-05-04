@@ -1,0 +1,64 @@
+---
+- name: make /sw/petra directory
+  file:
+    path: /sw/petra
+    state: directory
+    group: was
+    owner: tomcat
+    force: yes
+
+- name: make /logs/petra directory
+  file:
+    path: /logs/petra
+    state: directory
+    group: was
+    owner: tomcat
+    force: yes
+
+- name: "[STG|DEV] AP Server :  copy petra config template file to hidden directory"
+  template: src=stg_was_petra_cipher_api.conf dest=/sw/petra/petra_cipher_api.conf owner=tomcat group=was mode=0640
+  when:
+    - ansible_hostname | search("^bs") and ansible_hostname | search("db0") == 0 or ansible_hostname | search("^bd") and ansible_hostname | search("db0") == 0
+
+- name: "[STG|DEV] DB Server :  copy petra config template file to hidden directory"
+  template: src=stg_db_petra_cipher_api.conf dest=/sw/petra/petra_cipher_api.conf owner=tomcat group=was mode=0640
+  when:
+    - ansible_hostname | search("^bs") and ansible_hostname | search("db0") == 1 or ansible_hostname | search("^bd") and ansible_hostname | search("db0") == 1
+
+- name: "[PRD] AP Server :  copy petra config template file to hidden directory"
+  template: src=prd_was_petra_cipher_api.conf dest=/sw/petra/petra_cipher_api.conf owner=tomcat group=was mode=0640
+  when:
+    - ansible_hostname | search("^bp") and ansible_hostname | search("db0") == 0 
+
+- name: "[PRD] DB Server :  copy petra config template file to hidden directory"
+  template: src=prd_db_petra_cipher_api.conf dest=/sw/petra/petra_cipher_api.conf owner=tomcat group=was mode=0640
+  when:
+    - ansible_hostname | search("^bp") and ansible_hostname | search("db0") == 1
+
+- name: copy petra library files
+  copy:
+    src: "{{ item }}"
+    dest: /sw/petra/{{ item }}
+    group: was
+    owner: tomcat
+  with_items:
+    - libklib.so
+    - libpcjapi.so
+    - PetraCipherAPI.jar
+    - readme.txt
+
+- name: "config setenv.sh : export LD_LIBRARY_PATH"
+  lineinfile:
+    path: /sw/tomcat/bin/setenv.sh
+    state: present
+    line: export LD_LIBRARY_PATH
+
+- name: "config setenv.sh (path: petra_cipher_api.conf, libklib.so libpcjapi.so)" 
+  lineinfile:
+    path: /sw/tomcat/bin/setenv.sh
+    state: present
+    line: "{{ item }}"
+    insertbefore: "export LD_LIBRARY_PATH"
+  with_items:
+    - "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/sw/petra"
+    - "export PC_CONF_FILE=/sw/petra/petra_cipher_api.conf"

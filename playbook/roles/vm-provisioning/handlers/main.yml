@@ -1,0 +1,3 @@
+---
+- name: SSHD restart
+  command: sudo -u awx ansible {{ vm_hostname }} --become-user finadm -m command -a "sudo systemctl restart sshd" -e ansible_ssh_port=22

@@ -1,0 +1,28 @@
+# Systemd unit file for jboss
+[Unit]
+Description=JBoss EAP 6.4
+After=network-online.target
+
+[Service]
+Type=forking
+
+# comment because of occuring to fail create pid file randomly
+#PIDFile=/logs/jboss/{{ instance_nm }}/{{ instance_nm }}.pid
+
+WorkingDirectory=/sw/jboss/domains/{{ instance_nm }}
+Environment=JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
+
+ExecStart=/sw/jboss/domains/{{ instance_nm }}/start.sh wait /Config.jsp
+ExecStop=/sw/jboss/domains/{{ instance_nm }}/shutdown.sh wait
+
+User=jboss
+Group=was
+UMask=0027
+
+# set ulimits on service with systemd
+LimitNOFILE=65536
+LimitNPROC=16384
+LimitMEMLOCK=infinity
+
+[Install]
+WantedBy=multi-user.target

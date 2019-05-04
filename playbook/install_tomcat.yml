@@ -1,0 +1,11 @@
+---
+- hosts: all
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files:
+    - roles/tomcat/role-vars/common.var
+
+  roles:
+    - tomcat

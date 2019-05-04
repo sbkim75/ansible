@@ -1,0 +1,88 @@
+---
+- hosts: bsv-fq-jh01 
+  remote_user: finadm
+  tasks:
+  - name: groupadd with {{ item.group }}
+    group: 
+      name: "{{ item.group }}" 
+      gid: "{{ item.gid }}"
+      state: present
+    become: true
+    with_items:
+      - { user: oracle, group: dba, uid: 601, gid: 600, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: maria, group: dba, uid: 602, gid: 600, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: maxgauge, group: dba, uid: 1201, gid: 600, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: jboss, group: was, uid: 701, gid: 700, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: nexcoreadm, group: was, uid: 702, gid: 700, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: spideradm, group: was, uid: 705, gid: 700, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: khan, group: was, uid: 706, gid: 700, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: fdsadm, group: was, uid: 707, gid: 700, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: khanapm, group: was, uid: 720, gid: 700, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: khansys, group: was, uid: 710, gid: 700, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: redis, group: redis, uid: 493, gid: 493, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: mongod, group: mongod, uid: 494, gid: 494, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: chronograf, group: chronograf, uid: 495, gid: 495, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: influxdb, group: influxdb, uid: 496, gid: 496, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: haproxy, group: haproxy, uid: 188, gid: 188, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: rabbitmq, group: rabbitmq, uid: 497, gid: 497, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: apache, group: apache, uid: 703, gid: 703, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: jenkins, group: apache, uid: 704, gid: 703, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: cruzeai, group: chn, uid: 801, gid: 800, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: cruzmci, group: chn, uid: 802, gid: 800, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: cruzfep, group: chn, uid: 803, gid: 800, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: cruzadm, group: chn, uid: 804, gid: 800, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: cruzsim, group: chn, uid: 805, gid: 800, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: hanacard, group: chn, uid: 806, gid: 800, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: softcamp, group: sec, uid: 901, gid: 900, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: petra, group: sec, uid: 903, gid: 900, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: sparrow, group: sec, uid: 904, gid: 900, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: metaadm, group: meta, uid: 902, gid: 902, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: cfadm, group: mng, uid: 1001, gid: 1000, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: wiseuadm, group: sol, uid: 1101, gid: 1100, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: smsadm, group: sol, uid: 1102, gid: 1100, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: ecrmadm, group: sol, uid: 1103, gid: 1100, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: etladm, group: sol, uid: 1104, gid: 1100, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: xpushadm, group: sol, uid: 1105, gid: 1100, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+  - name: useradd with {{ item.user }}
+    user:
+      name: "{{ item.user }}"
+      uid: "{{ item.uid }}"
+      group: "{{ item.group }}"
+      password: "{{ item.password }}"
+      state: present
+    become: true 
+    with_items:
+      - { user: oracle, group: dba, uid: 601, gid: 600, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: maria, group: dba, uid: 602, gid: 600, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: maxgauge, group: dba, uid: 1201, gid: 600, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: jboss, group: was, uid: 701, gid: 700, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: nexcoreadm, group: was, uid: 702, gid: 700, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: spideradm, group: was, uid: 705, gid: 700, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: khan, group: was, uid: 706, gid: 700, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: fdsadm, group: was, uid: 707, gid: 700, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: khanapm, group: was, uid: 720, gid: 700, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: khansys, group: was, uid: 710, gid: 700, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: redis, group: redis, uid: 493, gid: 493, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: mongod, group: mongod, uid: 494, gid: 494, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: chronograf, group: chronograf, uid: 495, gid: 495, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: influxdb, group: influxdb, uid: 496, gid: 496, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: haproxy, group: haproxy, uid: 188, gid: 188, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: rabbitmq, group: rabbitmq, uid: 497, gid: 497, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: apache, group: apache, uid: 703, gid: 703, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: jenkins, group: apache, uid: 704, gid: 703, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: cruzeai, group: chn, uid: 801, gid: 800, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: cruzmci, group: chn, uid: 802, gid: 800, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: cruzfep, group: chn, uid: 803, gid: 800, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: cruzadm, group: chn, uid: 804, gid: 800, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: cruzsim, group: chn, uid: 805, gid: 800, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: hanacard, group: chn, uid: 806, gid: 800, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: softcamp, group: sec, uid: 901, gid: 900, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: petra, group: sec, uid: 903, gid: 900, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: sparrow, group: sec, uid: 904, gid: 900, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: metaadm, group: meta, uid: 902, gid: 902, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: cfadm, group: mng, uid: 1001, gid: 1000, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: wiseuadm, group: sol, uid: 1101, gid: 1100, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: smsadm, group: sol, uid: 1102, gid: 1100, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: ecrmadm, group: sol, uid: 1103, gid: 1100, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: etladm, group: sol, uid: 1104, gid: 1100, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }
+      - { user: xpushadm, group: sol, uid: 1105, gid: 1100, password: $6$kccheon$PyT2XwAaEq6BOZW83Epn0/p6FJh7Tc7u6X5.X18WLCpkQ4eODz84DAqHCmzptzHMrWWp3lFoRlzpYUAFbV4cI0 }

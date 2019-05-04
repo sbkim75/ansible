@@ -1,0 +1,16 @@
+-Xms2048M
+-Xmx2048M
+-XX:MaxDirectMemorySize=2G
+-XX:+UnlockDiagnosticVMOptions
+-XX:+UnsyncloadClass
+-XX:+LogVMOutput
+-XX:LogFile=/logs/nexus/jvm.log
+-XX:-OmitStackTraceInFastThrow
+-Djava.net.preferIPv4Stack=true
+-Dkaraf.home=.
+-Dkaraf.base=.
+-Dkaraf.etc=etc/karaf
+-Djava.util.logging.config.file=etc/karaf/java.util.logging.properties
+-Dkaraf.data=/data1/sonatype-work/nexus3
+-Djava.io.tmpdir=/data1/sonatype-work/nexus3/tmp
+-Dkaraf.startLocalConsole=false

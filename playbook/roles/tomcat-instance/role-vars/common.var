@@ -1,0 +1,6 @@
+# JAVA_OPTS
+java_opts: "$JAVA_OPTS -Djsse.enableSNIExtension=false -Dinstance.id={{ instance_nm }} -Denv={{ spring_profiles }} -Dspring.profiles.active={{ spring_profiles }}"
+#java_opts:  "$JAVA_OPTS -Djsse.enableSNIExtension=false -Dinstance.id={{ instance_nm }} -Djava.library.path=/sw/tomcat/shared/lib -Denv=stg -Dlogback.configurationFile=logger/stg-logback.xml"
+
+# UMASK
+umask_value: "0027"

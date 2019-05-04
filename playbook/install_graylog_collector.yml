@@ -1,0 +1,11 @@
+---
+- hosts: all
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+  vars:
+    # collector tags 
+    - TAGS: mas-ap  # 해당 Log tags 정보 명기 
+    
+  roles:
+    - graylog_collector

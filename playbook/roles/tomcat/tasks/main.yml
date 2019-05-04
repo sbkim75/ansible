@@ -1,0 +1,173 @@
+---
+# install JDK
+- name: Install Java 1.8 OpenJDK
+  yum: name=java-1.8.0-openjdk-devel state=present
+
+# add user and group
+- name: add group "was"
+  group: name=was gid=700 state=present
+
+- name: add user "tomcat"
+  user: name=tomcat group=was uid=708 state=present shell=/sbin/nologin home=/sw/tomcat createhome=no
+
+# make tomcat install directory
+- name: make tomcat directory
+  file:
+    path: /sw/tomcat
+    state: directory
+    mode: 0750
+
+# install tomcat engine
+- name: extract Tomcat tarball into tomcat directory
+  unarchive:
+    src: apache-tomcat-8.5.29.tar.gz
+    dest: /sw/tomcat
+    extra_opts: [--strip-components=1]
+    keep_newer: yes
+    group: was
+
+# setup shared library
+#- name: make shared lib directory
+#  file:
+#    path: /sw/tomcat/shared/lib
+#    state: directory
+#    group: was
+#    mode: 0750
+#    recurse: yes
+
+#- name: copy native library file
+#  copy:
+#    src: libtcnative-1.so.0.2.16
+#    dest: /sw/tomcat/shared/lib/libtcnative-1.so
+#    group: was
+#    mode: 0640
+
+# copy shell files
+- name: copy startup.sh file
+  copy: src=startup.sh dest=/sw/tomcat/bin/ mode=0750
+
+- name: copy setenv.sh file
+  template:
+    src: setenv.sh
+    dest: /sw/tomcat/bin/
+    mode: 0750
+
+# change directory permission
+- name: change tomcat conf directory permission
+  file:
+    path: /sw/tomcat/conf
+    mode: g+r
+    recurse: yes
+
+- name: change tomcat conf directory permission
+  file:
+    path: /sw/tomcat/conf
+    mode: g+x
+    
+# copy configure files
+- name: configure logging.properties
+  template: src=logging.properties dest=/sw/tomcat/conf/
+
+- name: configure tomcat server
+  template: src=server.xml dest=/sw/tomcat/conf/
+
+# comment default WatchedResource setting
+- name : comment WEB-INF/web.xml watchedresource
+  lineinfile:
+    path: /sw/tomcat/conf/context.xml
+    regexp: '^.*<WatchedResource>WEB-INF/web.xml</WatchedResource>'
+    line: '    <!-- WatchedResource>WEB-INF/web.xml</WatchedResource -->'
+
+- name : comment conf/web.xml watchedresource
+  lineinfile:
+    path: /sw/tomcat/conf/context.xml
+    regexp: '^.*<WatchedResource>\${catalina.base}/conf/web.xml</WatchedResource>'
+    line: '    <!-- WatchedResource>${catalina.base}/conf/web.xml</WatchedResource -->'
+
+# change tomcat group
+- name: change tomcat directory group
+  file:
+    path: /sw/tomcat
+    group: was
+    recurse: yes
+
+# change directory owner
+- name: change tomcat directories owner
+  file:
+    path: /sw/tomcat/{{ item }}
+    owner: tomcat
+    recurse: yes
+  with_items:
+    - webapps
+    - work
+    - temp
+
+# initialize webapps directory
+- name: remove and remake webapps directory
+  file:
+    path: /sw/tomcat/webapps
+    state: "{{ item }}"
+    group: was
+    mode: 0750
+  with_items:
+    - absent
+    - directory
+
+# make apps directory
+- name: make apps directory
+  file:
+    path: "{{ docbase }}"
+    state: directory
+    group: was
+    owner: deploy
+    mode: 0750
+
+# make context path file directory
+- name: make localhost directory
+  file:
+    path: /sw/tomcat/conf/Catalina/localhost
+    state: directory
+    group: was
+    owner: root
+    mode: 0755
+    recurse: yes
+
+# copy ROOT context path file
+- name: configure ROOT docBase
+  template: src=ROOT.xml dest=/sw/tomcat/conf/Catalina/localhost/ group=was mode=0644
+  when: extra_context is not defined
+
+# copy extra context path file
+- name: configure context docBase
+  template: src=context.xml dest=/sw/tomcat/conf/Catalina/localhost/{{ extra_context.split('/')[1] }}.xml group=was mode=0644
+  when: extra_context is defined and extra_context is not none
+
+# make log directories
+- name: make /logs directory
+  file:
+    path: /logs/{{ item }}
+    state: directory
+    owner: tomcat
+    group: was
+    mode: 0750
+    recurse: yes
+  with_items:
+    - tomcat
+    - tomcat/gclog
+    - tomcat/heapdump
+
+- name: copy limits conf file
+  template: src=56-tomcat.conf dest=/etc/security/limits.d/ mode=0644
+  
+# copy tomcat systemd control file and restart
+- name: copy tomcat.service file
+  copy: src=tomcat.service dest=/lib/systemd/system/tomcat.service mode=0644
+
+- name: register service file to systemd
+  systemd: daemon_reload=yes
+
+- name: make sure the tomcat service is running
+  systemd: name=tomcat state=started
+
+- name: enable service tomcat and ensure it
+  systemd: name=tomcat enabled=yes

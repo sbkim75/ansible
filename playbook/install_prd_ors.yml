@@ -1,0 +1,12 @@
+---
+- hosts: prd-ors
+  port: 22
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - jdk1.8
+    - tomcat
+    - netbackup-agent
+    - ssh-port

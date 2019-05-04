@@ -1,0 +1,12 @@
+---
+- name: VM Remove
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files: 
+    - inventories/common/group_vars/vcenter_info.yml 
+    - inventories/common/group_vars/passwd-vars.yml
+  #vars:
+  #  ansible_python_interpreter: "/usr/bin/env python3"
+  roles: 
+    - vm_remove

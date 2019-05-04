@@ -1,0 +1,21 @@
+  - name: "FusionInventory Agent Install"
+    yum:
+      name: 
+        - fusioninventory-agent
+        - fusioninventory-agent-task-inventory
+      state: present
+  - name: "FusionInventory Agent Config File Copy"
+    template: 
+      src: agent.cfg.j2
+      dest: /etc/fusioninventory/agent.cfg
+      owner: root
+      group: root
+      mode: 644
+  - name: "Service Disable"
+    service:
+      name: fusioninventory-agent
+      enabled: no
+      state: stopped
+  - name: "FusinInventory Gethering"
+    shell: fusioninventory-agent
+

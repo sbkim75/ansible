@@ -1,0 +1,11 @@
+---
+- hosts: bpv-fq-kkoap01, bpv-fq-kkoap02
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+  vars:
+    # collector tags 
+    - TAGS: kko-ap  # 해당 Log tags 정보 명기 
+    
+  roles:
+    - graylog_collector

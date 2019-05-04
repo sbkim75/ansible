@@ -1,0 +1,35 @@
+- name: make raon directory for STG or PRD
+  file:
+    path: /apps/jboss-ews/htdocs/ows/raon/
+    state: directory
+    owner: cfadm
+    group: apache
+  when:
+    - (ansible_hostname | search("^bsv")) or (ansible_hostname | search("^bp"))
+
+- name: make raon directory for DEV
+  file:
+    path: /apps/jboss-ews/htdocs/ows/raon/
+    state: directory
+    owner: jenkins
+    group: apache
+  when:
+    - ansible_hostname | search("^bdv")
+
+- name: Extract transkey_mobile.tar.gz from files for STG or PRD
+  unarchive: 
+    src: transkey_mobile.tar.gz
+    dest: /apps/jboss-ews/htdocs/ows/raon/
+    owner: cfadm
+    group: apache
+  when:
+    - (ansible_hostname | search("^bsv")) or (ansible_hostname | search("^bp"))
+
+- name: Extract transkey_mobile.tar.gz from files for DEV
+  unarchive: 
+    src: transkey_mobile.tar.gz
+    dest: /apps/jboss-ews/htdocs/ows/raon/
+    owner: jenkins
+    group: apache
+  when:
+    - ansible_hostname | search("^bdv")

@@ -1,0 +1,33 @@
+---
+- hosts: all
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files:
+    - roles/tomcat-instance/role-vars/common.var
+
+  #vars:
+  #  - instance_nm: sfdsadm11
+  #  - approot: /apps/spider/{{ instance_nm }}/adminWeb
+  #  - portoffset: 10000
+  #  - classpath: /apps/spider/config/sql
+  #  - ld_library_path: /sw/petra
+  #  - spring_profiles: stg
+  #  - extra_context: /ibsmgr
+  #  - dataSources:
+  #    - name: jdbc/spiderdb
+  #      username: cfwcon
+  #      password: c5ebd13eb45429810e465d5030d4d224
+  #      url: "jdbc:mariadb://172.27.123.32:4306/scfwdb?useServerPrepStmts=false&amp;autoReconnect=true&amp;connectTimeout=15000&amp;socketTimeout=60000"
+  #      timeBetweenEvictionRunsMillis: 30000
+  #      validationQuery: "select 1"
+  #      driverClassName: "org.mariadb.jdbc.Driver"
+  #      maxActive: 10
+  #      initialSize: 10
+  #      maxIdle: 5
+  #      minIdle: 5
+  #      maxWait: 6000
+
+  roles:
+    - tomcat-instance

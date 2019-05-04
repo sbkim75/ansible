@@ -1,0 +1,12 @@
+---
+- name: VM provisioning
+  hosts: localhost
+  vars_prompt:
+    - name: "vcpasswd"
+      prompt: "Enter vcenter password"
+      private: yes
+  vars_files: 
+    - inventories/common/group_vars/vcenter_info.yml 
+    - inventories/ops/host_vars/bpv-fq-kibap01.yml 
+  roles: 
+    - vm-provisioning

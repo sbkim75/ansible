@@ -1,0 +1,47 @@
+---
+# tasks file for netbackup-agent
+- name: Copy netbackup-agent.tar file in /tmp
+  copy: src=netbackup-agent.tar dest=/tmp/
+
+- name : Extract netbackup-agent.tar
+  unarchive:
+    src: /tmp/netbackup-agent.tar
+    dest: /tmp/
+    remote_src: yes
+
+- name: NetBackup Master server address and localhost address add in /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    state: present
+    line: "{{ item }}"
+  with_items:
+    - "## NetBackup Master Server ##"
+    - "172.27.104.70  bpp-fq-bak01"
+
+- name: Confiqure NBInstallAnswer.conf
+  template:
+    src: NBInstallAnswer.conf
+    dest: /tmp
+
+- name: Install NetBackup Agent
+#  command: rpm -Uvh /tmp/VRT*.rpm
+  yum:
+    pkg: /tmp/{{item}}
+    state: present
+  with_items:
+    - VRTSnbcfg.rpm
+    - VRTSnbcfg.rpm
+    - VRTSnbclt.rpm
+    - VRTSnbjava.rpm
+    - VRTSnbjre.rpm
+    - VRTSnbpck.rpm
+    - VRTSpbx.rpm
+    - VRTSpddea.rpm
+
+- name: Install check start
+  command: /usr/openv/netbackup/bin/bpps -x
+  register: result
+
+- name: Install check result
+  debug:
+    msg: '{{ result.stdout_lines }}'

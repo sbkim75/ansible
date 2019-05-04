@@ -1,0 +1,81 @@
+---
+- name: make /sw/petra directory
+  file:
+    path: /sw/petra
+    state: directory
+    group: was
+    owner: jboss
+    mode: 0750
+    force: yes
+
+- name: make /logs/petra directory
+  file:
+    path: /logs/petra
+    state: directory
+    group: was
+    owner: jboss
+    mode: 0750
+    force: yes
+
+- name: "[STG|DEV] AP Server :  copy petra config template file to hidden directory"
+  template:
+    src: roles/petra-tobe-tomcat/templates/stg_was_petra_cipher_api.conf
+    dest: /sw/petra/petra_cipher_api.conf
+    owner: jboss
+    group: was
+    mode: 0640
+  when:
+    - ansible_hostname | search("^bs") and ansible_hostname | search("db0") == 0 or ansible_hostname | search("^bd") and ansible_hostname | search("db0") == 0
+
+- name: "[STG|DEV] DB Server :  copy petra config template file to hidden directory"
+  template:
+    src: roles/petra-tobe-tomcat/templates/stg_db_petra_cipher_api.conf
+    dest: /sw/petra/petra_cipher_api.conf
+    owner: jboss
+    group: was
+    mode: 0640
+  when:
+    - ansible_hostname | search("^bs") and ansible_hostname | search("db0") == 1 or ansible_hostname | search("^bd") and ansible_hostname | search("db0") == 1
+
+- name: "[PRD] AP Server :  copy petra config template file to hidden directory"
+  template:
+    src: roles/petra-tobe-tomcat/templates/prd_was_petra_cipher_api.conf
+    dest: /sw/petra/petra_cipher_api.conf
+    owner: jboss
+    group: was
+    mode: 0640
+  when:
+    - ansible_hostname | search("^bp") and ansible_hostname | search("db0") == 0
+
+- name: "[PRD] DB Server :  copy petra config template file to hidden directory"
+  template:
+    src: roles/petra-tobe-tomcat/templates/prd_db_petra_cipher_api.conf
+    dest: /sw/petra/petra_cipher_api.conf
+    owner: jboss
+    group: was
+    mode: 0640
+  when:
+    - ansible_hostname | search("^bp") and ansible_hostname | search("db0") == 1
+
+- name: copy petra library files
+  copy:
+    src: "roles/petra-tobe-tomcat/files/{{ item }}"
+    dest: /sw/petra/{{ item }}
+    group: was
+    owner: jboss
+    mode: 0640
+  with_items:
+    - libklib.so
+    - libpcjapi.so
+    - PetraCipherAPI.jar
+    - readme.txt
+
+- name: "config .bashrc (path: petra_cipher_api.conf)"
+  lineinfile:
+    path: /home/jboss/.bashrc
+    state: present
+    line: "{{ item }}"
+  with_items:
+    - "# PetraSafer LIB PATH"
+    - "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/sw/petra"
+    - "export PC_CONF_FILE=/sw/petra/petra_cipher_api.conf"

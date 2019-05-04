@@ -1,0 +1,13 @@
+---
+- name: restarted ecmengine
+  systemd: name=ecmengine state=restarted
+
+- name: restarted ecmmonitor
+  systemd: name=ecmmonitor state=restarted
+
+- name: restart tomcat
+  systemd: name=tomcat state=restarted
+
+- name: install ocr
+  command: /sw/ecm/install.sh
+

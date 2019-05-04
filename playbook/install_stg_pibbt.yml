@@ -1,0 +1,13 @@
+---
+- hosts: bsv-fq-pibbt01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - netbackup-agent
+    - zabbix 
+    - jdk1.8
+    - ipa-client
+    - tomcat
+

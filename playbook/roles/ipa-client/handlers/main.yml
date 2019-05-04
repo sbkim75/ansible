@@ -1,0 +1,15 @@
+---
+- name: restart dbus
+  systemd: name=dbus.service state=restarted
+
+- name: restart oddjobd
+  systemd: name=oddjobd.service state=restarted
+
+- name: restart systemd-logind
+  systemd: name=systemd-logind.service state=restarted
+
+- name: stop ntpd
+  systemd: name=ntpd.service state=stopped 
+
+- name: disable ntpd
+  systemd: name=ntpd.service enabled=no 

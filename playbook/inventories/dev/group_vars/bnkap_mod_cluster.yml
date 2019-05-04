@@ -1,0 +1,22 @@
+---
+# file: inventories/dev/group_vars/bnkap_mod_cluster.yml
+
+# server.xml
+onModcluster: False
+#advertiseGroupAddress: 224.26.1.2
+#advertisePort: 23364
+#proxyList: 223.39.114.119:6166
+#balancer: balancer_dbnk
+#loadBalancingGroup: G_dbnk
+
+# setmodenv.sh
+onModJk: True
+httpd_main_hosts:
+httpd_hosts: '"172.27.104.222:8082"'
+lb_worker: dbnk
+ajp_port: 8009
+http_port: 8080
+context_name: /health_check.html
+
+# startup.sh
+onKHANagent: false

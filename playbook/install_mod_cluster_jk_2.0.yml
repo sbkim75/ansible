@@ -1,0 +1,11 @@
+---
+- hosts: all
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files:
+    - roles/mod_cluster_jk_2.0/role-vars/common.var
+
+  roles:
+    - mod_cluster_jk_2.0

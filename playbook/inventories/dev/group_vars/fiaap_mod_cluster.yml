@@ -1,0 +1,22 @@
+---
+# file: inventories/dev/group_vars/apiap_mod_cluster.yml
+
+# server.xml
+onModcluster: True
+#advertiseGroupAddress: 224.26.1.2
+#advertisePort: 23364
+proxyList: 223.39.114.119:6166
+balancer: balancer_dfia
+loadBalancingGroup: G_dfia
+
+# setmodenv.sh
+onModJk: True
+httpd_main_hosts: '"223.39.114.119:443"'
+httpd_hosts: '"172.27.104.223:8082"'
+lb_worker: dfia
+ajp_port: 8009
+http_port: 8080
+context_name: /
+
+# startup.sh
+onKHANagent: True

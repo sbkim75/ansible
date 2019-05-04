@@ -1,0 +1,11 @@
+---
+- hosts: prd-linux 
+  remote_user: finadm
+  tasks:
+  - name: Zabbix Disk Performace DM Remove Config
+    lineinfile:
+      dest: /usr/local/bin/lld-disks.py
+      state: present
+      regexp: '    skippable'
+      line: '    skippable = ("sr", "loop", "ram", "dm")'
+    become: True

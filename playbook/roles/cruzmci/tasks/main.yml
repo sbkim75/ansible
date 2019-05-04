@@ -1,0 +1,51 @@
+# 그룹추가
+- name: add group "chn"
+  group: name=chn gid=800 state=present
+
+- name: add user "cruzmci"
+  user: name=cruzmci group=chn uid=802 state=present shell=/usr/bin/ksh home=/home/cruzmci createhome=yes
+
+- name: make cruzmci directory
+  file:
+    path: /sw/cruzmci
+    state: directory
+    owner: cruzmci
+    group: chn 
+ 
+- name: make cruzmci log directory
+  file:
+    path: /logs/cruzmci
+    state: directory
+    owner: cruzmci
+    group: chn 
+ 
+- name: Extract cruzmci.tar from files
+  unarchive: 
+    src: cruzmci.tar.gz
+    dest: /sw/
+    owner: cruzmci
+    group: chn
+
+- name: Configure ES.profile
+  template:
+    src: ES.profile
+    dest: /sw/cruzmci/cruzlink/bin
+    owner: cruzmci
+    group: chn
+
+- name: Install ksh
+  yum:
+    name: ksh 
+    state: present
+  become: True
+
+- name: cruzmci profile add
+  shell: cat /sw/cruzmci/cruzlink/bin/ES.profile > /home/cruzmci/.profile
+  
+- name: cruzmci profile chmod
+  file:
+    path: /home/cruzmci/.profile
+    owner: cruzmci
+    group: chn
+
+

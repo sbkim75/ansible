@@ -1,0 +1,12 @@
+[Unit]
+Description=Logpresso Agent(Sentry) Service
+
+[Service]
+Type=forking
+ExecStart=/sw/answer/sentry/sentry.sh start
+ExecStop=/sw/answer/sentry/sentry.sh stop
+restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

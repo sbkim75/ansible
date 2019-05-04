@@ -1,0 +1,162 @@
+- name: "SRV-087 {{ item }} Check File Exist"
+  stat:
+    path: "{{ item }}"
+  with_items: "{{ SRV_087_VAR }}"
+  register: check_file
+  tags: SRV-087
+
+- name: "SRV-087 {{ item.item }} File Permission 0750"
+  file:
+    path: "{{ item.item }}"
+    state:  file
+    mode: 0750
+  with_items: "{{ check_file.results }}"
+  when: item.stat.exists and item.stat.isdir == false and item.stat.islnk == false
+  tags: SRV-087
+
+- name: "SRV-091 {{ item.item }} Check File Exist"
+  stat:
+    path: "{{ item }}"
+  with_items: "{{ SRV_091_VAR }}"
+  register: check_file
+  tags: SRV-091
+
+- name: "SRV-091 {{ item.item }} File Remove Sticky Bit"
+  file:
+    path: "{{ item.item }}"
+    state:  file
+    mode: "-st"
+  with_items: "{{ check_file.results }}"
+  when: item.stat.exists and item.stat.isdir == false and item.stat.islnk == false
+  tags: SRV-091
+
+- name: "SRV-107 {{ item.item }} Check File Exist"
+  stat:
+    path: "{{ item }}"
+  with_items: "{{ SRV_107_VAR }}"
+  register: check_file
+  tags: SRV-107
+
+- name: "SRV-107 {{ item.item }} File Permission 0640"
+  file:
+    path: "{{ item.item }}"
+    state: file
+    mode: 0640
+  with_items: "{{ check_file.results }}"
+  when: item.stat.exists and item.stat.isdir == false and item.stat.islnk == false
+  tags: SRV-107
+
+- name: "SRV-107 {{ item.item }} Change Owner root"
+  file:
+    path: "{{ item.item }}"
+    state: file
+    owner: root
+  with_items: "{{ check_file.results }}"
+  when: item.stat.exists and item.stat.isdir == false and item.stat.islnk == false and item.stat.uid != '0'
+  tags: SRV-107
+
+- name: "SRV-131 {{ item.item }} Check File Exist"
+  stat:
+    path: "{{ item }}"
+  with_items: "{{ SRV_131_VAR }}"
+  register: check_file
+  tags: SRV-131
+
+- name: "SRV-131 {{ item.item }} Change File Group wheel"
+  file:
+    path: "{{ item.item }}"
+    state: file
+    group: wheel
+  with_items: "{{ check_file.results }}"
+  when: item.stat.exists and item.stat.isdir == false and item.stat.islnk == false and item.stat.gr_name != 'wheel'
+  tags: SRV-131
+
+- name: "SRV-131 {{ item.item }} Change Mode 4750"
+  file:
+    path: "{{ item.item }}"
+    state:  file
+    mode: o-rwx
+  with_items: "{{ check_file.results }}"
+  when: item.stat.exists and item.stat.isdir == false and item.stat.islnk == false and item.stat.mode >= '4750'
+  tags: SRV-131
+
+- name: "SRV-131 /etc/pam.d/su wheel group"
+  shell: grep "^auth" /etc/pam.d/su|grep required|grep "pam_wheel.so use_uid"
+  register: su_wheel
+  ignore_errors: yes
+  tags: SRV-131
+
+- name: "Add Cconfig pam.d wheel"
+  lineinfile:
+    path: /etc/pam.d/su
+    line: 'auth		required	pam_wheel.so use_uid'
+  when: su_wheel.stdout == ""
+  tags: SRV-131
+
+- name: "SRV-132 {{ item.item }} Check File Exist"
+  stat:
+    path: "{{ item }}"
+  with_items: "{{ SRV_132_VAR }}"
+  register: check_file
+  tags: SRV-132
+
+- name: "SRV-132 {{ item.item }} File Permission 0640"
+  file:
+    path: "{{ item.item }}"
+    state: file
+    mode: 0640
+  with_items: "{{ check_file.results }}"
+  when: item.stat.exists and item.stat.isdir == false and item.stat.islnk == false
+  tags: SRV-132
+
+- name: "SRV-132 {{ item.item }} Make File If Not Exist"
+  file:
+    path: "{{ item.item }}"
+    state: touch
+    owner: root
+    group: root
+    mode: 0640
+  with_items: "{{ check_file.results }}"
+  when: item.stat.exists == False
+  tags: SRV-132
+
+- name: "SRV-132 {{ item.item }} Change Owner root"
+  file:
+    path: "{{ item.item }}"
+    state: file
+    owner: root
+  with_items: "{{ check_file.results }}"
+  when: item.stat.exists and item.stat.isdir == false and item.stat.islnk == false and item.stat.uid != '0'
+  tags: SRV-132
+
+- name: "SRV-159  TIMEOUT Config Check"
+  shell: grep ^TIMEOUT=600 {{ item }}
+  register: timeout_conf
+  with_items: "{{ SRV_159_VAR }}"
+  ignore_errors: yes
+  tags: SRV-159
+
+- name: "SRV-159 Add Config TIMIOUT=280"
+  lineinfile:
+    path: "{{ item.item }}"
+    regexp: '^TIMEOUT=600'
+    line: 'TIMEOUT=280'
+  with_items: "{{ timeout_conf.results }}"
+  when: item.stdout is search("TIMEOUT=600")
+  tags: SRV-159
+
+- name: "SRV-163 Login Banner File Add"
+  copy:
+    src: motd
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: 644
+  tags: SRV-163
+
+- name: "SRV-163 SSHD Banner Add"
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#Banner'
+    line: 'Banner /etc/motd'
+  tags: SRV-163

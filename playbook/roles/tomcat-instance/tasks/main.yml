@@ -1,0 +1,151 @@
+---
+- name: make instance directory
+  file:
+    path: "/sw/tomcat/domains/{{ item }}"
+    state: directory
+    group: was
+    mode: 0750
+  with_items:
+    - "{{ instance_nm }}"
+    - "{{ instance_nm }}/bin"
+    - "{{ instance_nm }}/temp"
+    - "{{ instance_nm }}/work"
+
+- name: make log directory
+  file:
+    path: "/logs/tomcat/{{ item }}"
+    state: directory
+    owner: tomcat
+    group: was
+    mode: 0750
+  with_items:
+    - "{{ instance_nm }}"
+    - "{{ instance_nm }}/gclog"
+    - "{{ instance_nm }}/heapdump"
+
+- name: copy conf directory 
+  command: cp -r /sw/tomcat/conf /sw/tomcat/domains/{{ instance_nm }}/
+
+- name: copy webapps directory 
+  command: cp -r /sw/tomcat/webapps /sw/tomcat/domains/{{ instance_nm }}/
+
+- name: copy sh file
+  copy:
+    src: "{{ item }}"
+    dest: "/sw/tomcat/domains/{{ instance_nm }}/bin/"
+    mode: 0750
+  with_items:
+    - startup.sh
+    - shutdown.sh
+
+- name: copy setenv.sh file
+  template:
+    src: setenv.sh
+    dest: "/sw/tomcat/domains/{{ instance_nm }}/bin/"
+    mode: 0750
+
+- name: change instance directory group
+  file: 
+    path: "/sw/tomcat/domains/{{ instance_nm }}"
+    group: was
+    recurse: yes
+
+- name: change instance conf directory read permission
+  file:
+    path: "/sw/tomcat/domains/{{ instance_nm }}/conf"
+    mode: g+r
+    recurse: yes
+
+- name: change instance conf directory execute permission
+  file:
+    path: "/sw/tomcat/domains/{{ instance_nm }}/conf"
+    mode: g+x
+
+- name: change conf/context.xml
+  file:
+    path: "/sw/tomcat/domains/{{ instance_nm }}/conf/context.xml"
+    mode: go+r
+
+- name: change instance directory ownner
+  file:
+    path: "/sw/tomcat/domains/{{ instance_nm }}/{{ item }}"
+    owner: tomcat
+    recurse: yes
+  with_items:
+    - work
+    - temp
+
+- name: make apps directory
+  file: 
+    path: "{{ approot }}"
+    state: directory
+    group: was
+    owner: deploy
+    mode: 0750
+
+- name: remove context xml directory
+  file:
+    path: "/sw/tomcat/domains/{{ instance_nm }}/conf/Catalina/localhost"
+    state: absent 
+
+- name: make context xml directory
+  file:
+    path: "/sw/tomcat/domains/{{ instance_nm }}/conf/Catalina/localhost"
+    state: directory
+    group: was
+    mode: 0755
+    recurse: yes
+
+- name: configure ROOT docBase
+  template:
+    src: ROOT.xml
+    dest: "/sw/tomcat/domains/{{ instance_nm }}/conf/Catalina/localhost/"
+    group: was
+    mode: 0644
+  when: extra_context is not defined or (extra_context is defined and extra_context == '')
+   
+- name: configure context docBase
+  template:
+    src: context_path.xml
+    dest: "/sw/tomcat/domains/{{ instance_nm }}/conf/Catalina/localhost/{{ extra_context.split('/')[1] }}.xml"
+    group: was
+    mode: 0644
+  when: extra_context is defined and extra_context != '' 
+
+- name: configure logging.properties
+  template:
+    src: logging.properties
+    dest: "/sw/tomcat/domains/{{ instance_nm }}/conf/"
+
+- name: configure tomcat server.xml
+  template:
+    src: server.xml
+    dest: "/sw/tomcat/domains/{{ instance_nm }}/conf/"
+
+- name: Add to fix org.xml.sax.SAXNotRecognizedException with jdk1.8
+  lineinfile:
+    path: "/sw/tomcat/domains/{{ instance_nm }}/conf/catalina.properties"
+    state: present
+    line: "{{ item }}"
+  with_items:
+    - "###"
+    - "# Add below 4 lines to fix org.xml.sax.SAXNotRecognizedException with jdk1.8"
+    - "javax.xml.parsers.DocumentBuilderFactory=com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl"
+    - "javax.xml.transform.TransformerFactory=com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"
+    - "javax.xml.parsers.SAXParserFactory=com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl"
+    - "javax.xml.datatype.DatatypeFactory=com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl"
+
+- name: copy tomcat.service file
+  template:
+    src: tomcat.service
+    dest: "/lib/systemd/system/tomcat-{{ instance_nm }}.service"
+    mode: 0644
+
+- name: register service file to systemd
+  systemd: daemon_reload=yes
+
+- name: make sure the instance service is running
+  systemd: name=tomcat-{{ instance_nm }} state=restarted
+
+- name: enable service tomcat and ensure it
+  systemd: name=tomcat-{{ instance_nm }} enabled=yes

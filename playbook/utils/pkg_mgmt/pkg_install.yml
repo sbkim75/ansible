@@ -1,0 +1,13 @@
+---
+- hosts: [stg-linux]
+  remote_user: finadm
+  vars_prompt:
+    - name: "package"
+      prompt: "Enter the package-name"
+      private: no
+  tasks:
+  - name: Install {{ package }} Packages
+    yum:
+      name: "{{ package }}"
+      state: latest
+    become: True

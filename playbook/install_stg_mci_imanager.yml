@@ -1,0 +1,10 @@
+---
+- hosts: bsv-fq-mciap01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - mci_imanager
+
+

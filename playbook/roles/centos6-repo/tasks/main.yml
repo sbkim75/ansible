@@ -1,0 +1,36 @@
+  - name: CentOS 6 GPG Key Copy
+    copy:
+      src: RPM-GPG-KEY-CentOS-6
+      dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
+      owner: root
+      group: root
+      mode: 644
+    when:
+      - (ansible_distribution == "CentOS") or (ansible_distribution == "RedHat")
+      - ansible_distribution_major_version == "6"
+
+  - name: CentOS 6 repo config Copy
+    copy:
+      src: centos6.repo
+      dest: /etc/yum.repos.d/centos6.repo
+      owner: root
+      group: root
+      mode: 644
+    when:
+      - (ansible_distribution == "CentOS") or (ansible_distribution == "RedHat")
+      - ansible_distribution_major_version == "6"
+
+  - name: Repo Update
+    shell: yum repolist
+    when:
+      - (ansible_distribution == "CentOS") or (ansible_distribution == "RedHat")
+      - ansible_distribution_major_version == "6"
+
+
+  - name: GPG Key Import
+    shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY*
+    when:
+      - (ansible_distribution == "CentOS") or (ansible_distribution == "RedHat")
+      - ansible_distribution_major_version == "6"
+
+

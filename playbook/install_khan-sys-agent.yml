@@ -1,0 +1,11 @@
+---
+- hosts: all
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files:
+    - "roles/khan-sys-agent/group_vars/all"
+
+  roles:
+    - khan-sys-agent/install-agent

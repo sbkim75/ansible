@@ -1,0 +1,62 @@
+- name: add group "sol"
+  group: name=sol gid=1100 state=present
+
+- name: add user "mongod"
+  user: name=mongod group=sol uid=1107 state=present shell=/sbin/nologin
+
+- name : make log directory 
+  file:
+    path: /logs/mongodb
+    state: directory
+    group: sol
+    owner: mongod
+
+- name : make data directory
+  file:
+    path: /data1/mongodb
+    state: directory
+    group: sol
+    owner: mongod
+
+- name : make /var/run/mongodb directory
+  file:
+    path: /var/run/mongodb
+    state: directory
+    group: sol
+    owner: mongod
+    mode: 0755
+
+- name: Extract mongodb.tar from files
+  unarchive:
+    src: mongodb.tar
+    dest: /tmp
+
+- name : Install mongodb 
+  yum:
+    name: /tmp/{{ item }}
+    state: present
+  with_items:
+    - mongodb-org-3.6.3-1.el7.x86_64.rpm
+    - mongodb-org-mongos-3.6.3-1.el7.x86_64.rpm
+    - mongodb-org-server-3.6.3-1.el7.x86_64.rpm
+    - mongodb-org-shell-3.6.3-1.el7.x86_64.rpm
+    - mongodb-org-tools-3.6.3-1.el7.x86_64.rpm
+
+- name: Configure mongod.conf
+  template:
+    src: mongod.conf.j2
+    dest: /etc/mongod.conf
+
+- name: Configure mongod.service
+  template:
+    src: mongod.service.j2
+    dest: /usr/lib/systemd/system/mongod.service
+
+- name: register service file to systemd
+  systemd: daemon_reload=yes
+
+- name: enable service mongod and ensure it
+  systemd: name=mongod enabled=yes
+
+- name: make sure the mongod service is running
+  systemd: name=mongod state=restarted

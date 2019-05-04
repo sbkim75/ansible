@@ -1,0 +1,16 @@
+---
+- hosts: bsv-fq-eaiap01, bsv-fq-eaiap02
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars:
+    - CONNECTIONURL: 'jdbc:mariadb://172.27.123.16:4306/SEAIDB' #DBURL
+    - DB_USERNAME: '' # 해당 내용은 암호화 필요
+    - DB_PASSWORD: '' # 해당 내용은 암호화 필요
+    - ENV_INFO_DVCD: 'T' # DEV=D, STG=T, PRD=P
+
+  roles:
+    - cruzeai
+
+

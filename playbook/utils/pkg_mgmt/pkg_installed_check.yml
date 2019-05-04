@@ -1,0 +1,12 @@
+---
+- hosts: bsv-fq-wsmsv01,bsv-fq-masap01,bsv-fq-mssap01,bsv-fq-cbsap01,bsv-fq-fisap01,bsv-fq-chnap01,bsv-fq-fepap01,bsv-fq-fepap02,bsv-fq-fpsap01,bsv-fq-batap01,bsv-fq-mbwap01,bsv-fq-fdssv01
+  remote_user: finadm
+  vars:
+    package: java-1.8.0-openjdk
+  tasks:
+  - name: Package {{ package }} installed Check
+    shell: rpm -qa "{{ package }}"
+    register: pkg_check
+  - name: Print Package Installed
+    debug:
+      msg: '{{ pkg_check.stdout }}'

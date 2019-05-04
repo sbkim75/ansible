@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<!-- configuration file for LogBack (slf4J implementation) See here for more
+     	details: http://gordondickens.com/wordpress/2013/03/27/sawing-through-the-java-loggers/ -->
+<configuration scan="true" scanPeriod="30 seconds">
+	<property name="LOG_DIR" value="/logs/tomcat/{{ ansible_hostname }}/webform" />
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>[%d] [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="sformAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_DIR}/sform.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${LOG_DIR}/sform.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+
+			<!-- keep 30 days' worth of history -->
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>[%d] [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="eformAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_DIR}/eform.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${LOG_DIR}/eform.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+
+			<!-- keep 30 days' worth of history -->
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>[%d] [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+
+	<appender name="othersAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_DIR}/others.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${LOG_DIR}/others.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+
+			<!-- keep 30 days' worth of history -->
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>[%d] [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="com.mobileleader.common" level="info" additivity="false">
+		<appender-ref ref="sformAppender" />
+		<appender-ref ref="eformAppender" />
+		<appender-ref ref="console" />
+	</logger>
+
+	<logger name="com.mobileleader.sform" level="info" additivity="false">
+		<appender-ref ref="sformAppender" />
+		<appender-ref ref="console" />
+	</logger>
+
+	<logger name="com.mobileleader.eform" level="info" additivity="false">
+		<appender-ref ref="eformAppender" />
+		<appender-ref ref="console" />
+	</logger>
+
+	<root level="info">
+		<appender-ref ref="sformAppender" />
+		<appender-ref ref="eformAppender" />
+		<appender-ref ref="console" />
+	</root>
+</configuration>
+

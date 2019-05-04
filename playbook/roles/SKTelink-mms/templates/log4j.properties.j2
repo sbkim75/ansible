@@ -1,0 +1,7 @@
+log4j.rootLogger=INFO, DBAgent
+log4j.appender.DBAgent=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.DBAgent.ImmediateFlush=true
+log4j.appender.DBAgent.File=/logs/SKTelink/mms/DBAgent.log
+log4j.appender.DBAgent.DatePattern='.'yyyyMMdd
+log4j.appender.DBAgent.layout=org.apache.log4j.PatternLayout
+log4j.appender.DBAgent.layout.ConversionPattern=%d{HH:mm:ss} [%-5p] %m%n

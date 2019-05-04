@@ -1,0 +1,19 @@
+---
+- hosts: bdv-fq-fiaap01, bdv-fq-fiawb01, bsv-fq-eaiap01, bsv-fq-mciap01, bsv-fq-eaiap02, bsv-fq-mciap02
+  remote_user: finadm
+  tasks:
+  - name: "add ssh.key  > /home/finadm/.ssh/authorized_keys "
+    lineinfile:
+      dest: /home/finadm/.ssh/authorized_keys
+      state: present
+      line: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDb3G3CZA3f2KzWDwLzn10QYncf1fOj8Y0axi4hau/l2DPugl3NK+mgM2L2P3x9jug+D2O6UfcohH2M60NGCE+1WuZIA7+vJ8MeAID9pFtSoPkM/P/carFmBUcuq0/Rj3HUXo5X3DUotxWDrtQ9uAWRfpgEKb/2YI1xIo5rm/oEcXSAmzSl+QPtHDSUc6xB25QduA+bPEj+btU5+223IMUA+nsbn5LKtW+AR0sOJ4Zxtf6yRYG9sQxo+qlsfLzVr23O/aL7NZRzShGtZKjnjJS9zUjt6t3v5sDy8wAIYVPhjiSpYbV19DquRuRu/so1DI3kBMXXaxWGbPs79dioPqOV 11056@bpv-fq-anssv01
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsMd1sfpZgKFq1rFxt3dFbQZe9y7Wjz2WU645LSJ2yztpAP6Z/Nag3oeeP2XmLkCm9QlZoQBX3tZDTghDhXu5JR/yRZrcgH3tPNWYMLZP+yXfKxyCKaN7AcUygtIPiadtMrRB9aPFJt6jE0nnIG6WRRBnoQaX+URwZ0Tibjmbgd7IOmyfpwirHZxHanZ1u314b6Mjgxo7Uqi5i9eRd5Q61oio9nmZlMJaFkLDmYus2OQHp9rQgFZqq5T3KuKrTl6aG7A+AEhwYNoy8QP8pEy3/7XdQPqOYCqTACLum1bM20ZTvKY4b9hbP8b2X70H5m4/dlLGaXmjKiO9l0xlIbbG7 11070@bpv-fq-anssv01
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsa9K2eGmZSDWHeLLvL3ZoT6rPtPmflSHT/WUEvajwTuky9lLasiPp6IK7lmevGYnNpiBUL69kD6QloYoiXdVS0GkC0JLHzs3EpTrt0LoKAqgfWadEpJgqhz5THB6Zfr1VZx3U82ffwPXjbfugMXLGI9BfVhW5whjhelnWmKnEFJI5bdNkjEu34FYQZv7pI0PoxgdnkHDvdf3L23am/hX5Ht6nJ1QuBuAgb2qYNwP+EMb25zwN41Gk/uT6toIZByZitoFbBvLJ8buxG9rhlLwC4LyQOM86CMrra2M15Mifzd83Otc3RVCRr3980d3yXojsrCOluxoco/hn9PsrS6yF 90052@bpv-fq-anssv01
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6Zi7F3PVQKbsDQWm9n4ChLzT3vL13U6jumpQJnqBgGZgZkYKIOOU3Q2SH39ciJOWh2l7rEZ0jRv+SxJR2BJfsF0K3FfJVdZOvYA9+9AOgaQQ/+70nwwJXGkycFMqm5EHgZNwxQg6/6wBJgE7MeJCdsV/erhDGS0HZvHegP/9+BQJziVlTv6Bv1OBreAoC+jW8BTCmJQ2ogtTbsY/KIVdcufea6ZXGkhHH0iBJRna/z1FwqObH6WW+ClMWw8Ro+6/BO2yFFxRLjCnYH6LC7zFoQNYeQQB0YM0I/vq7FP5N4tCgXWkzo/ryhH7oKwEo1KDWXaPYMKg3bRgGS+sqHSzT 90213@bpv-fq-anssv01"
+    become: True
+  - name: check /home/finadm/.ssh/authorized_keys
+    shell: cat /home/finadm/.ssh/authorized_keys
+    become: true

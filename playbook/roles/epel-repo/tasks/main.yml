@@ -1,0 +1,58 @@
+  - name: EPEL 6 GPG Key Copy
+    copy:
+      src: RPM-GPG-KEY-EPEL-6
+      dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6
+      owner: root
+      group: root
+      mode: 644
+    when:
+      - (ansible_distribution == "CentOS") or (ansible_distribution == "RedHat")
+      - ansible_distribution_major_version == "6"
+
+  - name: EPEL 6 GPG Key Import
+    shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6
+    when:
+      - (ansible_distribution == "CentOS") or (ansible_distribution == "RedHat")
+      - ansible_distribution_major_version == "6"
+      
+  - name: EPEL 7 GPG Key Copy
+    copy:
+      src: RPM-GPG-KEY-EPEL-7
+      dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+      owner: root
+      group: root
+      mode: 644
+    when:
+      - (ansible_distribution == "CentOS") or (ansible_distribution == "RedHat")
+      - ansible_distribution_major_version == "7"
+      
+  - name: EPEL 7 GPG Key Import
+    shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+    when:
+      - (ansible_distribution == "CentOS") or (ansible_distribution == "RedHat")
+      - ansible_distribution_major_version == "7"
+
+  - name: RHEL 6 repo config Copy
+    copy:
+      src: epel6.repo
+      dest: /etc/yum.repos.d/epel.repo
+      owner: root
+      group: root
+      mode: 644
+    when:
+      - (ansible_distribution == "CentOS") or (ansible_distribution == "RedHat")
+      - ansible_distribution_major_version == "6"
+
+  - name: RHEL 7 repo config Copy
+    copy:
+      src: epel7.repo
+      dest: /etc/yum.repos.d/epel.repo
+      owner: root
+      group: root
+      mode: 644
+    when:
+      - (ansible_distribution == "CentOS") or (ansible_distribution == "RedHat")
+      - ansible_distribution_major_version == "7"
+
+  - name: Repo Update
+    shell: yum repolist

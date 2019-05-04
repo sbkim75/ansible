@@ -1,0 +1,9 @@
+---
+- hosts: all
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - account_create
+

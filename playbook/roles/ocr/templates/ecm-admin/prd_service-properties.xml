@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+        <comment>Service Properties</comment>
+        <entry key="user.auth.type">IDPW</entry>
+        <entry key="viewer.server.url"></entry>
+        <entry key="viewer.type"></entry>
+        <entry key="image.server.ip"></entry>
+        <entry key="image.server.port"></entry>
+        <entry key="was.type">tomcat</entry>
+        <entry key="jdbc.dataSourceType">POOLED</entry>
+        <entry key="jdbc.jndiName"></entry>
+        <entry key="jdbc.driverClassName">oracle.jdbc.driver.OracleDriver</entry>
+        <entry key="jdbc.url">jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=172.27.104.98)(PORT = 2755)))(CONNECT_DATA=(SERVICE_NAME=POCRDB)))</entry>
+        <entry key="jdbc.username">OCRCON</entry>
+        <entry key="jdbc.password">ocrcon#01</entry>
+</properties>
+

@@ -1,0 +1,110 @@
+---
+- name: Check "{{ WEB_INSTANCE_DIR }}" directory
+  stat: path={{ WEB_INSTANCE_DIR }}
+  register: file_status
+
+- name: Remove previous "{{ WEB_INSTANCE_DIR }}" directory
+  file:
+    path: "{{ WEB_INSTANCE_DIR }}"
+    state: absent
+  when: file_status.stat.exists == true 
+
+- name: Make "{{ WEB_INSTANCE_DIR }}" directory
+  file:
+    path: "{{ WEB_INSTANCE_DIR }}"
+    state: directory
+    owner: "{{ INSTALL_OWNER }}"
+    group: "{{ INSTALL_GROUP }}"
+    mode: 0750
+
+- name: Make directory
+  file:
+    path: "{{ WEB_INSTANCE_DIR }}/{{ item }}"
+    state: directory
+    owner: "{{ INSTALL_OWNER }}"
+    group: "{{ INSTALL_GROUP }}"
+    mode: 0750
+  with_items:
+    - cache
+    - run
+    - var
+
+- name: Make "{{ WEB_DOCROOT_DIR }}" directory
+  file:
+    path: "{{ WEB_DOCROOT_DIR }}"
+    state: directory
+    owner: deploy
+    group: was
+    mode: 0755
+
+- name: Make "{{ WEB_LOG_DIR }}" directory
+  file:
+    path: "{{ WEB_LOG_DIR }}"
+    state: directory
+    owner: "{{ INSTALL_OWNER }}"
+    group: "{{ INSTALL_GROUP }}"
+    mode: 0750
+
+- name: Make logs symbolic link
+  file:
+    src: "{{ WEB_LOG_DIR }}"
+    dest: "{{ WEB_INSTANCE_DIR }}/logs"
+    state: link
+    owner: "{{ INSTALL_OWNER }}"
+    group: "{{ INSTALL_GROUP }}"
+
+- name: Make config directories
+  file:
+    path: "{{ WEB_INSTANCE_DIR }}/{{ item }}"
+    state: directory
+    owner: "{{ INSTALL_OWNER }}"
+    group: "{{ INSTALL_GROUP }}"
+    mode: 0700
+  with_items:
+    - conf
+    - conf.d
+    - conf.modules.d
+
+- name: Copy config file
+  copy:
+    src: "{{ item }}/"
+    dest: "{{ WEB_INSTANCE_DIR }}/{{ item }}/"
+    owner: "{{ INSTALL_OWNER }}"
+    group: "{{ INSTALL_GROUP }}"
+    mode: 0600
+  with_items:
+    - conf
+    - conf.d
+    - conf.modules.d
+
+- name: Copy apachectl template
+  template:
+    src: apachectl
+    dest: "{{ WEB_INSTANCE_DIR }}/"
+    owner: "{{ INSTALL_OWNER }}"
+    group: "{{ INSTALL_GROUP }}"
+    mode: 0700
+
+- name: Copy conf/httpd.conf template 
+  template:
+    src: conf/httpd.conf
+    dest: "{{ WEB_INSTANCE_DIR }}/conf/httpd.conf"
+    owner: "{{ INSTALL_OWNER }}"
+    group: "{{ INSTALL_GROUP }}"
+    mode: 0600
+
+# systemd 등록
+- name: Copy "httpd-{{ WEB_INSTANCE_NAME }}.service" file
+  template:
+    src: httpd.service
+    dest: "/lib/systemd/system/httpd-{{ WEB_INSTANCE_NAME }}.service"
+    mode: 0644
+
+- name: Register service file to systemd
+  systemd: daemon_reload=yes
+
+- name: Enable service httpd and ensure it
+  systemd: name=httpd-{{ WEB_INSTANCE_NAME }}.service enabled=yes
+
+- name: Make sure the httpd service is running
+  systemd: name=httpd-{{ WEB_INSTANCE_NAME }}.service state=restarted

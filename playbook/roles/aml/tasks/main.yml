@@ -1,0 +1,165 @@
+---
+- name: stop tomcat
+  systemd: name=tomcat state=stopped
+
+- name: add user "amladm"
+  user: name=amladm group=was uid=709 state=present shell=/bin/bash home=/home/amladm createhome=yes
+
+- name: make /sw/aml/webapps /sw/aml/batch directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    group: was
+    owner: tomcat
+  with_items:
+    - /sw/aml/webapps
+    - /sw/aml/batch
+
+- name: copy EMPLOYEE.xlsx
+  copy:
+    src: sw/aml/file/EMPLOYEE.xlsx
+    dest: /sw/aml/file/
+    group: was
+    owner: tomcat
+    mode: 0644
+
+- name: copy INNER.xlsx
+  copy:
+    src: sw/aml/file/INNER.xlsx
+    dest: /sw/aml/file/
+    group: was
+    owner: tomcat
+    mode: 0644
+
+- name: "AS-IS webapps안 파일 삭제"
+  shell: /bin/rm -rf /sw/aml/webapps/*
+
+- name: "AS-IS batch Diectory안 파일 삭제"
+  shell: /bin/rm -rf /sw/aml/batch/*
+
+- name: copy STG_aml tarball
+  copy:
+    src: sw/aml/webapps/PRISM_AML_RBA_S_aml.tar
+    dest: /sw/aml/webapps
+    group: was
+    owner: tomcat
+    mode: 0644
+  when:
+    - ansible_hostname | search("^bs")
+
+- name: copy PRD_aml01 tarball
+  copy:
+    src: sw/aml/webapps/PRISM_AML_RBA_P_aml01.tar
+    dest: /sw/aml/webapps
+    group: was
+    owner: tomcat
+    mode: 0644
+  when:
+    - ansible_hostname | search("^bpv-fq-amlsv01")
+
+- name: copy PRD_aml02 tarball
+  copy:
+    src: sw/aml/webapps/PRISM_AML_RBA_P_aml02.tar
+    dest: /sw/aml/webapps
+    group: was
+    owner: tomcat
+    mode: 0644
+  when:
+    - ansible_hostname | search("^bpv-fq-amlsv02")
+
+- name: copy STG_batch tarball
+  copy:
+    src: sw/aml/batch/WLF_batch_S.tar
+    dest: /sw/aml/batch
+    group: was
+    owner: tomcat
+    mode: 0644
+  when:
+    - ansible_hostname | search("^bs")
+
+- name: copy PRD_batch tarball
+  copy:
+    src: sw/aml/batch/WLF_batch_P.tar
+    dest: /sw/aml/batch
+    group: was
+    owner: tomcat
+    mode: 0644
+  when:
+    - ansible_hostname | search("^bp")
+
+- name: extract STG_aml tarball
+  unarchive:
+    src: /sw/aml/webapps/PRISM_AML_RBA_S_aml.tar
+    dest: /sw/aml/webapps
+    keep_newer: yes
+    remote_src: yes
+    group: was
+    owner: tomcat
+  when:
+    - ansible_hostname | search("^bs")
+
+- name: extract PRD_aml01 tarball
+  unarchive:
+    src: /sw/aml/webapps/PRISM_AML_RBA_P_aml01.tar
+    dest: /sw/aml/webapps
+    keep_newer: yes
+    remote_src: yes
+    group: was
+    owner: tomcat
+  when:
+    - ansible_hostname | search("^bpv-fq-amlsv01")
+
+- name: extract PRD_aml02 tarball
+  unarchive:
+    src: /sw/aml/webapps/PRISM_AML_RBA_P_aml02.tar
+    dest: /sw/aml/webapps
+    keep_newer: yes
+    remote_src: yes
+    group: was
+    owner: tomcat
+  when:
+    - ansible_hostname | search("^bpv-fq-amlsv02")
+
+- name: extract STG_batch tarball
+  unarchive:
+    src: /sw/aml/batch/WLF_batch_S.tar
+    dest: /sw/aml/batch
+    keep_newer: yes
+    remote_src: yes
+    group: was
+    owner: tomcat
+  notify: restart tomcat
+  when:
+    - ansible_hostname | search("^bs")
+
+- name: extract PRD_batch tarball
+  unarchive:
+    src: /sw/aml/batch/WLF_batch_P.tar
+    dest: /sw/aml/batch
+    keep_newer: yes
+    remote_src: yes
+    group: was
+    owner: tomcat
+  notify: restart tomcat
+  when:
+    - ansible_hostname | search("^bp")
+
+#2018.10.16 server.xml은 배포 시 수정대상 제외
+#- name: STG configure tomcat server
+#  template: src=stg_server.xml dest=/sw/tomcat/conf/server.xml owner=root group=was
+#  notify: restart tomcat
+#  when:
+#    - ansible_hostname | search("^bs")
+
+#- name: PRD configure tomcat server
+#  template: src=prd_aml01_server.xml dest=/sw/tomcat/conf/server.xml owner=root group=was
+#  notify: restart tomcat
+#  when:
+#    - ansible_hostname | search("^bpv-fq-amlsv01")
+
+#- name: PRD configure tomcat server
+#  template: src=prd_aml02_server.xml dest=/sw/tomcat/conf/server.xml owner=root group=was
+#  notify: restart tomcat
+#  when:
+#    - ansible_hostname | search("^bpv-fq-amlsv02")
+

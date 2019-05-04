@@ -1,0 +1,41 @@
+---
+- hosts: all
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+  vars:
+    SRV_087_VAR:
+      - "/usr/bin/cc"
+      - "/usr/bin/gcc"
+      - "/usr/ucb/cc"
+      - "/usr/ccs/bin/cc"
+    SRV_091_VAR:
+      - "/sbin/dump"
+      - "/usr/bin/lpq-lpd"
+      - "/usr/bin/newgrp"
+      - "/sbin/restore"
+      - "/usr/bin/lpr"
+      - "/usr/sbin/lpc"
+      - "/sbin/unix_chkpwd"
+      - "/usr/bin/lpr-lpd"
+      - "/usr/sbin/lpc-lpd"
+      - "/usr/bin/at"
+      - "/usr/bin/lprm"
+      - "/usr/sbin/traceroute"
+      - "/usr/bin/lpq"
+      - "/usr/bin/lprm-lpddo"
+    SRV_107_VAR:
+      - "/etc/at.allow"
+      - "/etc/at.deny"
+    SRV_131_VAR:
+      - "/bin/su"
+    SRV_132_VAR:
+      - "/etc/cron.allow"
+      - "/etc/cron.deny"
+    SRV_159_VAR:
+      - "/etc/profile"
+      - "/etc/bashrc"
+
+
+  roles:
+    - security_measure

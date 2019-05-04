@@ -1,0 +1,15 @@
+---
+- hosts: bdv-fq-fiawb01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files: 
+    - inventories/dev/host_vars/bdv-fq-fiawb01.yml
+
+  roles:
+    - netbackup-agent
+    - zabbix 
+    - ipa-client
+    - fusioninventory-agent
+

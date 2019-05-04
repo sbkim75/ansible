@@ -1,0 +1,9 @@
+---
+- hosts: bdv-fq-amlsv01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - petra-tobe
+

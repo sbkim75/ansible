@@ -1,0 +1,16 @@
+# Systemd unit file for SKTelink mms
+[Unit]
+Description=SKTelink mms
+Wants=network.target network-online.target sockets.target
+After=network.target network-online.target sockets.target
+
+[Service]
+Type=forking
+#PIDFile=/sw/SKTelink/sms/lib/unix/smsClient.pid
+User=smsadm
+Group=sol
+ExecStart=/sw/SKTelink/mms/bin/start_dbagent.sh
+ExecStop=/sw/SKTelink/mms/bin/stop_dbagent.sh
+
+[Install]
+WantedBy=multi-user.target

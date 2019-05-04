@@ -1,0 +1,107 @@
+---
+- name: install packages
+  yum:
+    name:
+      - apr.x86_64
+      - apr-util.x86_64
+      - apr-util-ldap.x86_64
+      - libaio.x86_64
+      - libaio-devel.x86_64
+      - openssl.x86_64
+      - openssl-libs.x86_64
+      - zlib.x86_64
+      - zlib-devel.x86_64
+      - xmlsec1-openssl.x86_64
+  state: present
+
+- name: Check group
+  shell: grep was /etc/group | wc -l
+  register: group_status
+
+#- debug: var=group_status
+- name: Add group was if not exist
+  group: name=was state=present
+  when: group_status.stdout == "0"
+
+- name: Check user
+  shell: grep "jboss" /etc/passwd | wc -l
+  register: user_status
+
+#- debug: var=user_status
+- name: Add user jboss if not exist
+  user: name=jboss uid=701 group=was state=present shell=/bin/bash home=/home/jboss createhome=yes
+  when: user_status.stdout == "0"
+
+- name: Change owner home directory
+  file:
+    path: /home/jboss
+    owner: jboss
+    group: was 
+  when: user_status.stdout == "0"
+
+- name: Check install directory
+  stat: path=/sw/jboss
+  register: file_status
+
+#- debug: var=file_status
+- name: Make install directory if not exist
+  file:
+    path: /sw/jboss
+    state: directory
+    owner: jboss
+    group: was
+    mode: 0750
+  when: file_status.stat.exists == false
+
+- name: Unzip jboss-eap-6.4.0 and native module
+  unarchive:
+    src: "{{ item }}"
+    dest: /sw/jboss/
+    owner: jboss
+    group: was
+  with_items:
+    - jboss-eap-6.4.0.zip
+    - jboss-eap-native-6.4.0-RHEL7-x86_64.zip
+    - jboss-eap-native-utils-6.4.0-RHEL7-x86_64.zip
+
+- name: copy layers.conf
+  copy:
+    src: layers.conf
+    dest: /sw/jboss/jboss-eap-6.4/modules/
+    owner: jboss
+    group: was
+    mode: 0640
+
+- name: Check ext directory
+  stat: path=/sw/jboss/jboss-eap-6.4/modules/system/layers/ext
+  register: file_status
+
+#- debug: var=file_status
+- name: Make ext directory if not exist
+  file:
+    path: /sw/jboss/jboss-eap-6.4/modules/system/layers/ext
+    state: directory
+    owner: jboss
+    group: was
+    mode: 0750
+  when: file_status.stat.exists == false
+  
+- name: Unzip extra modules
+  unarchive:
+    src: modules.tar.gz
+    dest: /sw/jboss/jboss-eap-6.4/modules/system/layers/ext/
+    owner: jboss
+    group: was
+
+- name: copy user limits file
+  copy:
+    src: 55-jboss.conf
+    dest: /etc/security/limits.d/
+    mode: 0644
+
+# 디렉토리 및 파일의 Other 퍼미션 제거
+- name: change directory permission
+  command: find /sw/jboss/jboss-eap-6.4 -type d -exec chmod 0750 {} \;
+
+- name: change file permission
+  command: find /sw/jboss/jboss-eap-6.4 -type f -exec chmod o-rwx {} \;

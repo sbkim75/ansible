@@ -1,0 +1,12 @@
+---
+- hosts: all
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files:
+    - "roles/khan-was-agent/group_vars/all"
+
+  roles:
+    - { role: khan-was-agent/install-agent }
+    - { role: khan-was-agent/set-config }

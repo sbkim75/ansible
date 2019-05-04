@@ -1,0 +1,119 @@
+---
+- name: Add group "was"
+  group: name=was gid=700 state=present
+
+- name: Add user "khansys"
+  user: name=khansys group=was uid=710 state=present shell=/sbin/nologin
+
+- name: Make install directory
+  file:
+    path: /sw/khan/khan-agent
+    state: directory
+    group: was
+    owner: khansys
+    mode: 0750
+    recurse: yes
+
+- name: Make log directory
+  file:
+    path: /logs/khan-sys-agent
+    state: directory
+    group: was
+    owner: khansys
+    mode: 0750
+    recurse: yes
+
+- name: Unzip file into khan-agent directory
+  unarchive:
+    src: roles/khan-sys-agent/agent-files/files/khan-sys-agent-5.1.0.zip
+    dest: /sw/khan/khan-agent
+    owner: khansys
+    group: was
+
+- name: Remove logs directory 
+  file:
+    path: /sw/khan/khan-agent/khan-sys-agent/logs
+    state: absent
+
+- name: Make logs symbolic link
+  file:
+    src: /logs/khan-sys-agent
+    dest: /sw/khan/khan-agent/khan-sys-agent/logs
+    state: link
+    owner: khansys
+    group: was
+
+- name: Set Khan DEV server IP if target is DEV
+  lineinfile:
+    dest: /sw/khan/khan-agent/khan-sys-agent/conf/khan-sys-agent.conf
+    state: present
+    regexp: "^khan.host="
+    line: "khan.host={{ dev_khan_host }}"
+  when: ansible_hostname is search("^bdv")
+
+- name: Set Khan STG server IP if target is STG
+  lineinfile:
+    dest: /sw/khan/khan-agent/khan-sys-agent/conf/khan-sys-agent.conf
+    state: present
+    regexp: "^khan.host="
+    line: "khan.host={{ stg_khan_host }}"
+  when: ansible_hostname is search("^bsv")
+
+- name: Set Khan PRD server IP if target is PRD
+  lineinfile:
+    dest: /sw/khan/khan-agent/khan-sys-agent/conf/khan-sys-agent.conf
+    state: present
+    regexp: "^khan.host="
+    line: "khan.host={{ prd_khan_host }}"
+  when: ansible_hostname is search("^bpv")
+
+- name: Set Khan server port 
+  lineinfile:
+    dest: /sw/khan/khan-agent/khan-sys-agent/conf/khan-sys-agent.conf
+    state: present
+    regexp: "^khan.port="
+    line: "khan.port={{ khan_port }}"
+
+- name: Set Khan agent IP
+  lineinfile:
+    dest: /sw/khan/khan-agent/khan-sys-agent/conf/khan-sys-agent.conf
+    state: present
+    regexp: "^#khan.agent.ip="
+    line: "khan.agent.ip={{ ansible_eth0.ipv4.address }}"
+
+- name: comment network
+  lineinfile:
+    dest: /sw/khan/khan-agent/khan-sys-agent/conf/khan-sys-agent.conf
+    state: present
+    regexp: "^khan.network.interfaces="
+    line: "#khan.network.interfaces=eth0,eth1"
+
+- name: comment disk
+  lineinfile:
+    dest: /sw/khan/khan-agent/khan-sys-agent/conf/khan-sys-agent.conf
+    state: present
+    regexp: "^khan.disk.mounts="
+    line: "#khan.disk.mounts=/,/home"
+
+# 디렉토리 및 파일의 Other 퍼미션 제거
+- name: change directory permission
+  command: find /sw/khan/khan-agent -type d -exec chmod 0750 {} \;
+
+- name: change file permission
+  command: find /sw/khan/khan-agent -type f -exec chmod o-rwx {} \;
+
+# systemd 등록
+- name: copy khan-sys-agent.service file
+  copy:
+    src: roles/khan-sys-agent/agent-files/files/khan-sys-agent.service
+    dest: /lib/systemd/system/khan-sys-agent.service
+    mode: 0644
+
+- name: register service file to systemd
+  systemd: daemon_reload=yes
+
+- name: enable service khan-sys-agent and ensure it
+  systemd: name=khan-sys-agent enabled=yes
+
+- name: make sure the khan-sys-agent service is running
+  systemd: name=khan-sys-agent state=started

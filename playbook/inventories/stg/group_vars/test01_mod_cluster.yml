@@ -1,0 +1,22 @@
+---
+# file: inventories/dev/group_vars/test01_mod_cluster.yml
+
+# DMZ/Internal WEB 연동 설정
+onModcluster: False         # DMZ WEB 연동여부
+onModJk: True             # Internal WEB 연동여부
+
+# server.xml
+proxyList: 172.27.123.101:6166
+balancer: balancer_stst
+loadBalancingGroup: G_stst
+
+# setmodenv.sh
+httpd_main_hosts: '"172.27.123.101:443"'   # useModcluster가 True 이면
+httpd_hosts: '"172.27.123.101:8082"'       # useModJk가 True 이면
+lb_worker: stst
+ajp_port: 8009
+http_port: 8080
+context_name: /health_check.html
+
+# # KHAN WAS Agent 설정. True 시 WAS Agent 설정이 포함된 startup.sh copy
+onKHANagent: False

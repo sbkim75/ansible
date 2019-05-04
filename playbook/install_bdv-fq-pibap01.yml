@@ -1,0 +1,18 @@
+---
+- hosts: bdv-fq-pibap01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files: 
+    - inventories/dev/host_vars/bdv-fq-pibap01.yml
+    - inventories/dev/group_vars/pibap_mod_cluster.yml
+    - roles/jboss-ews/role-vars/common.var
+
+  vars:
+    # bind IP address, default : eth0 IP
+    - BIND_ADDR:
+    
+  roles:
+    - tomcat
+    - mod_cluster_jk_2.0

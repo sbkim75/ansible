@@ -1,0 +1,22 @@
+- name: copy collector-sidecar-0.1.5-1.x86_64.rpm
+  copy:
+    src: collector-sidecar-0.1.5-1.x86_64.rpm
+    dest: /tmp
+
+- name : Install collector-sidecar
+  yum:
+    name: /tmp/{{ item }}
+    state: present
+  with_items:
+    - collector-sidecar-0.1.5-1.x86_64.rpm
+
+- name: Configure collector_sidecar.yml
+  template:
+    src: collector_sidecar.yml.j2
+    dest: /etc/graylog/collector-sidecar/collector_sidecar.yml
+
+- name: Activate Service
+  shell: graylog-collector-sidecar -service install
+
+- name: Service Start
+  service: name=collector-sidecar state=started

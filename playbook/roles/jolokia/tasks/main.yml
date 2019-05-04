@@ -1,0 +1,37 @@
+---
+- name: copy jolokia tarball
+  copy: src=jolokia-1.2.0.war.tar.gz dest=/tmp mode=0644
+
+- name: Make jolokia-1.2.0.war directory
+  file:
+    path: /apps/jolokia-1.2.0.war
+    state: directory
+    owner: deploy
+    group: was
+
+- name: extract jolokia tarball
+  unarchive:
+    src: /tmp/jolokia-1.2.0.war.tar.gz
+    dest: /apps/jolokia-1.2.0.war
+    owner: deploy
+    group: was
+    extra_opts: [--strip-components=1]
+    keep_newer: yes
+    remote_src: yes
+
+- name: change jolokia directory permission
+  file:
+    path: /apps/jolokia-1.2.0.war
+    mode: o-rwx
+    recurse: yes
+
+- name: copy context xml file
+  copy: src=jolokia.xml dest=/sw/tomcat/conf/Catalina/localhost/ group=was mode=0640
+
+- name: Remove jolokia tarball
+  file:
+    path: /tmp/jolokia-1.2.0.war.tar.gz
+    state: absent
+
+- name: Restart tomcat
+  systemd: name=tomcat state=restarted

@@ -1,0 +1,23 @@
+---
+- hosts: bpp-fq-log01
+  remote_user: finadm
+
+  tasks:
+
+  - name: Find File older than 6 month
+    find:
+      paths: /backup/logpresso/table
+      recurse: yes
+      age: 26w
+    register: files_to_delete
+
+  - name: File to Delete list
+    debug:
+      msg: "{{ files_to_delete.files }}"
+    with_items: "{{ files_to_delete.files }}"
+
+  - name: Delete File
+    file:
+      path: "{{ item.path }}"
+      state: absent
+    with_items: "{{ files_to_delete.files }}"

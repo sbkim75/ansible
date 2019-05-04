@@ -1,0 +1,14 @@
+---
+- hosts: bpv-fq-jh01, bsv-fq-jh01, bsv-fq-mssdb01, bdv-fq-masap01, bdv-fq-fisdb01
+  vars_prompt:
+    - name: "developer_name"
+      prompt: "Enter the developer's number(username)"
+      private: no
+  tasks:
+    - name: 
+      debug:
+#        msg: "{{ ansible_hostname | search('^bs') and ansible_hostname | search('db0') == 1 }}"
+        msg: ok
+      when:
+#        -  ansible_hostname | search("^bs") and ansible_hostname | search("db0") == 1 or ansible_hostname | search("^bd") and ansible_hostname | search("db0") == 1
+        -  ansible_hostname | search("^bs") and ansible_hostname | search("db0") == 0 or ansible_hostname | search("^bd") and ansible_hostname | search("db0") == 0

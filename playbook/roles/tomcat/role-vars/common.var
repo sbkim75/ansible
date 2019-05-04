@@ -1,0 +1,9 @@
+# mode_cluster: setmodenv.sh
+worker: "{{ instance_id }}"
+
+# JAVA_OPTS
+java_opts: "$JAVA_OPTS -Djsse.enableSNIExtension=false -Dinstance.id={{ instance_id }} -Denv={{ spring_profiles }} -Dspring.profiles.active={{ spring_profiles }}"
+#java_opts:  "$JAVA_OPTS -Djsse.enableSNIExtension=false -Dinstance.id={{ instance_id }} -Djava.library.path=/sw/tomcat/shared/lib -Denv=stg -Dlogback.configurationFile=logger/stg-logback.xml"
+
+# UMASK
+umask_value: "0022"

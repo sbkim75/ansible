@@ -1,0 +1,18 @@
+---
+- name: Make install directory if not exist
+  file:
+    path: /sw/jboss/script
+    state: directory
+    owner: jboss
+    group: was
+
+- name: copy sh
+  copy:
+    src: "{{ item }}"
+    dest: "/sw/jboss/script/{{ item }}"
+    owner: jboss
+    group: was
+    mode: 0740
+  with_items:
+    - jboss_app_backup.sh
+    - jboss_app_restore.sh

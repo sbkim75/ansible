@@ -1,0 +1,37 @@
+# Systemd unit file for tomcat
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=syslog.target network.target
+
+[Service]
+Type=forking
+
+Environment=JAVA_HOME=/usr/lib/jvm/jre
+Environment=CATALINA_PID=/sw/tomcat/domains/{{ instance_nm }}/temp/tomcat.pid
+Environment=CATALINA_HOME=/sw/tomcat
+Environment=CATALINA_BASE=/sw/tomcat/domains/{{ instance_nm }}
+Environment=TOMCAT_LOG_DIR=/logs/tomcat/{{ instance_nm }}
+Environment='CATALINA_OPTS=-Xms2048M -Xmx2048M -server -XX:MaxMetaspaceSize=512m -XX:+UseG1GC -XX:G1ReservePercent=20 -XX:+DisableExplicitGC -XX:+UseStringDeduplication -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Xloggc:$TOMCAT_LOG_DIR/gclog/gc.log -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$TOMCAT_LOG_DIR/heapdump'
+Environment='JAVA_OPTS=-Djava.awt.headless=true -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/./urandom'
+
+ExecStart=/sw/tomcat/domains/{{ instance_nm }}/bin/startup.sh
+ExecStop=/sw/tomcat/domains/{{ instance_nm }}/bin/shutdown.sh 30
+
+User=tomcat
+Group=was
+UMask=0007
+
+# set restart options
+Restart=on-failure
+RestartSec=60
+StartLimitInterval=10m
+StartLimitBurst=2
+
+# set ulimits on service with systemd
+LimitNOFILE=65536
+LimitNPROC=16384
+LimitMEMLOCK=infinity
+
+[Install]
+WantedBy=multi-user.target
+

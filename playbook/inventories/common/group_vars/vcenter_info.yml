@@ -1,0 +1,8 @@
+---
+
+# VCenter variables
+vcenter_username: administrator@finnq.com
+validate_certs: false
+vcenter_host: vcenter.finnq.com
+datacenter: FINNQ
+

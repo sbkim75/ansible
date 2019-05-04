@@ -1,0 +1,7 @@
+---
+- hosts: bsv-fq-pibdb01
+  remote_user: finadm
+  tasks:
+  - name: service sssd.service restart
+    systemd: name=sssd.service state=restarted
+    become: true

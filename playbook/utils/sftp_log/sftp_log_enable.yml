@@ -1,0 +1,36 @@
+---
+- hosts: all
+  remote_user: finadm
+  tasks: 
+  - name: /etc/ssh/sshd_config Add sftp log
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^Subsystem'
+      line: "Subsystem       sftp    /usr/libexec/openssh/sftp-server -f local2 -l INFO"
+    become: True
+  - name: /etc/rsyslog.conf Add sftp log Comment
+    lineinfile:
+      path: /etc/rsyslog.conf
+      line: '# SFTP log'
+    become: True
+  - name: /etc/rsyslog.conf Add sftp log
+    lineinfile:
+      path: /etc/rsyslog.conf
+      line: 'local2.*                                                /var/log/sftp.log'
+    become: True
+  - name: sshd servcie restart
+    service:
+      name: sshd
+      state: restarted
+    become: True
+  - name: /etc/logrotate.d/syslog Add sftp log
+    lineinfile:
+      path: /etc/logrotate.d/syslog
+      line: '/var/log/sftp.log'
+      insertbefore: BOF
+    become: True
+  - name:  rsyslog servcie restart
+    service:
+      name: rsyslog
+      state: restarted
+    become: True

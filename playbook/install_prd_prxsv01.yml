@@ -1,0 +1,12 @@
+---
+- hosts: bpv-fq-prxsv01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - zabbix
+    - ipa-client
+    - web-proxy
+    - netbackup-agent
+    

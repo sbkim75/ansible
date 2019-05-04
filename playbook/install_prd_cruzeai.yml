@@ -1,0 +1,20 @@
+---
+- hosts: bpv-fq-eaiap02, bpv-fq-eaiap03, bpv-fq-eaiap04
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars:
+    - CONNECTIONURL: 'jdbc:mariadb://172.27.104.44:4540/PEAIDB' #DBURL
+    - DB_USERNAME: '' # 해당 내용은 암호화 필요
+    - DB_PASSWORD: '!' # 해당 내용은 암호화 필요
+    - ENV_INFO_DVCD: 'P' # DEV=D, STG=T, PRD=P
+
+  roles:
+    - netbackup-agent
+    - zabbix
+    - jdk1.7
+    - ipa-client
+    - fusioninventory-agent
+    - cruzeai
+    - nexcore-scheduler-agent

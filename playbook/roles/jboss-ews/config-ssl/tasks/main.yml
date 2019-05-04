@@ -1,0 +1,41 @@
+---
+- name: Check SSL Cert directory
+  stat: path={{ SSL_CERT_HOME }}
+  register: file_status
+
+- name: Make SSL Cert directory if not exist
+  file:
+    path: "{{ SSL_CERT_HOME }}"
+    state: directory
+    owner: "{{ INSTALL_OWNER }}"
+    group: "{{ INSTALL_GROUP }}"
+    mode: 0755
+    recurse: yes
+  when: file_status.stat.exists == false
+  
+- name: Copy SSL Cert files
+  copy:
+    src: certs/finnq.com/ 
+    dest: "{{ SSL_CERT_HOME }}/"
+    owner: "{{ INSTALL_OWNER }}"
+    group: "{{ INSTALL_GROUP }}"
+    mode: go+r
+
+- name: Copy SSL password file
+  copy:
+    src: certs/finnq.com/ssl_echo.sh
+    dest: "{{ SSL_CERT_HOME }}/ssl_echo.sh"
+    owner: "{{ INSTALL_OWNER }}"
+    group: "{{ INSTALL_GROUP }}"
+    mode: 0755
+
+- name: Copy ssl.conf template files
+  template:
+    src: conf.d/ssl.conf
+    dest: "{{ WEB_INSTANCE_DIR }}/conf.d/ssl.conf"
+    owner: "{{ INSTALL_OWNER }}"
+    group: "{{ INSTALL_GROUP }}"
+    mode: 0600
+
+- name: restart httpd-{{ WEB_INSTANCE_NAME }}
+  systemd: name=httpd-{{ WEB_INSTANCE_NAME }} state=restarted

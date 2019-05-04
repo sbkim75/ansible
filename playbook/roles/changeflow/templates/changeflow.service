@@ -1,0 +1,20 @@
+# Systemd unit file for khansysagent
+[Unit]
+Description=changeflow agent
+After=network-online.target
+
+[Service]
+Type=forking
+PIDFile={{ log_dir }}/Agent.pid
+
+Environment=USER={{ install_user }}
+
+ExecStart={{ install_dir }}/CFAgent/agent/agentStart.sh
+ExecStop={{ install_dir }}/CFAgent/agent/agentStop.sh
+
+User={{ install_user }}
+Group=was
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

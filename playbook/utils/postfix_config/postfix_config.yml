@@ -1,0 +1,10 @@
+---
+- hosts: [prd-linux]
+  remote_user: finadm
+  tasks: 
+  - name: "/etc/postfix/main.cf update config"
+    lineinfile:
+      path: /etc/postfix/main.cf
+      regexp: '^inet_interfaces = localhost'
+      line: 'inet_interfaces = all'
+    become: True

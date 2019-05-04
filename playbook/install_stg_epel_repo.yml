@@ -1,0 +1,8 @@
+---
+- hosts: bsv-fq-masap01 
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - epel-repo 

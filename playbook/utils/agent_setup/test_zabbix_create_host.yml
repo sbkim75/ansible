@@ -1,0 +1,82 @@
+- hosts: localhost
+  connection: local
+  tasks:
+
+# Zabbix에 vm host 추가
+  - name: Create a new host
+    local_action: 
+      module: zabbix_host
+      server_url: http://172.27.105.206/zabbix/
+      login_user: admin
+      login_password: "{{ ipa_pass }}"
+      host_name: "{{ vm_hostname }}"
+      visible_name: "{{ vm_hostname }}"
+      host_groups:
+        - DEV
+      link_templates:
+        - Template OS Linux
+      status: enabled
+      state: present
+      inventory_mode: automatic
+      interfaces:
+      - type: 1 ## 1- agent, 2-SNMP, 3-IPMI, 4 - JMX ##
+        main: 1 ## set as default 1-default, 0- not default ##
+        useip: 1 ## 0- connect using dns, 1- ip ##
+        ip: "{{ hostvars[vm_hostname][ansible_eth0_ipv4][address] }}"
+        dns: ""
+        port: 10050
+    when:
+    - vm_hostname | search("^bdv")
+    ignore_errors: true
+
+  - name: Create a new host group (check with_items)
+    local_action: 
+      module: zabbix_host
+      server_url: http://172.27.105.206/zabbix/
+      login_user: admin
+      login_password: "{{ ipa_pass }}"
+      host_name: "{{ vm_hostname }}"
+      visible_name: "{{ vm_hostname }}"
+      host_groups:
+        - STG
+      link_templates:
+        - Template OS Linux
+      status: enabled
+      state: present
+      inventory_mode: automatic
+      interfaces:
+      - type: 1
+        main: 1
+        useip: 1
+        ip: "{{ hostvars[vm_hostname][ansible_eth0_ipv4][address] }}"
+        dns: ""
+        port: 10050
+    when:
+    - vm_hostname | search("^bsv")
+    ignore_errors: true
+
+  - name: Create a new host group (check with_items)
+    local_action: 
+      module: zabbix_host
+      server_url: http://172.27.105.206/zabbix/
+      login_user: admin
+      login_password: "{{ ipa_pass }}"
+      host_name: "{{ vm_hostname }}"
+      visible_name: "{{ vm_hostname }}"
+      host_groups:
+        - PRD
+      link_templates:
+        - Template OS Linux
+      status: enabled
+      state: present
+      inventory_mode: automatic
+      interfaces:
+      - type: 1
+        main: 1
+        useip: 1
+        ip: "{{ hostvars[vm_hostname][ansible_eth0_ipv4][address] }}"
+        dns: ""
+        port: 10050
+    when:
+    - vm_hostname | search("^bpv")
+    ignore_errors: true

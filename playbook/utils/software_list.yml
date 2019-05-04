@@ -1,0 +1,48 @@
+- hosts: localhost
+  remote_user: finadm
+  tasks:
+    - name: "서버별 /sw 목록 기존 데이터 삭제"
+      shell: 'find /tmp/sw_list/ -type f -name *.txt -exec rm -f {} \;'
+      become: True 
+
+- hosts: dev-linux, new-stg-linux, prd-linux
+  remote_user: finadm
+  vars:
+    hostname: "{{ ansible_hostname }}"
+    date: "{{ ansible_date_time.date }}"
+
+  tasks:
+    - name: "/sw 디렉토리 목록, 사용자, 그룹"
+      shell: ls -l /sw |grep -v 'total'|grep -v lost+found |awk '{print $9,"\t",$3,"\t",$4}'
+      register: sw_list
+      become: True
+      
+    - name: "/sw 목록 파일 기록"
+      lineinfile:
+        path: "{{ '/tmp/' + hostname + '_sw_list' + '.txt' }}"
+        state: present
+        create: yes
+        line: "{{ (hostname + '\t' + item) }}"
+      become: True
+      with_items: "{{ sw_list.stdout_lines }}"
+
+    - name: "/sw 목록 파일 취합"
+      fetch:
+        src: "{{ '/tmp/' + hostname + '_sw_list' + '.txt' }}"
+        dest: "{{ '/tmp/sw_list/hosts/' + hostname + '_sw_list' + '.txt' }}"
+        flat: yes
+      become: True
+
+    - name: "서버 별 파일 삭제"
+      file:
+        path: "{{ '/tmp/' + hostname + '_sw_list' + '.txt' }}"
+        state: absent
+      become: true
+
+- hosts: localhost
+  remote_user: finadm
+  tasks:
+    - name: "서버별 /sw 목록 병합"
+      shell: 'find /tmp/sw_list/hosts -type f -name *.txt -exec cat {} >> /tmp/sw_list/sw_list.txt \;'
+      become: True 
+

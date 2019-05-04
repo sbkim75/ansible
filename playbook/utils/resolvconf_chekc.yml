@@ -1,0 +1,14 @@
+---
+- hosts: bsv-fq-kccheon
+  remote_user: finadm
+
+  tasks:
+
+  - name: check
+    shell: cat /etc/resolv.conf
+    register: resolv_check
+    become: true
+  - name : check
+    debug:
+      msg: '{{ansible_hostname}} {{ resolv_check.stdout }}'
+    become: true 

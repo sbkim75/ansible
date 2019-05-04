@@ -1,0 +1,157 @@
+################################################################################
+#                        SK telink SMS Client Config                           #
+#                                                                  Ver. 1.8.3  #
+################################################################################
+
+
+###############################################################
+#  You can change to configure information of root directory  #
+###############################################################
+SOCKET_HOME=/sw/SKTelink/sms
+JAVA_HOME=/usr/java/latest
+
+
+
+#############################################################
+#  You can change to configure information of socket        #
+#  For connet this Client-socket to SKTelink Server-socket  #
+#    #
+#############################################################
+SKT_HOST={{SKT_HOST}}
+SKT_PORT={{SKT_PORT}}
+CMP_ID={{CMP_ID}}
+AUTH_SEQ={{AUTH_SEQ}}
+
+
+#########################################################
+#  You can change to configure information of database  #
+#  DB_KIND values :                                     #
+#            1 : oracle                                 #
+#            2 : mysql                                  #
+#            3 : ms-sql                                 #
+#            4 : db2                                    #
+#            5 : sybase                                 #
+#            6 : sybase( Same or over the ver 12.5.3 )  #
+#            7 : informix                               #
+#            8 : ms-sql ( Same or over the ver 2005 )   #
+#  DB_SELECT_ROW_NUM values : 1 ~ 1000                  #
+#########################################################
+DB_KIND={{DB_KIND}}
+DB_HOST={{DB_HOST}}
+DB_PORT={{DB_PORT}}
+DB_NAME={{DB_NAME}}
+DB_SID={{DB_SID}}
+DB_PASS={{DB_PASS}}
+DB_TBL_NAME={{DB_TBL_NAME}}
+
+DB_SELECT_ROW_NUM=30
+DB_INF_SERVER=INFSERVER
+
+
+#########################################################################
+#  You can change to configure level information of log                 #
+#  LOG_LEVEL value :                                                    #
+#                0 : lowst level   : only information by connection     #
+#                1 : low level     : (0) with story flow                #
+#                2 : default level : (0,1) with socket stream packet    #
+#                3 : high level    : (0,1,2) with socket value of data  #
+#                                                                       #
+#  LOG_TYPE value :                                                     #
+#               0 : Wrrite log at month after month                     #
+#               1 : Wrrite log at day after day                         #
+#               2 : Wrrite log at hour after hour                       #
+#########################################################################
+LOG_LEVEL=3
+LOG_TYPE=1
+LOG_PERIOD=30
+LOG_FILE_PATH=/logs/SKTelink/sms
+
+
+
+###############################################################
+#  You can change to configure Small-Content or Big-Contents  #
+#                                                             #
+#  CONTENT value :                                            #
+#           0 : Method by Small-Contents                      #
+#           1 : Method by Big-Contents                        #
+###############################################################
+CONTENT=1
+
+
+
+###############################################################
+#  You can change to configure Single-mode or Dual-mode rx/tx #
+#                                                             #
+#  MODE value :                                               #
+#           0 : Method by Single-mode or Dual-mode-tx         #
+#           1 : Method by Dual-mode-rx                        #
+###############################################################
+MODE=0
+
+
+
+#############################################################
+#  You can change to configure Synchronous or Asynchronous  #
+#                                                           #
+#  SYNC value :                                             #
+#           0 : Method by Synchronous                       #
+#           1 : Method by Asynchronous                      #
+#############################################################
+SYNC=1
+
+
+
+###########################################################################################
+#  You can change to configure sleep time for retry connection to SKTelink Socket Server  #
+#                                                                                         #
+#unitoption:second(ex:1minute=>60&1hour=>360)#
+###########################################################################################
+SLEEP_TIME=30
+
+
+
+#############################################################
+#  You can change to configure ignorable time for NON-SMS   #
+#                                                           #
+#unitoption:type:hh24(ex:1hour=>1,=>0100)#
+#  default : non-using : 0                                  #
+#############################################################
+IGNORE_HOUR=0
+
+
+
+#####################################################################
+# You can change to configure stop processing time for NON-SMS      #
+#                                                                   #
+#unitoption:type:hh24mi(ex:14:11=>1411,01:00=>0100)#
+# default : non-using : XXX                                         #
+#####################################################################
+STOP_PROCESS_TIME=XXX
+START_PROCESS_TIME=XXX
+
+
+
+################################################################################
+#  You can change to configure information of alarm phone-number               #
+#                                                                              #
+#  ## Only send message than DataBase connection error or query or restart ##  #
+#                                                                              #
+#  add option 1 : Don't maked '/' behind tail                                  #
+#  add option 2 : Must maked '-' between number                                #
+#addoption3:ALARM_NUMBER=011222333/01622223333...#
+#                                                                              #
+#ex:ALARM_NUMBER=011222333/01622223333(O)#
+#ALARM_NUMBER=011222333/01622223333/(X)#
+#ALARM_NUMBER=XXX(casebynon-manager)#
+################################################################################
+ALARM_NUMBER=XXX
+
+
+
+################################################################################
+#   You can change to configure characterEncoding                              #
+#                                                                              #
+#ex)KoreancharacterEncoding=euc-kr#
+################################################################################
+CHARACTER_ENCODING=euc-kr
+

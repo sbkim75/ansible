@@ -1,0 +1,8 @@
+---
+- hosts: bsv-fq-eaiap01, bsv-fq-eaiap02
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - nexcore-scheduler-agent

@@ -1,0 +1,25 @@
+---
+- hosts: bsv-fq-test01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files: 
+    - inventories/stg/host_vars/bsv-fq-test01.yml
+    - inventories/stg/group_vars/test01_jboss-ews_vars.yml
+    - inventories/stg/group_vars/test01_mod_cluster.yml
+    - roles/jboss-ews/role-vars/common.var
+
+  vars:
+    # bind IP address, default : eth0 IP
+    - BIND_ADDR:
+    
+  roles:
+    - { role: jboss-ews/install-engine , when: useInstallEngine == True }
+    - { role: jboss-ews/create-instance, when: useInstance == True }
+    - { role: jboss-ews/config-mod_cluster, when: useModcluster == True and useModjk == False }
+    - { role: jboss-ews/config-mod_jk, when: useModjk == True and useModcluster == False }
+    - { role: jboss-ews/config-ssl, when: useSSL == True }
+    - tomcat
+    #- mod_cluster_jk
+    - mod_cluster_jk_2.0

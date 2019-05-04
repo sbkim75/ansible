@@ -1,0 +1,5 @@
+# KHAN [monitoring] Server's IP Address and Port
+dev_khan_host: 172.27.104.237
+stg_khan_host: 172.27.123.19
+prd_khan_host: 172.27.105.204
+khan_port: 80

@@ -1,0 +1,41 @@
+---
+# VM tempate filename
+vm_template: Template_centos7.4_basic 
+
+# H/W configuration
+#
+# vm_cpu: CPU Core count
+# vm_mem: RAM (Unit: MB)
+# vm_vswitch:
+#       내부망
+#       DMZ망
+#       개발/테스트_DMZ망
+#       개발/테스트망
+#       보안관리망
+
+vm_cpu: 1
+vm_mem: 8192
+vm_vswitch: 내부망
+# DATASTORE
+#
+# IBS / IBSi_2 / OPR / SEC / STG / STG1 / VMM / DEV / DMZ
+# IBS, IBS_2: 3, 4, 5, 6, 7, 8, 13, 14, 17, 18 (PRD)
+# OPR: 9 (Operation only)
+# SEC: 12, 16, 19 (security zone)
+# STG / STG1: 10, 11, 15, 16, 20, 21, 22 (Staging)
+# VMM: ALL (VM template) 
+# DEV: 10, 11, 15, 16, 20, 21, 22 (DEV)
+# DMZ: 1, 2 (DMZ) 
+vm_disk_datastore: IBS_3
+
+# network interface configuration
+vm_ip: 172.27.104.110
+vm_netmask: 255.255.255.128
+vm_gateway: 172.27.104.1
+
+# ESXI location
+vm_esxi: bpp-fq-esx17.finnq.com
+
+# VM hostname
+vm_hostname: bpv-fq-pibdb01
+

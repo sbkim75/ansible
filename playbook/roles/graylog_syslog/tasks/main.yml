@@ -1,0 +1,16 @@
+  - name: /etc/rsyslog.d/graylog.conf Add remote log
+    lineinfile:
+      path: /etc/rsyslog.d/graylog.conf
+      create: yes
+      state: present
+      regexp: '^\*'
+      line: "*.* @@172.27.105.194:5514;RSYSLOG_SyslogProtocol23Format"
+    when:
+      - ansible_hostname | search("^bp")
+    become: True
+
+  - name: rsyslog service restart
+    service:
+      name: rsyslog
+      state: restarted
+    become: True

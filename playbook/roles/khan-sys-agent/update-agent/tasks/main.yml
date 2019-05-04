@@ -1,0 +1,52 @@
+---
+- name: stop agent service
+  service:
+    name: khan-sys-agent
+    enabled: yes
+    state: stopped
+  when: USER_MODE == "login"
+
+- name: stop agent systemd
+  systemd: state=stopped name=khan-sys-agent
+  when: USER_MODE == "nologin"
+
+- name: backup previous version directory
+  shell: cp -a /sw/khan/khan-agent/khan-sys-agent /sw/khan/khan-agent/khan-sys-agent.`date +%Y%m%d`
+
+- name: unzip file into khan-agent directory
+  unarchive:
+    src: roles/khan-sys-agent/agent-files/files/khan-sys-agent-5.1.0.zip
+    dest: /tmp
+    owner: khansys
+    group: was
+
+- name: To copy directory
+  command: cp -a /tmp/khan-sys-agent/{{ item }} /sw/khan/khan-agent/khan-sys-agent/
+  with_items:
+#    - bin
+#    - conf
+    - lib
+    - plugins
+
+# 디렉토리 및 파일의 Other 퍼미션 제거
+- name: change directory permission
+  command: find /sw/khan/khan-agent/khan-sys-agent -type d -exec chmod 0750 {} \;
+
+- name: change file permission
+  command: find /sw/khan/khan-agent/khan-sys-agent -type f -exec chmod o-rwx {} \;
+
+- name: restart agent service
+  service:
+    name: khan-sys-agent
+    enabled: yes
+    state: started
+  when: USER_MODE == "login"
+
+- name: restart agent systemd
+  systemd: state=started name=khan-sys-agent
+  when: USER_MODE == "nologin"
+
+- name: remove update files in /tmp
+  file:
+    path: /tmp/khan-sys-agent
+    state: absent

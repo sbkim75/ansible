@@ -1,0 +1,24 @@
+---
+- hosts: bpv-fq-kibap01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files: 
+    - inventories/ops/host_vars/bpv-fq-kibap01.yml
+
+  roles:
+    - netbackup-agent
+    - zabbix
+    - jdk1.8
+    - ipa-client
+
+  tasks:
+    - name: Reboot VM
+      shell: '/sbin/shutdown -r +1 "Reboot triggered by Ansible" '
+
+    - name: Wait for the server to finish rebooting
+      wait_for_connection:
+        delay: 15
+        sleep: 15
+        timeout: 300

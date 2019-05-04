@@ -1,0 +1,49 @@
+- hosts: localhost
+  connection: local
+  tasks:
+  - name: Check hostname and IP
+    debug: 
+      msg: "hostname is {{ item }} and IP is {{ hostvars[item]['ansible_default_ipv4']['address'] }}"
+    with_items:
+      - bpv-fq-grylg01
+      - bpv-fq-grylg02
+      - bpv-fq-grylg03
+      - bpv-fq-gryes01
+      - bpv-fq-gryes02
+      - bpv-fq-gryes03
+      - bpv-fq-gryha01
+      - bpv-fq-gryha02
+#    with_items: "{{ groups['prd-linux'] }}"
+  - name: Create a new host group (check with_items)
+    local_action: 
+      module: zabbix_host
+      server_url: http://172.27.105.206/zabbix/
+      login_user: admin
+      login_password: finnq!23
+      host_name: "{{ item }}"
+      visible_name: "{{ item }}"
+      host_groups:
+        - Linux servers
+        - PRD
+      link_templates:
+        - Template OS Linux
+        - Template Disk Performance
+      status: enabled
+      state: present
+      inventory_mode: automatic
+      interfaces:
+      - type: 1
+        main: 1
+        useip: 1
+        ip: "{{ hostvars[item]['ansible_default_ipv4']['address'] }}"
+        dns: ""
+        port: 10050
+    with_items:
+      - bpv-fq-grylg01
+      - bpv-fq-grylg02
+      - bpv-fq-grylg03
+      - bpv-fq-gryes01
+      - bpv-fq-gryes02
+      - bpv-fq-gryes03
+      - bpv-fq-gryha01
+      - bpv-fq-gryha02

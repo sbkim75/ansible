@@ -1,0 +1,8 @@
+---
+- hosts: prd-aml-servers
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - aml

@@ -1,0 +1,31 @@
+---
+- hosts: bdv-fq-piap01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files: 
+    - inventories/dev/group_vars/pibap_mod_cluster.yml
+    - inventories/dev/host_vars/bdv-fq-pibap01.yml
+    #- roles/jboss-ews/role-vars/common.var
+    #- inventories/dev/group_vars/bnkap_jboss-ews_vars.yml
+
+  vars:
+    # bind IP address, default : eth0 IP
+    - BIND_ADDR:
+
+  roles:
+    #- passwd-root.finadm
+    #- netbackup-agent
+    #- zabbix 
+    #- jdk1.8
+    #- ipa-client
+    #- { role: jboss-ews/install-engine , when: useInstallEngine == True }
+    #- { role: jboss-ews/create-instance, when: useInstance == True }
+    #- { role: jboss-ews/config-mod_cluster, when: useModcluster == True and useModjk == False }
+    #- { role: jboss-ews/config-mod_jk, when: useModjk == True and useModcluster == False }
+    #- { role: jboss-ews/config-ssl, when: useSSL == True }
+    - tomcat
+    - mod_cluster_jk_2.0
+    #- fusioninventory-agent 
+

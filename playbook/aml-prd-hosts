@@ -1,0 +1,3 @@
+[prd-aml-servers]
+bpv-fq-amlsv01 ansible_port=2222 ansible_user=finadm
+bpv-fq-amlsv02 ansible_port=2222 ansible_user=finadm

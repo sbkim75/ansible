@@ -1,0 +1,10 @@
+---
+- hosts: stg-ocr-servers
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - ocr
+    - petra-tobe-tomcat
+

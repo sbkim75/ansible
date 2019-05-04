@@ -1,0 +1,11 @@
+---
+- hosts: bsv-fq-fpsap01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+  vars:
+  # collector tags 
+    - TAGS:  ansible # 해당 Log tags 정보 명기 
+
+  roles:
+    - graylog_collector

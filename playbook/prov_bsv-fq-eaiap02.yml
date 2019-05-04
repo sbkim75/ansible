@@ -1,0 +1,13 @@
+---
+- name: VM provisioning
+  hosts: localhost
+  vars_prompt:
+    - name: "vcpasswd"
+      prompt: "Enter vcenter password"
+      private: yes
+  vars_files: 
+    - inventories/common/group_vars/vcenter_info.yml 
+    - inventories/stg/host_vars/bsv-fq-eaiap02.yml 
+  roles: 
+    - vm-provisioning
+

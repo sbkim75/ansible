@@ -1,0 +1,58 @@
+---
+- hosts: prd-linux 
+  remote_user: finadm
+  vars:
+    ip: '{{ ansible_eth0["ipv4"]["address"] }}'
+    ip2: '{{ ansible_bond0["ipv4"]["address"] }}'
+    lastnum2: "{{ ip.split('.')[-1][-2:] }}"
+    lastnum3: "{{ ip2.split('.')[-1][-2:] }}"
+
+  vars_prompt:
+    - name: "user_id"
+      prompt: "Enter the User, you want to change password"
+      private: no
+    - name: "password_var"
+      prompt: "Enter the Password variable"
+      private: no
+
+  tasks:
+  - name: "{{ user_id }} Check if user exists"
+    shell: id -u "{{ user_id }}"
+    register: user_exists
+    ignore_errors: true
+
+  - name: "가상화서버이며, IP가 1자리 일 경우{{ user_id }} Change password"
+    user:
+      name: "{{ user_id }}"
+      password: "{{ (password_var + '0' + lastnum2)| password_hash('sha512') }}"
+    become: true
+    when:
+      - user_exists.rc == 0 and lastnum2|length == 1
+    ignore_errors: true
+
+  - name: "가상화서버이며, IP가 2자리 이상일 경우{{ user_id }} Change password"
+    user:
+      name: "{{ user_id }}"
+      password: "{{ (password_var + lastnum2)| password_hash('sha512') }}"
+    become: true
+    when:
+      - user_exists.rc == 0 and lastnum2|length == 2
+    ignore_errors: true
+
+  - name: "물리서버이며, IP가 1자리 일 경우{{ user_id }} Change password"
+    user:
+      name: "{{ user_id }}"
+      password: "{{ (password_var + '0' + lastnum3)| password_hash('sha512') }}"
+    become: true
+    when:
+      - user_exists.rc == 0 and lastnum3|length == 1
+    ignore_errors: true
+
+  - name: "물리서버이며, IP가 2자리 이상일 경우{{ user_id }} Change password"
+    user:
+      name: "{{ user_id }}"
+      password: "{{ (password_var + lastnum3)| password_hash('sha512') }}"
+    become: true
+    when:
+      - user_exists.rc == 0 and lastnum3|length == 2
+    ignore_errors: true

@@ -1,0 +1,3 @@
+[stg-rba-servers]
+bsv-fq-rbasv01 ansible_port=22 ansible_user=finadm
+

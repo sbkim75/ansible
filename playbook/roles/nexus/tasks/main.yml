@@ -1,0 +1,58 @@
+---
+- name: add group "was"
+  group: name=was gid=700 state=present
+
+- name: add user "nexus"
+  user: name=nexus group=was uid=713 state=present shell=/sbin/nologin home=/sw/nexus createhome=no
+
+- name: make nexus directory
+  file: 
+    path: /sw/nexus
+    state: directory
+
+- name: make /logs directory
+  file:
+    path: /logs/{{ item }}
+    state: directory
+    owner: nexus
+    group: was
+    mode: 0750
+    recurse: yes
+  with_items:
+    - nexus
+    - nexus/gclog
+    - nexus/heapdump
+
+- name: copy nexus tarball
+  copy: src=nexus-3.13.0-01-unix.tar.gz dest=/tmp mode=0755
+
+- name: extract nexus tarball into nexus directory
+  unarchive:
+    src: /tmp/nexus-3.13.0-01-unix.tar.gz
+    dest: /sw/nexus
+    extra_opts: [--strip-components=1]
+    keep_newer: yes
+    remote_src: yes
+
+- name: change nexus directory owner/group
+  file: 
+    path: /sw/nexus
+    owner: nexus
+    group: was
+    recurse: yes
+
+- name: copy nexus.service file
+  copy: src=nexus.service dest=/lib/systemd/system/nexus.service mode=0644
+
+- name: copy nexus.vmoptions file
+  copy: src=nexus.vmoptions dest=/sw/nexus/bin/nexus.vmoptions mode=0644
+
+- name: register service file to systemd
+  systemd: daemon_reload=yes
+
+- name: make sure the nexus service is running
+  systemd: name=nexus state=started
+
+- name: enable service nexus and ensure it
+  systemd: name=nexus enabled=yes
+

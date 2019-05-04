@@ -1,0 +1,12 @@
+---
+- hosts: bsv-fq-test01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files: 
+    - inventories/stg/host_vars/bsv-fq-test01.yml
+
+  roles:
+    - tomcat
+    - jolokia

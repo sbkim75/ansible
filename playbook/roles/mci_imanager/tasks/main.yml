@@ -1,0 +1,27 @@
+- name: add group "chn"
+  group: name=chn gid=800 state=present
+
+- name: add user "cruzmci"
+  user: name=cruzmci group=chn uid=802 state=present shell=/usr/bin/ksh home=/home/cruzmci createhome=yes
+
+- name: make cruzmci directory
+  file:
+    path: /sw/cruzmci/cruzlink
+    state: directory
+    owner: cruzmci
+    group: chn
+
+- name: make cruzmci log directory
+  file:
+    path: /logs/cruzmci/imanager
+    state: directory
+    owner: cruzmci
+    group: chn
+
+- name: Extract imanager.tar.gz from files
+  unarchive:
+    src: imanager.tar.gz
+    dest: /sw/cruzmci/cruzlink
+    owner: cruzmci
+    group: chn
+

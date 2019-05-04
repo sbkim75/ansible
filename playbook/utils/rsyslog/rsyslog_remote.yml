@@ -1,0 +1,18 @@
+---
+- hosts: all
+  remote_user: finadm
+  tasks:
+  - name: /etc/rsyslog.d/graylog.conf Add remote log
+    lineinfile:
+      path: /etc/rsyslog.d/graylog.conf
+      create: yes
+      state: present
+      regexp: '^\*'
+      line: "*.* @@172.27.105.194:5514;RSYSLOG_SyslogProtocol23Format"
+    become: True
+  - name: rsyslog service restart
+    service:
+      name: rsyslog
+      state: restarted
+    become: True
+    

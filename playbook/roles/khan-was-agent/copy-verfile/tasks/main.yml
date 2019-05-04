@@ -1,0 +1,8 @@
+---
+- name: Deliver current version file
+  template: src=current.version.j2 dest={{ install_dir }}/khan-was-agent/current.version owner={{ install_user }} group={{ install_group }} mode=0640
+  when: install_dir != "" and update_dir == ""
+
+- name: Deliver current version file
+  template: src=current.version.j2 dest={{ update_dir }}/current.version owner={{ install_user }} group={{ install_group }} mode=0640
+  when: update_dir != "" and install_dir == ""

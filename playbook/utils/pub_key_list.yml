@@ -1,0 +1,55 @@
+- hosts: localhost
+  remote_user: finadm
+  tasks:
+    - name: "기존 pub key 정보 삭제"
+      file:
+        path: /tmp/pub_key_list.txt
+        state: absent
+      become: True 
+
+- hosts: dev-linux, new-stg-linux, prd-linux
+#- hosts: bdv-fq-masap01
+  remote_user: finadm
+  vars:
+    hostname: "{{ ansible_hostname }}"
+    date: "{{ ansible_date_time.date }}"
+
+  tasks:
+    - name: "Pub Key Authorized Key List"
+      shell: find / -type f -name authorized_keys -exec awk '{print $3}' {} \;
+      register: pub_key_list
+      become: True
+      
+    - name: "Pub Key Authorized Key 파일 기록"
+      lineinfile:
+        path: "{{ '/tmp/' + hostname + '_pub_key_list' + '.txt' }}"
+        state: present
+        create: yes
+        line: "{{ (hostname + '\t' + item) }}"
+      become: True
+      with_items: "{{ pub_key_list.stdout_lines }}"
+
+    - name: "Pub Key Authorized Key 목록 파일 취합"
+      fetch:
+        src: "{{ '/tmp/' + hostname + '_pub_key_list' + '.txt' }}"
+        dest: "{{ '/tmp/pub_key/' + hostname + '_pub_key_list' + '.txt' }}"
+        flat: yes
+      become: True
+
+    - name: "서버 별 파일 삭제"
+      file:
+        path: "{{ '/tmp/' + hostname + '_pub_key_list' + '.txt' }}"
+        state: absent
+      become: true
+
+- hosts: localhost
+  remote_user: finadm
+  tasks:
+    - name: "서버별 Pub Key 목록 병합"
+      shell: 'find /tmp/pub_key/ -type f -name *_pub_key_list.txt -exec cat {} >> /tmp/pub_key_list.txt \;'
+      become: True 
+
+    - name: "서버별 Pub Key 목록 기존 데이터 삭제"
+      shell: 'find /tmp/pub_key/ -type f -name *_pub_key_list.txt -exec rm -f {} \;'
+      become: True
+

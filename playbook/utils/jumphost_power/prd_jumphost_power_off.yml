@@ -1,0 +1,17 @@
+---
+- hosts: localhost 
+
+  vars_prompt:
+    - name: "vcenter_password"
+      prompt: "Enter the vcenter's password"
+      private: yes
+
+  tasks:
+  - name: Jumphost Power OFF
+    vsphere_guest: 
+      vcenter_hostname: vcenter.finnq.com
+      username: administrator@finnq.com
+      password: "{{ vcenter_password }}"
+      guest: bpv-fq-jh01
+      state: powered_off
+      validate_certs: no

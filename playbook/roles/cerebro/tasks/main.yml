@@ -1,0 +1,26 @@
+- name: Extract cerebro-0.7.3.tgz from files
+  unarchive:
+    src: cerebro-0.7.3.tgz
+    dest: /sw
+
+- name: Configure cerebro.service
+  template:
+    src: cerebro.service.j2
+    dest: /usr/lib/systemd/system/cerebro.service
+
+- name : make Link directory
+  file:
+    src: /sw/cerebro-0.7.3
+    dest: /sw/cerebro
+    state: link
+
+- name: register service file to systemd
+  systemd: daemon_reload=yes
+
+- name: enable cerebro.service and ensure it
+  systemd: name=cerebro enabled=yes
+
+- name: make sure the cerebro.service is running
+  systemd: name=cerebro state=restarted
+
+

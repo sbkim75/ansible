@@ -1,0 +1,16 @@
+---
+- hosts: stg-linux-noctl
+  remote_user: finadm
+  tasks:
+  - name: Update kernel Packages for Intel CPU bug-patch
+    yum:
+      name: "{{ item }}"
+      state: latest
+    become: true
+    with_items:
+    - kernel
+    - kernel-devel
+    - kernel-abi-whitelists
+    - kernel-firmware
+    - kernel-headers
+    - microcode_ctl

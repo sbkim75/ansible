@@ -1,0 +1,22 @@
+---
+# file: inventories/dev/group_vars/apiap_mod_cluster.yml
+
+# DMZ/Internal WEB 연동 설정
+onModcluster: True         # DMZ WEB 연동여부
+onModJk: True              # Internal WEB 연동여부
+
+# server.xml
+proxyList: 223.39.114.111:6166
+balancer: balancer_sapi
+loadBalancingGroup: G_sapi
+
+# setmodenv.sh
+httpd_main_hosts: '"223.39.114.111:443"'
+httpd_hosts: '"172.27.123.31:8082"'
+lb_worker: sapi
+ajp_port: 8009
+http_port: 8080
+context_name: /health_check.html
+
+# KHAN WAS Agent 설정. True 시 WAS Agent 설정이 포함된 startup.sh copy
+onKHANagent: True

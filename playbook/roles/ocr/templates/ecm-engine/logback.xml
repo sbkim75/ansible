@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="false" scanPeriod="30 seconds">
+    <property name="LOG_HOME" value="/logs/ecm/{{ ansible_hostname }}" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%d] [%thread] %-5p %c{10}\(%F:%M:%L\) - %m%n%ex{5}
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="dailyfile"
+        class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/engine/engine.log</file>
+        <rollingPolicy
+            class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${LOG_HOME}/engine/engine.log.%d{yyyy-MM-dd}
+            </fileNamePattern>
+            <!-- keep 60 days' worth of history -->
+            <maxHistory>60</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d] [%thread] %-5level %logger{36} - %msg%n%ex{5}
+            </pattern>
+        </encoder>
+    </appender>
+
+        <appender name="accessfile"
+        class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/engine/access/access.log</file>
+        <rollingPolicy
+            class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${LOG_HOME}/engine/access/access.log.%d{yyyy-MM-dd}
+            </fileNamePattern>
+            <!-- keep 60 days' worth of history -->
+            <maxHistory>365</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d] [%thread] %-5level %logger{36} - %msg%n%ex{5}
+            </pattern>
+        </encoder>
+    </appender>
+
+<!--     Application Loggers -->
+    <logger name="com.ecm" level="info">
+        <appender-ref ref="dailyfile" />
+    </logger>
+
+<!--     access Loggers -->
+    <logger name="SocketServer.access" level="INFO">
+        <appender-ref ref="accessfile" />
+    </logger>
+
+    <root level="INFO">
+
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
+

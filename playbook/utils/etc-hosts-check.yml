@@ -1,0 +1,14 @@
+---
+- hosts: [prd-linux]
+  remote_user: finadm
+  tasks:
+  - name: /etc/hosts check
+    shell: head -1 /etc/hosts
+    register: hosts
+    become: True
+
+  - name: 찾았다 요놈!!
+    debug:
+      msg: "{{ hosts.stdout }}"
+    when:
+      - hosts.stdout | search("bp") or hosts.stdout | search("bd") or hosts.stdout | search("bs") or hosts.stdout | search("bp")

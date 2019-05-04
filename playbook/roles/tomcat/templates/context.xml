@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context path="{{ context_name }}" docBase="{{ docbase }}" privileged="true">
+</Context>

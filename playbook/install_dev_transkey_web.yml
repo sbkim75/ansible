@@ -1,0 +1,9 @@
+---
+- hosts: bdv-fq-unfwb01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - transkey_mobile_web
+

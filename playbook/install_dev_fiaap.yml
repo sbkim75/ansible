@@ -1,0 +1,20 @@
+---
+- hosts: bdv-fq-fiaap01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files: 
+    - inventories/dev/group_vars/fiaap_mod_cluster.yml
+    - inventories/dev/host_vars/bdv-fq-fiaap01.yml
+
+  roles:
+   # - netbackup-agent
+   # - zabbix 
+   # - jdk1.8
+   # - ipa-client
+    - tomcat
+    - petra-tobe
+    - mod_cluster_jk_2.0
+   # - fusioninventory-agent
+    

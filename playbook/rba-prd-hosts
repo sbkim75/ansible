@@ -1,0 +1,3 @@
+[prd-rba-servers]
+bpv-fq-rbasv01 ansible_port=2222 ansible_user=finadm
+

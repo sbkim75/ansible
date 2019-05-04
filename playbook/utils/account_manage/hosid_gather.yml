@@ -1,0 +1,18 @@
+---
+- hosts: bsv-fq-kccheon
+  remote_user: finadm
+
+  vars:
+    ip: '{{ ansible_eth0["ipv4"]["address"] }}'
+    lastnum2: "{{ ip[-1][-2:] }}"
+
+  tasks:
+  - name: "gather hostid"
+    shell: hostid | md5sum 
+    register: hostid
+    become: true
+
+  - name: "{{ user_id }} Change password"
+    debug:
+      msg: "{{ hostid.stdout[8:12] }}"
+    become: true 

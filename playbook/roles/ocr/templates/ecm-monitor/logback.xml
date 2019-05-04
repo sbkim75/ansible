@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="false" scanPeriod="30 seconds">
+	<property name="LOG_HOME" value="/logs/ecm/{{ ansible_hostname }}" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%d] [%thread] %-5p %c{10}\(%F:%M:%L\) - %m%n%ex{5}
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE"
+        class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/monitor/monitor.log</file>
+        <rollingPolicy
+            class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/monitor/monitor.log.%d{yyyy-MM-dd}
+            </fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d] [%thread] %-5level %logger{36} - %msg%n%ex{5}
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- Application Loggers -->
+    <root level="INFO">
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>
+

@@ -1,0 +1,75 @@
+---
+- name: Check install directory
+  stat: path={{ install_dir }}
+  register: file_status
+
+#- debug: var=file_status
+- name: Make install directory if not exist
+  file:
+    path: "{{ install_dir }}"
+    state: directory
+    owner: "{{ install_user }}"
+    group: "{{ install_group }}"
+    mode: 0750
+    recurse: yes
+  when: file_status.stat.exists == false
+
+- name: remove previous directory
+  file:
+    path: "{{ install_dir }}/khan-agent"
+    state: absent
+
+- name: Unzip file into khan-agent directory
+  unarchive:
+    src: roles/khan-was-agent/agent-files/files/{{ khan_was_agent_zip }}
+    dest: "{{ install_dir }}"
+    owner: "{{ install_user }}"
+    group: "{{ install_group }}"
+
+- name: rename agent jar file
+  command: mv {{ install_dir }}/khan-agent/{{ khan_was_agent_jar }} {{ install_dir }}/khan-agent/{{ current_version }}
+
+- name: copy etc jar file into khan-agent directory
+  copy:
+    src: roles/khan-was-agent/agent-files/files/jamm-0.2.5.jar
+    dest: "{{ install_dir }}/khan-agent/"
+    owner: "{{ install_user }}"
+    group: "{{ install_group }}"
+    mode: 0640
+
+- name: Deliver current version file
+  template:
+    src: roles/khan-was-agent/agent-files/templates/current.version
+    dest: "{{ install_dir }}/khan-agent/"
+    owner: "{{ install_user }}"
+    group: "{{ install_group }}"
+    mode: 0640
+
+- name: Check khan-agent log directory
+  stat: path=/logs/khan-was-agent
+  register: file_status
+
+- name: Make khan-agent log directory if not exist
+  file:
+    path: /logs/khan-was-agent
+    state: directory
+    owner: "{{ install_user }}"
+    group: "{{ install_group }}"
+    mode: 0750
+    recurse: yes
+  when: file_status.stat.exists == false
+
+- name: Make logs symbolic link
+  file:
+    src: /logs/khan-was-agent
+    dest: "{{ install_dir }}/khan-agent/logs"
+    state: link
+    owner: "{{ install_user }}"
+    group: "{{ install_group }}"
+
+# 디렉토리 및 파일의 Other 퍼미션 제거
+- name: change directory permission
+  command: find {{ install_dir }}/khan-agent -type d -exec chmod 0750 {} \;
+
+- name: change file permission
+  command: find {{ install_dir }}/khan-agent -type f -exec chmod o-rwx {} \;

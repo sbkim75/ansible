@@ -1,0 +1,10 @@
+---
+- hosts: new-stg-linux
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - epel-repo
+    - centos6-repo 
+    - fusioninventory-agent

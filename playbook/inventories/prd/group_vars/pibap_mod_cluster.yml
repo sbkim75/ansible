@@ -1,0 +1,20 @@
+---
+# file: inventories/prd/group_vars/pibap_mod_cluster.yml
+
+# server.xml
+useModcluster: True
+advertiseGroupAddress: 224.25.1.1
+advertisePort: 23364
+proxyList: 223.39.114.8:6566,223.39.114.9:6566
+balancer: balancer_pib
+loadBalancingGroup: G_pib
+
+# setmodenv.sh
+httpd_main_hosts: '"223.39.114.8:451" "223.39.114.9:451"'
+httpd_hosts: '"172.27.104.92:8080" "172.27.104.93:8080"'
+lb_worker: pib
+ajp_port: 8009
+context_name: /
+
+# startup.sh
+useKHANagent: True

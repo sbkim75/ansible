@@ -1,0 +1,30 @@
+---
+- name: Stop khan-sys-agent
+  service:
+    name: khan-sys-agent
+    enabled: no
+    state: stopped
+
+- name: Remove install directory
+  file:
+    path: /sw/khan/khan-agent
+    state: absent
+
+- name: Remove log directory
+  file:
+    path: /sw/khan/logs
+    state: absent
+
+- name: Remove start config on boot 
+  shell: chkconfig --del khan-sys-agent
+
+- name: Remove init script
+  file:
+    path: /etc/init.d/khan-sys-agent
+    state: absent
+
+- name: Remove the user "khansys"
+  user:
+    name: khansys
+    state: absent
+    remove: yes

@@ -1,0 +1,24 @@
+BIND_ADDR:
+CACertificateFile: AddTrustExternalCARoot.crt
+CertificateChainFile: rsa-ov.chain-bundle.pem
+CertificateFile: _wildcard_finnq_com.crt
+CertificateKeyFile: _wildcard_finnq_com_SHA256WITHRSA.key
+ERROR_DIR: "{{ WEB_DOCROOT_DIR }}/error"
+ERROR_PAGE: error.html
+SSL_CERT_HOME: "{{ SVC_WEB_HOME }}/certs/finnq.com"
+WEB_DOCROOT_DIR: "/apps/jboss-ews/htdocs/{{ WEB_INSTANCE_NAME[-3:] }}"
+WEB_INSTANCE_DIR: "{{ SVC_WEB_HOME }}/servers/{{ WEB_INSTANCE_NAME }}"
+WEB_LOG_DIR: "/logs/jboss-ews/{{ WEB_INSTANCE_NAME }}"
+vhostArr:
+  - group: "{{ WEB_INSTANCE_NAME }}"
+    domain: "{{ WEB_INSTANCE_NAME }}.finnq.com"
+    # For mod_cluster
+    proxyTimeout: 30
+    proxyPass:
+      - passMatch: "^/.*\\.(jsp|do|mvc|web)$ balancer://balancer_{{ WEB_INSTANCE_NAME }}/"
+      - passMatch: "^(/resources/.*)$ !"
+      - passMatch: "^(/)$ !"
+    # For mod_jk
+    jkMount:
+      - mountPoint: "/*"
+workerList: "{{ WEB_INSTANCE_NAME }}"

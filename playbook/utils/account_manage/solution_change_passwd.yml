@@ -1,0 +1,30 @@
+---
+#- hosts: bpv-fq-mhasv01, bpv-fq-stgdb02, bpv-fq-zabsv01, bpv-fq-wiksv01
+- hosts: prd-linux
+  gather_facts: false
+  remote_user: finadm
+  vars_prompt:
+    - name: "password_var"
+      prompt: "Enter the Password variable"
+      private: no
+  vars_files: 
+    - /root/ansible/playbook/utils/account_manage/usergroup_list.yml
+  tasks:
+    - name: " Check if user exists "
+      shell: id -u "{{ item }}"
+      ignore_errors: true
+      with_items: "{{ usergroup }}"
+      register: user_info
+      
+    - name: "gather hostid"
+      shell: hostid | md5sum 
+      register: hostid
+      
+    - name: "Change User Password"
+      user:
+        name: "{{ item.item }}" 
+        password: "{{ (item.item + hostid.stdout[4:8] + password_var) | password_hash('sha512') }}" 
+        update_password: always 
+      become: True 
+      when: item.rc == 0 
+      with_items: "{{ user_info.results }}"

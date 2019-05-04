@@ -1,0 +1,9 @@
+---
+- hosts: bsv-fq-yjpark
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - jdk1.8
+    - tomcat

@@ -1,0 +1,10 @@
+---
+- hosts: bpv-fq-glpsv01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - netbackup-agent
+    - zabbix 
+    - ipa-client

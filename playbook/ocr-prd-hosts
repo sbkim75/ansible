@@ -1,0 +1,4 @@
+[prd-ocr-servers]
+bpv-fq-ocrsv01 ansible_port=2222 ansible_user=finadm
+bpv-fq-ocrsv02 ansible_port=2222 ansible_user=finadm
+

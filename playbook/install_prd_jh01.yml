@@ -1,0 +1,10 @@
+---
+- hosts: bpv-fq-jh01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - netbackup-agent
+    - zabbix
+    - fusioninventory-agent

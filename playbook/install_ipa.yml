@@ -1,0 +1,8 @@
+---
+- hosts: ipasv01.finnq.com
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - netbackup-agent

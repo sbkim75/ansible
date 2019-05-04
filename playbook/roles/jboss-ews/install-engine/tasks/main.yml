@@ -1,0 +1,80 @@
+---
+#######################################################
+# Use variables to be defined in role-vars/common.var #
+#######################################################
+- name: Check group
+  shell: grep "{{ INSTALL_GROUP }}" /etc/group | wc -l
+  register: group_status 
+
+#- debug: var=group_status
+- name: Add group "{{ INSTALL_GROUP }}" if not exist
+  group: name={{ INSTALL_GROUP }} gid={{ GID }} state=present
+  when: group_status.stdout == "0"
+
+- name: Check user
+  shell: grep "{{ INSTALL_OWNER }}" /etc/passwd | wc -l
+  register: user_status
+
+#- debug: var=user_status
+- name: Add user "{{ INSTALL_OWNER }}" if not exist
+  user: name={{ INSTALL_OWNER }} uid={{ UID }} group={{ INSTALL_GROUP }} state=present shell=/sbin/nologin
+  when: user_status.stdout == "0"
+
+- name: Check install directory
+  stat: path={{ SVC_WEB_HOME }}
+  register: file_status
+
+- name: Make install directory if not exist
+  file:
+    path: "{{ SVC_WEB_HOME }}"
+    state: directory
+    owner: "{{ INSTALL_OWNER }}"
+    group: "{{ INSTALL_GROUP }}"
+    mode: 0750
+  when: file_status.stat.exists == false
+  
+- name: Unzip file
+  unarchive:
+    src: "{{ item }}"
+    dest: "{{ SVC_WEB_HOME }}"
+    owner: "{{ INSTALL_OWNER }}"
+    group: "{{ INSTALL_GROUP }}"
+  with_items:
+    - jbcs-httpd24-httpd-2.4.6-RHEL6-x86_64.zip
+    - jbcs-httpd24-httpd-2.4.6-SP1-RHEL6-x86_64.zip
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
+
+- name: Unzip file
+  unarchive:
+    src: "{{ item }}"
+    dest: "{{ SVC_WEB_HOME }}"
+    owner: "{{ INSTALL_OWNER }}"
+    group: "{{ INSTALL_GROUP }}"
+  with_items:
+    - jbcs-httpd24-httpd-2.4.6-RHEL7-x86_64.zip
+    - jbcs-httpd24-httpd-2.4.6-SP1-RHEL7-x86_64.zip
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+
+- name: change owner
+  file:
+    path: "{{ SVC_WEB_HOME }}/{{ JBCS_HTTPD_DIR_NAME }}"
+    owner: "{{ INSTALL_OWNER }}"
+    group: "{{ INSTALL_GROUP }}"
+
+- name: Copy apachectl file
+  copy: src=apachectl  dest={{ SVC_WEB_HOME }}/{{ JBCS_HTTPD_DIR_NAME }}/httpd/sbin/
+
+- name: Change file permission 
+  file:
+    path: "{{ SVC_WEB_HOME}}/{{ JBCS_HTTPD_DIR_NAME }}/httpd/modules/httpd.exp"
+    mode: 0755
+
+- name: copy limits conf file
+  template: src=54-apache.conf dest=/etc/security/limits.d/ mode=0644
+
+# 디렉토리 및 파일의 Other 퍼미션 제거
+- name: change directory permission
+  command: find {{ SVC_WEB_HOME }} -type d -exec chmod 0750 {} \;
+
+- name: change file permission
+  command: find {{ SVC_WEB_HOME }} -type f -exec chmod o-rwx {} \;

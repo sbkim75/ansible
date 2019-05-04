@@ -1,0 +1,91 @@
+---
+- name: copy cluster library files
+  copy:
+    src: sw/tomcat/lib/
+    dest: /sw/tomcat/lib/
+    owner: root
+    group: was
+    mode: 0640
+  when : useModcluster == True 
+  notify: restart tomcat
+ 
+- name: copy mod_cluster shell files
+  copy:
+    src: "sw/tomcat/bin/{{ item }}"
+    dest: /sw/tomcat/bin/
+    owner: root
+    group: was
+    mode: 0750
+  with_items:
+    - turnon-modcluster.sh
+    - turnoff-modcluster.sh
+  when : useModcluster == True
+  notify: restart tomcat
+
+- name: copy mod_jk shell files
+  copy:
+    src: "sw/tomcat/bin//{{ item }}"
+    dest: /sw/tomcat/bin/
+    owner: root
+    group: was
+    mode: 0750
+  with_items:
+    - turnon-modjk.sh
+    - turnoff-modjk.sh
+  when : useModJk == True
+  notify: restart tomcat
+
+- name: copy health_check.html
+  template:
+    src: sw/tomcat/conf/health_check.html
+    dest: "{{ docbase }}"
+    group: was
+    owner: deploy
+    mode: 0640
+  when : useModcluster == True or useModJk == True
+  notify: restart tomcat
+
+- name: copy server.xml file from template
+  template:
+    src: sw/tomcat/conf/server.xml
+    dest: /sw/tomcat/conf/
+    owner: root
+    group: was
+    mode: 0640
+  when : useModcluster == True or useModJk == True
+  notify: restart tomcat
+
+- name: copy shell template
+  template:
+    src: "sw/tomcat/bin/{{ item }}"
+    dest: /sw/tomcat/bin/
+    owner: root
+    group: was
+    mode: 0750
+  with_items:
+    - check-port.sh
+    - setmodenv.sh
+    - catalina.sh
+  when : useModcluster == True or useModJk == True
+  notify: restart tomcat
+
+- name: copy function.sh file
+  copy:
+    src: sw/tomcat/bin/function.sh
+    dest: /sw/tomcat/bin/
+    owner: root
+    group: was
+    mode: 0750
+  when : useKHANagent == True
+  notify: restart tomcat
+
+- name: copy startup.sh file from template
+  template:
+    src: sw/tomcat/bin/startup.sh
+    dest: /sw/tomcat/bin/
+    owner: root
+    group: was
+    mode: 0750
+  when : useKHANagent == True
+  notify: restart tomcat
+

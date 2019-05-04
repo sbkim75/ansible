@@ -1,0 +1,26 @@
+---
+- name: Remove mod_jk config files
+  file:
+    path: "{{ WEB_INSTANCE_DIR }}/conf.d/{{ item }}"
+    state: absent
+  with_items:
+    - mod_jk.conf
+    - vhost.conf
+    - workers.properties
+
+- name: Remove SSL config file if not use SSL
+  file:
+    path: "{{ WEB_INSTANCE_DIR }}/conf.d/ssl.conf"
+    state: absent
+  when: useSSL == False
+
+- name: Copy mod_cluster.conf template
+  template:
+    src: conf.d/mod_cluster.conf
+    dest: "{{ WEB_INSTANCE_DIR }}/conf.d/"
+    owner: "{{ INSTALL_OWNER }}"
+    group: "{{ INSTALL_GROUP }}"
+    mode: 0600
+
+- name: restart httpd-{{ WEB_INSTANCE_NAME }}
+  systemd: name=httpd-{{ WEB_INSTANCE_NAME }} state=restarted

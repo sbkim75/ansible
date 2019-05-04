@@ -1,0 +1,8 @@
+---
+- hosts: prd-rba-servers
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - rba

@@ -1,0 +1,11 @@
+---
+- name: VM provisioning
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files: 
+    - inventories/common/group_vars/vcenter_info.yml 
+    - inventories/common/group_vars/passwd-vars.yml
+  roles: 
+    - vm-provisioning
+    - zabbix-add

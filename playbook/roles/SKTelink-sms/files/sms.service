@@ -1,0 +1,16 @@
+# Systemd unit file for SKTelink sms
+[Unit]
+Description=SKTelink sms
+Wants=network.target network-online.target sockets.target
+After=network.target network-online.target sockets.target
+
+[Service]
+Type=forking
+PIDFile=/sw/SKTelink/sms/lib/unix/smsClient.pid
+User=smsadm
+Group=sol
+ExecStart=/sw/SKTelink/sms/bin/unix/start.sh
+ExecStop=/sw/SKTelink/sms/bin/unix/stop.sh
+
+[Install]
+WantedBy=multi-user.target

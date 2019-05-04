@@ -1,0 +1,8 @@
+---
+- hosts: bpv-fq-grylg01, bpv-fq-grylg02, bpv-fq-grylg03, bpv-fq-gryes01, bpv-fq-gryes02, bpv-fq-gryes03, bpv-fq-gryha01, bpv-fq-gryha02 
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - netbackup-agent

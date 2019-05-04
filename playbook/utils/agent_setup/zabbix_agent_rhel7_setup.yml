@@ -1,0 +1,66 @@
+---
+- hosts: jirasv01
+  remote_user: finadm
+  tasks:
+  - name: Install zabbix agent from repo
+    yum:
+      name: ftp://172.27.104.9/repo/zabbix/3.4/rhel/7/x86_64/zabbix-agent-3.4.4-2.el7.x86_64.rpm 
+      state: present
+    become: True
+    when:
+      - (ansible_distribution == "CentOS") or (ansible_distribution == "RedHat")
+      - ansible_distribution_major_version == "7"
+  - name: Install zabbix get from repo
+    yum:
+      name: ftp://172.27.104.9/repo/zabbix/3.4/rhel/7/x86_64/zabbix-get-3.4.4-2.el7.x86_64.rpm 
+      state: present
+    become: True
+    when:
+      - (ansible_distribution == "CentOS") or (ansible_distribution == "RedHat")
+      - ansible_distribution_major_version == "7"
+  - name: Agent Server config 
+    lineinfile:
+      dest: /etc/zabbix/zabbix_agentd.conf
+      state: present
+      regexp: '^Server='
+      line: 'Server=127.0.0.1,172.27.105.206'
+    become: True
+    when:
+      - (ansible_distribution == "CentOS") or (ansible_distribution == "RedHat")
+      - ansible_distribution_major_version == "7"
+  - name: Agent ServerActive config remove
+    lineinfile:
+      dest: /etc/zabbix/zabbix_agentd.conf
+      state: absent
+      regexp: '^ServerActive='
+    become: True
+    when:
+      - (ansible_distribution == "CentOS") or (ansible_distribution == "RedHat")
+      - ansible_distribution_major_version == "7"
+  - name: Zabbix disk performance discovery script download
+    get_url:
+      url: ftp://anonymous:pass@172.27.104.9/repo/zabbix/3.4/rhel/template.d/zabbix-disk-performance-master/lld-disks.py
+      dest: /usr/local/bin/lld-disks.py
+      mode: 0755
+    become: True
+    when:
+      - (ansible_distribution == "CentOS") or (ansible_distribution == "RedHat")
+      - ansible_distribution_major_version == "7"
+  - name: Zabbix disk performance parameters config download
+    get_url:
+      url: ftp://anonymous:pass@172.27.104.9/repo/zabbix/3.4/rhel/template.d/zabbix-disk-performance-master/userparameter_diskstats.conf
+      dest: /etc/zabbix/zabbix_agentd.d/userparameter_diskstats.conf
+      mode: 0644
+    become: True
+    when:
+      - (ansible_distribution == "CentOS") or (ansible_distribution == "RedHat")
+      - ansible_distribution_major_version == "7"
+  - name: Zabbix Agent restart
+    service:
+      name: zabbix-agent
+      enabled: True
+      state: restarted
+    become: True  
+    when:
+      - (ansible_distribution == "CentOS") or (ansible_distribution == "RedHat")
+      - ansible_distribution_major_version == "7"

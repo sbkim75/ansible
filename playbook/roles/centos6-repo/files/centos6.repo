@@ -1,0 +1,6 @@
+[z-centos6]
+name=centos6
+baseurl=ftp://172.27.104.9/repo/centos/6/os/x86_64
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
+

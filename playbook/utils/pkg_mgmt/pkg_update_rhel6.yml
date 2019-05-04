@@ -1,0 +1,24 @@
+---
+- hosts: bdv-fq-chnap01
+  remote_user: finadm
+  vars: 
+    package: firefox
+
+  tasks:
+  - name: Package {{ package }} Installed Check
+    yum:
+      list: "{{ package }}"
+    register: pkg
+  - name: Print Package Installed
+    debug:
+      msg: '{{ pkg.results.yumstate }}'
+#  - name: TEST Package Installed
+#    debug:
+#      msg: '{{ rpm_fact.stdout }}'
+  - name: Updatae the {{ package }} package 
+    yum:
+      name: "{{ package }}"
+      state: latest
+    become: True
+    when:
+    - pkg.results[1].yumstate  == 'installed'

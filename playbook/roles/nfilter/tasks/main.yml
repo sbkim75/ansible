@@ -1,0 +1,39 @@
+---
+- name: make /sw/nshc/ directory
+  file:
+    path: /sw/nshc
+    state: directory
+    group: was
+    owner: tomcat
+    force: yes
+
+- name: make /sw/nshc/nfilter directory
+  file:
+    path: /sw/nshc/nfilter
+    state: directory
+    group: was
+    owner: tomcat
+    force: yes
+
+- name: copy petra library files
+  copy:
+    src: "{{ item }}"
+    dest: /sw/nshc/nfilter/{{ item }}
+    group: was
+    owner: tomcat
+  with_items:
+    - libnperm.so
+    - libNSaferJNI.so
+    - libnsafer.so
+    - nfsrv.1.9.11.jar
+    - nSafer.jar
+    - readme.txt
+
+- name: "config setenv.sh" 
+  lineinfile:
+    path: /sw/tomcat/bin/setenv.sh
+    state: present
+    line: "{{ item }}"
+    insertbefore: "export LD_LIBRARY_PATH"
+  with_items:
+    - "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/sw/nshc/nfilter"

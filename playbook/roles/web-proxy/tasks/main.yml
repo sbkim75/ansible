@@ -1,0 +1,19 @@
+---
+- name: install httpd
+  yum:
+    name: httpd
+    state: latest
+
+- name: copy forward-proxy.conf file
+  copy:
+    src: etc/httpd/conf.d/forward-proxy.conf
+    dest: /etc/httpd/conf.d/forward-proxy.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: enable httpd to systemd
+  systemd: name=httpd enabled=yes
+
+- name: start httpd
+  systemd: name=httpd state=started

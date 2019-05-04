@@ -1,0 +1,24 @@
+---
+- hosts: bsv-fq-test01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+  vars:
+    # Agent 서버 목록을 조회하기 위한 Noti 서버 IP/PORT 정보
+    - NOTI_SERVER_IP: 211.237.69.130 # DEV, STG, PRD 동일
+    - NOTI_SERVER_PORT: 19000 # DEV, STG, PRD 동일
+    # Agent 인증 및 버전 정보
+    - USER_ID: finnq.mms # DEV, STG, PRD 동일
+    - AGENT_ID: finnq.mms3 # DEV: finnq.mms2, STG: finnq.mms3, PRD: finnq.mms
+    - USER_PW: mTb32T3ZhQkWwHnV # DEV, STG, PRD 동일
+    # MySql DBMS Setting
+    - DB_DRIVER_CLASS: com.mysql.jdbc.Driver
+    - DB_URL : jdbc:mysql://172.27.123.17:4306/ssmsdb
+    - DB_USER_ID: smscon
+    - DB_PASSWORD: finnqQ1!
+    - DB_TBL_NAME: TBL_SUBMIT_QUEUE
+    - DB_TBL_HIST_NAME: TBL_MSG_HIST
+    - DB_POOL_SIZE: 8
+
+  roles:
+    - SKTelink-mms

@@ -1,0 +1,16 @@
+---
+- hosts: bdv-fq-pibbt01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files: 
+    - inventories/dev/host_vars/bdv-fq-pibbt01.yml
+
+  roles:
+    - netbackup-agent
+    - zabbix 
+    - jdk1.8
+    - ipa-client
+    - tomcat
+

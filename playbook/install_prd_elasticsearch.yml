@@ -1,0 +1,9 @@
+---
+- hosts: bpv-fq-gryes02, bpv-fq-gryes03
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - jdk1.8
+    - elasticsearch

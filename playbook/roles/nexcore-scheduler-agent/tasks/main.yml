@@ -1,0 +1,86 @@
+---
+- name: Create group if not exist
+  group:
+     name: was
+     gid: 700
+
+- name: Create user if not exist
+  user:
+     name: "{{ install_user }}"
+     uid: 701
+     group: was
+  when: install_user == "jboss"
+
+- name: Create user if not exist
+  user:
+     name: "{{ install_user }}"
+     uid: 708
+     group: was
+  when: install_user == "tomcat"
+
+- name: Make batchagent directory if not exist
+  file:
+    path: /sw/nexcore
+    state: directory
+    owner: "{{ install_user }}"
+    group: was
+    mode: 0750
+    recurse: yes
+
+- name: Copy nexcore-batchagent to /tmp
+  copy:
+    src: scheduler-agent-4.0.zip
+    dest: /tmp
+    mode: 0644
+
+- name: Extract batch agent file
+  unarchive:
+     src: /tmp/scheduler-agent-4.0.zip
+     dest: /sw/nexcore
+     remote_src: yes
+     owner: "{{ install_user }}"
+     group: was
+     mode: 0750
+
+- name: Copy setenv.sh file
+  template:
+    src: setenv.sh
+    dest: /sw/nexcore/scheduler-agent-4.0/
+    mode: 0750
+    owner: "{{ install_user }}"
+    group: was
+
+- name: Copy properties file
+  copy:
+    src: nexcore-scheduler-agent.properties
+    dest: /sw/nexcore/scheduler-agent-4.0/config/properties/
+    mode: 0750
+    owner: "{{ install_user }}"
+    group: was
+
+#- name: change setenv.sh path : 압축된 파일에 이미 적용되어 있음
+#  lineinfile:
+#    dest: /sw/nexcore/scheduler-agent-4.0/{{ item }}
+#    state: present
+#    regexp: "^. ./setenv.sh"
+#    line: ". /sw/nexcore/scheduler-agent-4.0/setenv.sh"
+#  with_items:
+#    - startup.sh
+#    - shutdown.sh
+
+- name: copy nexcore-scheduler-agent file
+  template:
+    src: nexcore-scheduler-agent.service
+    dest: /lib/systemd/system/nexcore-scheduler-agent.service
+    mode: 0644
+
+- name: register service file to systemd
+  systemd: daemon_reload=yes
+
+- name: make sure the nexcore-scheduler-agent service is running
+  systemd: name=nexcore-scheduler-agent state=started
+
+- name: enable service nexcore-scheduler-agent and ensure it
+  systemd: name=nexcore-scheduler-agent enabled=yes
+
+

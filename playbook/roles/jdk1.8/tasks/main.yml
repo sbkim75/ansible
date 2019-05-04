@@ -1,0 +1,13 @@
+---
+# tasks file for jdk1.8
+- name: Package java-1.8.0-openjdk installed Check
+  yum:
+    list: java-1.8.0-openjdk
+  register: pkg_check
+
+- name : Install java-1.8.0-openjdk
+  yum:
+    name: java-1.8.0-openjdk-devel
+    state: present
+  when: 
+    - pkg_check.results | selectattr( "yumstate","match","installed" )|list|length == 0 

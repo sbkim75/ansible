@@ -1,0 +1,48 @@
+---
+- hosts: bpv-fq-mhasv01
+  remote_user: finadm
+  tasks:
+  - name: /etc/hosts File add NetBackup Master server address
+    lineinfile:
+      path: /etc/hosts 
+      state: present
+      line: "{{ item }}"
+    with_items:
+      - "## NetBackup Master Server ##"
+      - "172.27.104.70  bpp-fq-bak01"
+    become: True
+  - name: NetBackup Agent Package down
+    get_url:
+      url: ftp://anonymous:pass@172.27.104.9/netbackup/NetBackup_rpm.tar.gz
+      dest: /home/finadm/NetBackup_rpm.tar.gz
+    become: True
+  - name: NetBackup Agent Config file down
+    get_url:
+      url: ftp://anonymous:pass@172.27.104.9/netbackup/NBInstallAnswer.conf
+      dest: /tmp/NBInstallAnswer.conf
+    become: True
+  - name: NetBackup Agent File Unarchive
+    shell: tar xvfz /home/finadm/NetBackup_rpm.tar.gz
+    become: True
+  - name: Get Hostname
+    shell: echo $HOSTNAME
+    register: hostname
+  - name: /etc/hosts File add NetBackup Master server address
+    lineinfile:
+      path: /tmp/NBInstallAnswer.conf
+      state: present
+      line: "{{ item }}"
+    with_items:
+      - "CLIENT_NAME={{ hostname.stdout }}" 
+    become: True
+  - name: Install NetBackup Agent
+    shell: rpm -Uvh /home/finadm/VRT*.rpm
+    become: True
+  - name: Install check start
+    shell: /usr/openv/netbackup/bin/bpps -x
+    become: True
+    register: netbackup
+  - name: Install check result
+    debug:
+      msg: '{{ netbackup.stdout_lines }}'
+

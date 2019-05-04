@@ -1,0 +1,91 @@
+- name: add group "sol"
+  group: name=sol gid=1100 state=present
+
+- name: add user "elasticsearch"
+  user: name=elasticsearch group=sol uid=1108 state=present shell=/sbin/nologin
+
+- name : make data directory
+  file:
+    path: /data1/elasticsearch
+    state: directory
+    group: sol
+    owner: elasticsearch
+
+- name : make log directory
+  file:
+    path: /logs/elasticsearch
+    state: directory
+    group: sol
+    owner: elasticsearch
+
+- name: copy elasticsearch-5.6.8.rpm
+  copy:
+    src: elasticsearch-5.6.8.rpm
+    dest: /tmp
+
+- name : Install elasticsearch
+  yum:
+    name: /tmp/{{ item }}
+    state: present
+  with_items:
+    - elasticsearch-5.6.8.rpm
+
+- name : set group /etc/elasticsearch directory
+  file:
+    path: /etc/elasticsearch
+    state: directory
+    group: sol
+    recurse: yes
+
+- name : set group /var/run/elasticsearch directory
+  file:
+    path: /var/run/elasticsearch
+    state: directory
+    group: sol
+    owner: elasticsearch
+    recurse: yes
+
+- name : set group /var/lib/elasticsearch directory
+  file:
+    path: /var/lib/elasticsearch
+    state: directory
+    group: sol
+    owner: elasticsearch
+    recurse: yes
+
+- name : set group /var/log/elasticsearch directory
+  file:
+    path: /var/log/elasticsearch
+    state: directory
+    group: sol
+    owner: elasticsearch
+    recurse: yes
+
+- name: Configure elasticsearch.yml
+  template:
+    src: elasticsearch.yml.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+
+- name: Configure jvm.options
+  template:
+    src: jvm.options.j2
+    dest: /etc/elasticsearch/jvm.options
+
+- name: Configure log4j2.properties
+  template:
+    src: log4j2.properties.j2
+    dest: /etc/elasticsearch/log4j2.properties
+
+- name: Configure elasticsearch.service 
+  template:
+    src: elasticsearch.service.j2
+    dest: /usr/lib/systemd/system/elasticsearch.service
+
+- name: reload service file to systemd
+  systemd: daemon_reload=yes
+
+- name: enable service elasticsearch and ensure it
+  systemd: name=elasticsearch enabled=yes
+
+- name: make sure the elasticsearch service is running
+  systemd: name=elasticsearch state=restarted

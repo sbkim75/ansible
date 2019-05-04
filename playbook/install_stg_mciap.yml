@@ -1,0 +1,11 @@
+---
+- hosts: bsv-fq-mciap01, bsv-fq-mciap02
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - netbackup-agent
+    - zabbix 
+    - jdk1.7
+    - ipa-client

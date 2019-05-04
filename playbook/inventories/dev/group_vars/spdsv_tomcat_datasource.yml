@@ -1,0 +1,21 @@
+---
+# file: inventories/dev/group_vars/spdsv_tomcat_datasource.yml
+dataSources:
+  - name: "jdbc/spiderdb"
+    maxActive: "100"
+    initialSize: "100"
+    maxIdle: "10"
+    minIdle: "10"
+    maxWait: "10000"
+    username: "cfwadm"
+    password: "d6655c1baa08a64fbf894649cfdfc86a"                 # Cfwadm#01 
+    url: "jdbc:mariadb://172.27.104.231:10306/dcfwdb?useServerPrepStmts=false&amp;autoReconnect=true&amp;connectTimeout=15000&amp;socketTimeout=60000"
+  - name: "jdbc/opsdb"
+    maxActive: "100"
+    initialSize: "100"
+    maxIdle: "10"
+    minIdle: "10"
+    maxWait: "10000"
+    username: "opscon"
+    password: "008f5b10a9110f71efbf283780f3d600"                 # Opscon#01
+    url: "jdbc:mariadb://172.27.104.231:10306/dopsdb?useServerPrepStmts=false&amp;autoReconnect=true&amp;connectTimeout=15000&amp;socketTimeout=60000"

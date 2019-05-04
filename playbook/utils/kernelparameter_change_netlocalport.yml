@@ -1,0 +1,15 @@
+---
+- hosts: bsv-fq-jh01, bsv-fq-jhdb01
+  remote_user: finadm
+  tasks:
+  - name: "Change /etc/sysctl.conf > net.ipv4.ip_local_port_range = 20001 65000"
+    lineinfile:
+      dest: /etc/sysctl.conf
+      state: present
+      regexp: '^net.ipv4.ip_local_port_range'
+      line: 'net.ipv4.ip_local_port_range = 20001 65000'
+    become: True
+
+  - name: sysctl reload (sysctl --system)
+    shell: sysctl --system
+    become: True

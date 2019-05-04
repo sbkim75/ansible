@@ -1,0 +1,67 @@
+---
+- hosts: bpv-fq-pibap01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files: 
+    - inventories/prd/group_vars/pibap_mod_cluster.yml
+    - inventories/prd/host_vars/bpv-fq-pibap01.yml
+
+  tasks:
+    - name: External P2P corp. hostname
+      lineinfile:
+        path: /etc/hosts
+        state: present
+        line: "{{ item }}"
+      with_items:
+        - "## External P2P corp. hostname"
+        - "13.124.193.181 finnq.8percent.kr"
+        - "222.231.25.109 finnq.together.co.kr"
+        - "14.49.35.157 api.sodit.co.kr"
+        - "211.253.30.27 www.hellofunding.co.kr"
+
+  roles:
+    - netbackup-agent
+    - zabbix
+    - jdk1.8
+    - ipa-client
+    - tomcat
+    - mod_cluster_jk
+    - pibap-sofile
+    - petra-tobe
+    - nfilter
+
+
+- hosts: bpv-fq-pibap02
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files: 
+    - inventories/prd/group_vars/pibap_mod_cluster.yml
+    - inventories/prd/host_vars/bpv-fq-pibap02.yml
+
+  tasks:
+    - name: External P2P corp. hostname
+      lineinfile:
+        path: /etc/hosts
+        state: present
+        line: "{{ item }}"
+      with_items:
+        - "## External P2P corp. hostname"
+        - "13.124.193.181 finnq.8percent.kr"
+        - "222.231.25.109 finnq.together.co.kr"
+        - "14.49.35.157 api.sodit.co.kr"
+        - "211.253.30.27 www.hellofunding.co.kr"
+
+  roles:
+    - netbackup-agent
+    - zabbix
+    - jdk1.8
+    - ipa-client
+    - tomcat
+    - mod_cluster_jk
+    - pibap-sofile
+    - petra-tobe
+    - nfilter

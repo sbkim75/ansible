@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+  - name: "awx inventory update /sw/ansible/hosts"
+    shell: sudo -u awx /opt/awx/bin/awx-manage inventory_import --source /sw/ansible/hosts --inventory-name ansible_hosts --overwrite --overwrite-vars

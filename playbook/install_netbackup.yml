@@ -1,0 +1,8 @@
+---
+- hosts: bdv-fq-dumwb01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - netbackup-agent

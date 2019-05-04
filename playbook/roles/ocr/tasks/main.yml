@@ -1,0 +1,214 @@
+---
+- name: add user "ocradm"
+  user: name=ocradm group=was uid=712 state=present shell=/bin/bash home=/home/ocradm createhome=yes
+
+- name: make ecm directory
+  file: 
+    path: /sw/ecm
+    state: directory
+    group: was
+    owner: ocradm
+
+- name: copy install shell file
+  copy:
+    src: sw/ecm/install.sh
+    dest: /sw/ecm
+    mode: 0755
+    owner: ocradm
+    group: was
+
+- name: copy ECM-Engine jar file
+  copy: 
+    src: sw/ecm/ECM-SocketServer-2.3.0-finnq-obfuscated.jar 
+    dest: /sw/ecm 
+    mode: 0644 
+    owner: ocradm 
+    group: was
+
+- name: execute install.sh
+  command: /sw/ecm/install.sh
+#  notify: install ocr
+
+- name: copy ECM-monitor jar file
+  copy: 
+    src: sw/ecm/ECM-Monitor-1.0.0-finnq-obfuscated.jar 
+    dest: /sw/ecm 
+    mode: 0644
+    owner: ocradm
+    group: was
+
+- name: execute install.sh
+  command: /sw/ecm/install.sh
+#  notify: install ocr
+
+- name: copy ECM-Admin war file
+  copy: 
+    src: sw/tomcat/webapps/ecmadmin.war 
+    dest: /sw/tomcat/webapps 
+    mode: 0644
+    owner: tomcat
+    group: was
+  notify: restart tomcat
+
+- name: copy webform file
+  copy: 
+    src: sw/tomcat/webapps/webform.war 
+    dest: /sw/tomcat/webapps 
+    mode: 0644
+    owner: tomcat 
+    group: was
+  notify: restart tomcat
+
+- name: make log directory for ecm
+  file:
+    path: /logs/ecm
+    state: directory
+    owner: ocradm
+    group: was
+
+- name: make log directory for tomcat
+  file:
+    path: /logs/tomcat
+    state: directory
+    owner: tomcat
+    group: was
+
+- name: make license directory
+  file:
+    path: /sw/ecm/engine/.license
+    state: directory
+    owner: ocradm
+    group: was
+
+- name: copy license data files
+  copy: 
+    src: sw/ecm/engine/.license/{{ item }}
+    dest: /sw/ecm/engine/.license
+    owner: ocradm
+    group: was
+  with_items:
+    - "{{ 'finnq_' + ansible_hostname + '_license.dat'  }}"
+    - "{{ 'finnq_' + ansible_hostname + '_licPubKey.asc'  }}"
+
+- name: copy license config file
+  template:  
+    src: ecm-engine/mllicense.properties
+    dest: /sw/ecm/engine
+    owner: ocradm
+    group: was
+
+- name: restart tomcat service REALLY NEEDED?????
+  systemd: name=tomcat state=restarted
+
+- name: wait during tomcat service successfully
+  wait_for:
+    port: 8080
+    delay: 10
+
+- name: copy ecm-admin logback.xml file from template
+  template:
+    src: ecm-admin/logback.xml
+    dest: /sw/tomcat/webapps/ecmadmin/WEB-INF/classes/logback.xml
+
+- name: copy ecm-admin service-properties.xml file from template
+  template:
+    src: ecm-admin/stg_service-properties.xml
+    dest: /sw/tomcat/webapps/ecmadmin/WEB-INF/classes/properties/service-properties.xml
+  when: 
+    - ansible_hostname | search("^bs") 
+
+- name: copy ecm-admin service-properties.xml file from template
+  template:
+    src: ecm-admin/prd_service-properties.xml
+    dest: /sw/tomcat/webapps/ecmadmin/WEB-INF/classes/properties/service-properties.xml
+  when:
+    - ansible_hostname | search("^bp")
+
+- name: copy ecm-engine logback.xml file from template
+  template:
+    src: ecm-engine/logback.xml
+    dest: /sw/ecm/engine/logback.xml
+
+- name: copy ecm-engine db.properties file from template
+  template:
+    src: ecm-engine/stg_db.properties
+    dest: /sw/ecm/engine/properties/db.properties
+  when: 
+    - ansible_hostname | search("^bs")
+
+- name: copy ecm-engine db.properties file from template
+  template:
+    src: ecm-engine/prd_db.properties
+    dest: /sw/ecm/engine/properties/db.properties
+  when: 
+    - ansible_hostname | search("^bp")
+
+- name: copy ecm-monitor logback.xml file from template
+  template:
+    src: ecm-monitor/logback.xml
+    dest: /sw/ecm/monitor/logback.xml
+
+- name: copy ecm-monitor db.properties file from template
+  template:
+    src: ecm-monitor/stg_db.properties
+    dest: /sw/ecm/monitor/properties/db.properties
+  when: 
+    - ansible_hostname | search("^bs")
+
+- name: copy ecm-monitor db.properties file from template
+  template:
+    src: ecm-monitor/prd_db.properties
+    dest: /sw/ecm/monitor/properties/db.properties
+  when: 
+    - ansible_hostname | search("^bp")
+
+- name: when ocrsv02, Change monitor.properties file
+  lineinfile:
+    path: /sw/ecm/monitor/properties/monitor.properties
+    regexp: "^monitor.serverId"
+    line: "monitor.serverId=SERVER02"
+  when:
+    - ansible_hostname | search("^bpv-fq-ocrsv02")
+
+- name: copy webform ddims7.properties file from template
+  template:
+    src: webform/ddims7.properties
+    dest: /sw/tomcat/webapps/webform/WEB-INF/classes/properties/ddims7.properties
+
+- name: copy webform logback.xml file from template
+  template:
+    src: webform/logback.xml
+    dest: /sw/tomcat/webapps/webform/WEB-INF/classes/logback.xml
+
+- name: copy webform service.properties file from template
+  template:
+    src: webform/service.properties
+    dest: /sw/tomcat/webapps/webform/WEB-INF/classes/properties/service.properties
+    owner: tomcat
+    group: was
+  notify: restart tomcat
+
+- name: copy ecmengine.service and ecmmonitor.service file
+  copy: 
+    src: etc/systemd/system/{{ item }}
+    dest: /lib/systemd/system/{{ item }}
+    mode: 0644
+  with_items:
+    - ecmengine.service
+    - ecmmonitor.service
+
+- name: register service file to systemd
+  systemd: daemon_reload=yes
+
+- name: make sure the ecmengine service is running
+  systemd: name=ecmengine state=restarted
+
+- name: enable service ecmengine and ensure it
+  systemd: name=ecmengine enabled=yes
+
+- name: make sure the ecmmonitor service is running
+  systemd: name=ecmmonitor state=restarted
+
+- name: enable service ecmmonitor and ensure it
+  systemd: name=ecmmonitor enabled=yes
+

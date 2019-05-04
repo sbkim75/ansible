@@ -1,0 +1,66 @@
+---
+# file: inventories/dev/group_vars/fiaap_jboss-ews_vars.yml
+
+###########################################
+# Jboss-EWS Engine 설치 여부
+###########################################
+useInstallEngine: True
+
+###########################################
+# Instance 기본 설정
+###########################################
+useInstance: True                                      # Instance 설정 : True or False
+WEB_INSTANCE_NAME: dfia                               # Instance
+WEB_INSTANCE_DIR: "{{ SVC_WEB_HOME }}/servers/{{ WEB_INSTANCE_NAME }}"  # Instance directory
+WEB_PORT: 8080                                           # HTTP Port
+SVC_USER: nobody                                       # HTTPD processor owner
+SVC_GROUP: nobody                                      # HTTPD processor group
+WEB_DOCROOT_DIR: /apps/jboss-ews/htdocs/fia            # DocuemntRoot directory
+ERROR_DIR: "{{ WEB_DOCROOT_DIR }}/error"               # 4xx, 5xx 발생  시 redirect 할 error page directory
+ERROR_PAGE: error.html                                 # 4xx, 5xx 발생 시 redirect 할 error page
+WEB_LOG_DIR: "/logs/jboss-ews/{{ WEB_INSTANCE_NAME }}" # Log directory
+
+###########################################
+# Virtual Host 설정
+############################################
+vhostArr:                                              # Viratual host 설정
+  - group: dfia                                       # 애플리케이션 group
+    domain: dfia.finnq.com                            # Server Name(Domain Name)
+    #proxyTimeout: 30                                  # 설정하지 않으면 conf/httpd.conf의 Timeout 120 적용됨
+    #proxyPass:                                         # useModcluster가 True일 때 proxy 설정
+    #  - passMatch: "^/.*\\.(jsp|do|mvc|web)$ balancer://balancer_dfia/"
+    #  - passMatch: "^(/.*\\.(gif|GIF|jpg|JPG|png|PNG|avi|AVI|ico|ICO|zip|ZIP|html|HTML|htm|HTM|txt|TXT|css|CSS|js|JS|swf|SWF|htc|HTC))$ !"
+    #  - passMatch: "^(/resources/.*)$ !"
+    jkMount:                                           # useModjk가 True일 때 jkMount 설정
+      - mountPoint: "/*"
+
+###########################################
+# modd_cluster 설정
+###########################################
+useModcluster: False                                    # mod_cluster 설정 : True or False, useModjk가 True이면 False 이어야 함
+#modclusterPort: 6166                                   # mod_cluster port
+#advertiseGroupAddress: 224.26.1.2                      # mod_cluster group udp address
+#advertisePort: 23364                                   # mod_cluster group udp port, default 23364
+#AllowHostsArr:                                         # mod_cluster 연동대상 WAS 서버 IP
+#  - hostAddr: 172.27.104.223 
+
+###########################################
+# mod_jk 설정
+############################################
+useModjk: True                                        # mod_jk 설정 : True or False, useModcluster가 True이면 False 이어야 함
+workerList: dfia                                       # Load Balancing Worker Group
+workerPropertiesArr:                                   # Worker Balancing Members
+  - workerName: dfia11                                 # Member Name
+    workerHost: 172.27.104.223                         # Member IP
+    workerPort: 8009                                   # Member Port
+
+###########################################
+# SSL 설정
+############################################
+useSSL: False                                           # SSL 설정 : True or False, DMZ WEB인 경우 True
+#SSL_PORT: 443                                          # SSL port
+#SSL_CERT_HOME: "{{ SVC_WEB_HOME }}/certs/finnq.com"    # SSL file directory
+#CertificateFile: _wildcard_finnq_com.crt               # SSL Cerfificate file
+#CertificateKeyFile: _wildcard_finnq_com_SHA256WITHRSA.key  # SSL Certificate Key file
+#CertificateChainFile: rsa-ov.chain-bundle.pem          # SSL Certificate Chain file
+#CACertificateFile: AddTrustExternalCARoot.crt          # SSL Certificate CA Root file

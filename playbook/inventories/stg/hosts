@@ -1,0 +1,31 @@
+bsv-fq-wsmsv01 ansible_port=22 ansible_user=finadm
+bsv-fq-masap01 ansible_port=22 ansible_user=finadm
+bsv-fq-cbsap01 ansible_port=22 ansible_user=finadm
+bsv-fq-fisap01 ansible_port=22 ansible_user=finadm
+bsv-fq-mbwap01 ansible_port=22 ansible_user=finadm
+bsv-fq-fpsap01 ansible_port=22 ansible_user=finadm
+bsv-fq-batap01 ansible_port=22 ansible_user=finadm
+bsv-fq-chnap01 ansible_port=22 ansible_user=finadm
+bsv-fq-fepap01 ansible_port=22 ansible_user=finadm
+bsv-fq-fepap02 ansible_port=22 ansible_user=finadm
+bsv-fq-mssap01 ansible_port=22 ansible_user=finadm
+bsv-fq-fdssv01 ansible_port=22 ansible_user=finadm
+bsv-fq-apmsv01 ansible_port=22 ansible_user=finadm
+bsv-fq-maswb01 ansible_port=22 ansible_user=finadm
+bsv-fq-owswb01 ansible_port=22 ansible_user=finadm
+bsv-fq-amlsv01 ansible_port=22 ansible_user=finadm
+bsv-fq-rbasv01 ansible_port=22 ansible_user=finadm
+bsv-fq-ocrsv01 ansible_port=22 ansible_user=finadm
+bsv-fq-ftpsv01 ansible_port=22 ansible_user=finadm
+
+[jumphost]
+bsv-fq-jh01 ansible_port=2222 ansible_user=finadm
+bsv-fq-jhdb01 ansible_port=2222 ansible_user=finadm
+
+[dbserver]
+bsv-fq-masdb01 ansible_port=22 ansible_user=finadm
+bsv-fq-chndb01 ansible_port=22 ansible_user=finadm
+bsv-fq-mssdb01 ansible_port=22 ansible_user=finadm
+bsv-fq-fisdb01 ansible_port=22 ansible_user=finadm
+bsv-fq-fpsdb01 ansible_port=22 ansible_user=finadm
+

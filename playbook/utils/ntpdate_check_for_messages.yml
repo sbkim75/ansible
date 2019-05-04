@@ -1,0 +1,10 @@
+- hosts: all
+  remote_user: finadm
+  tasks:
+    - name: "ntpdate check"
+      shell: ntpdate -s 172.27.105.221
+      register: ntpdate_check
+      become: True 
+    - name : "ntpdate output"
+      debug:
+          msg: "{{ ntpdate_check.stdout }}"

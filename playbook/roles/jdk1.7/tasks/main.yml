@@ -1,0 +1,13 @@
+---
+# tasks file for jdk1.7
+- name: Copy jdk-7u80-linux-x64.rpm /tmp
+  copy: 
+    src: jdk-7u80-linux-x64.rpm 
+    dest: /tmp
+    mode: 0644
+
+- name : Install jdk
+  yum:
+    name: /tmp/jdk-7u80-linux-x64.rpm
+    state: present
+    

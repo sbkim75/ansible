@@ -1,0 +1,14 @@
+---
+- hosts: bsv-fq-masap01,bsv-fq-mssap01,bsv-fq-cbsap01,bsv-fq-fisap01,bsv-fq-chnap01,bsv-fq-fepap01,bsv-fq-fepap02,bsv-fq-fpsap01,bsv-fq-batap01,bsv-fq-mbwap01,bsv-fq-fdssv01
+  remote_user: finadm
+  tasks:
+  - name: jdk pkg down
+    get_url:
+      url: ftp://anonymous:pass@172.27.104.9/jdk/jdk-7u80-linux-x64.rpm
+      dest: /tmp/
+      mode: 0644
+    become: True
+  - name: Install jdk
+    shell: rpm -ivh /tmp/jdk-7u80-linux-x64.rpm
+    become: True
+

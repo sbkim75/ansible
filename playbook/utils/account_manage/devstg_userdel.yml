@@ -1,0 +1,13 @@
+---
+- hosts: dev-linux, stg-linux
+  remote_user: finadm
+  tasks:
+##사번계정 리스트 취합##
+    - name: Create /tmp/userlist.txt
+      shell: "cat /etc/passwd |egrep '^90|^11' |awk -F : '{print $1}'"
+      register: userlist
+
+    - name: "서버 별 계정정보 파일 기록"
+      shell: "/usr/sbin/userdel -r {{ item }}"
+      with_items: "{{ userlist.stdout_lines }}"
+      become: True

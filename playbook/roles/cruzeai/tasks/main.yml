@@ -1,0 +1,48 @@
+- name: add group "chn"
+  group: name=chn gid=800 state=present
+
+- name: add user "cruzeai"
+  user: name=cruzeai group=chn uid=801 state=present shell=/usr/bin/ksh home=/home/cruzeai createhome=yes
+
+- name: make cruzeai directory
+  file:
+    path: /sw/cruzeai
+    state: directory
+    owner: cruzeai
+    group: chn 
+ 
+- name: make cruzeai log directory
+  file:
+    path: /logs/cruzeai
+    state: directory
+    owner: cruzeai
+    group: chn 
+ 
+- name: Extract cruzeai.tar from files
+  unarchive: 
+    src: cruzeai.tar.gz
+    dest: /sw/
+    owner: cruzeai
+    group: chn
+
+- name: Configure ES.profile
+  template:
+    src: ES.profile
+    dest: /sw/cruzeai/cruzlink/bin
+    owner: cruzeai
+    group: chn
+
+- name: Install ksh
+  yum:
+    name: ksh 
+    state: present
+  become: True
+
+- name: cruzeai profile add
+  shell: cat /sw/cruzeai/cruzlink/bin/ES.profile > /home/cruzeai/.profile
+  
+- name: cruzeai profile chmod
+  file:
+    path: /home/cruzeai/.profile
+    owner: cruzeai
+    group: chn

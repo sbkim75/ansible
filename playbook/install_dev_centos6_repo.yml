@@ -1,0 +1,8 @@
+---
+- hosts: bdv-fq-ftpsv01 
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - centos6-repo 

@@ -1,0 +1,42 @@
+---
+- name: make hidden directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - /var/tmp/.petra
+    - /sw/petra
+
+- name: "[STG|DEV] AP Server :  copy petra config template file to hidden directory"
+  template: src=stg_was_petra_cipher_api.conf dest=/var/tmp/.petra/petra_cipher_api.conf
+  when:
+    - ansible_hostname | search("^bs") and ansible_hostname | search("db0") == 0 or ansible_hostname | search("^bd") and ansible_hostname | search("db0") == 0
+
+- name: "[STG|DEV] DB Server :  copy petra config template file to hidden directory"
+  template: src=stg_db_petra_cipher_api.conf dest=/var/tmp/.petra/petra_cipher_api.conf
+  when:
+    - ansible_hostname | search("^bs") and ansible_hostname | search("db0") == 1 or ansible_hostname | search("^bd") and ansible_hostname | search("db0") == 1
+
+- name: "[PRD] AP Server :  copy petra config template file to hidden directory"
+  template: src=prd_was_petra_cipher_api.conf dest=/var/tmp/.petra/petra_cipher_api.conf
+  when:
+    - ansible_hostname | search("^bp") and ansible_hostname | search("db0") == 0 
+
+- name: "[PRD] DB Server :  copy petra config template file to hidden directory"
+  template: src=prd_db_petra_cipher_api.conf dest=/var/tmp/.petra/petra_cipher_api.conf
+  when:
+    - ansible_hostname | search("^bp") and ansible_hostname | search("db0") == 1
+
+- name: copy petra library files
+  copy:
+    src: "{{ item }}"
+    dest: /sw/petra/{{ item }}
+  with_items:
+    - libklib.so
+    - libpcjapi.so
+    - PcaTest.java
+    - PetraCipherAPI.jar
+
+- name: copy petra.sh profile 
+  copy: src=petra.sh dest=/etc/profile.d/petra.sh
+

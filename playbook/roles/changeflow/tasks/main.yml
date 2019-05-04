@@ -1,0 +1,83 @@
+---
+- name: Check group
+  shell: grep was /etc/group | wc -l
+  register: group_status
+
+#- debug: var=group_status
+- name: Add group was if not exist
+  group: name=was state=present
+  when: group_status.stdout == "0"
+
+- name: Check user
+  shell: grep "{{ install_user }}" /etc/passwd | wc -l
+  register: user_status
+
+#- debug: var=user_status
+- name: Add user "{{ install_user }}" if not exist
+  user: name={{ install_user }} group=was state=present shell=/bin/bash home=/home/{{ install_user }} createhome=yes
+  when: user_status.stdout == "0"
+
+- name: Change owner home directory
+  file:
+    path: /home/{{ install_user }}
+    owner: "{{ install_user }}"
+    group: was
+  when: user_status.stdout == "0"
+
+- name: Make install directory
+  file:
+    path: "{{ install_dir }}"
+    state: directory
+    owner: "{{ install_user }}"
+    group: was
+    mode: 0750
+    recurse: yes
+
+- name: Extract tar file into changeflow directory
+  unarchive:
+    src: CFAgent.tar
+    dest: "{{ install_dir }}"
+    owner: "{{ install_user }}"
+    group: was
+
+- name: Deliver agent configuration file
+  template: src=agent.properties dest={{ install_dir }}/CFAgent/agent/ owner={{ install_user }} group=was mode=0640
+
+- name: Deliver agent.sh file
+  template: src=agent.sh dest={{ install_dir }}/CFAgent/agent/ owner={{ install_user }} group=was mode=0750
+
+- name: Deliver agentStart.sh file
+  template: src=agentStart.sh dest={{ install_dir }}/CFAgent/agent/ owner={{ install_user }} group=was mode=0750
+
+- name: Deliver agentStop.sh file
+  template: src=agentStop.sh dest={{ install_dir }}/CFAgent/agent/ owner={{ install_user }} group=was mode=0750
+
+- name: Deliver log4j configuration file
+  template: src=log4j.properties dest={{ install_dir }}/CFAgent/agent/ owner={{ install_user }} group=was mode=0640
+
+- name: Make log directory
+  file:
+    path: "{{ log_dir }}"
+    state: directory
+    owner: "{{ install_user }}"
+    group: was
+    mode: 0750
+    recurse: yes
+
+- name: remove other permission
+  file:
+    path: "{{ install_dir }}"
+    mode: o-rwx
+    recurse: yes
+
+- name: Deliver service file
+  template: src=changeflow.service dest=/lib/systemd/system/ mode=0644
+
+- name: register service file to systemd
+  systemd: daemon_reload=yes
+
+- name: enable service
+  systemd: name=changeflow.service enabled=yes
+
+- name: make sure the service is running
+  systemd: name=changeflow.service state=restarted

@@ -1,0 +1,71 @@
+#!/bin/sh
+# -------------------------------------------------------------
+#   KHAN [provisioning]              http://www.opennaru.com/
+#
+#   contact : service@opennaru.com
+#   Copyright(C) 2015, opennaru.com, All Rights Reserved.
+# -------------------------------------------------------------
+#
+# KHAN [monitoring] system agent Control Script
+#
+# chkconfig: 345 80 20
+# description: KHAN [monitoring] system agent
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+start(){
+    su - khansys -c "cd /sw/khan/khan-agent/khan-sys-agent/bin; /sw/khan/khan-agent/khan-sys-agent/bin/start.sh "
+    echo "Starting..."
+	return 0
+}
+
+stop(){
+    su - khansys -c "cd /sw/khan/khan-agent/khan-sys-agent/bin; /sw/khan/khan-agent/khan-sys-agent/bin/kill.sh "
+    echo "Stop..."
+	return 0
+}
+
+kill(){
+    su - khansys -c "cd /sw/khan/khan-agent/khan-sys-agent/bin; /sw/khan/khan-agent/khan-sys-agent/bin/kill.sh"
+    echo "Kill..."
+	return 0
+}
+
+restart(){
+    stop
+    sleep 10
+    su - khansys -c "cd /sw/khan/khan-agent/khan-sys-agent/bin; /sw/khan/khan-agent/khan-sys-agent/bin/kill.sh"
+    start
+}
+
+status(){
+    if [ "`ps -ef | grep java | grep "com.opennaru.khan.agent.sys.Launcher"`" != "" ]; then
+        echo "Running..."
+        return 0
+    else
+        echo "Not Running..."
+        return 3
+    fi
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  kill)
+        kill
+        ;;
+  status)
+	status
+	;;
+  restart)
+        restart
+        ;;
+  *)
+        echo "Usage: khan-sys-agent {start|stop|kill|restart|status}"
+        exit 1
+esac

@@ -1,0 +1,8 @@
+---
+- hosts: bpv-fq-batap01,bpv-fq-batap02,bpv-fq-cbsap01,bpv-fq-cbsap02,bpv-fq-fdssv01,bpv-fq-fisap01,bpv-fq-fisap02,bpv-fq-fpsap01,bpv-fq-fpsap02,bpv-fq-masap01,bpv-fq-masap02,bpv-fq-mbwap01,bpv-fq-mbwap02
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+ 
+  roles:
+    - app_backup

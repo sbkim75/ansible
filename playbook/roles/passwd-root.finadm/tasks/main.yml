@@ -1,0 +1,41 @@
+- name: "root Change password"
+  user:
+    name: root
+    password: "{{ (root_first_var + (ansible_hostname.split('-')[-1][-7:])  + root_second_var )| password_hash('sha512') }}"
+  become: true 
+
+- name: "가상화서버이며, IP가 1자리 일 경우> finadm  Change password"
+  user:
+    name: finadm
+    password: "{{ (finadm_first_var + '0' + vmip_var)| password_hash('sha512') }}"
+  become: true
+  when:
+    - vmip_var|length == 1
+  ignore_errors: true
+
+- name: "가상화서버이며, IP가 2자리 이상일 경우> finadm Change password"
+  user:
+    name: finadm
+    password: "{{ (finadm_first_var + vmip_var)| password_hash('sha512') }}"
+  become: true
+  when:
+    - vmip_var|length == 2
+  ignore_errors: true
+
+- name: "물리서버이며, IP가 1자리 일 경우> finadm Change password"
+  user:
+    name: finadm
+    password: "{{ (finadm_first_var + '0' + pmip_var)| password_hash('sha512') }}"
+  become: true
+  when:
+    - pmip_var|length == 1
+  ignore_errors: true
+
+- name: "물리서버이며, IP가 2자리 이상일 경우> finadm Change password"
+  user:
+    name: finadm
+    password: "{{ (finadm_first_var + pmip_var)| password_hash('sha512') }}"
+  become: true
+  when:
+    - pmip_var|length == 2
+  ignore_errors: true

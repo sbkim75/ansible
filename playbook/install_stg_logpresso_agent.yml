@@ -1,0 +1,9 @@
+---
+- hosts: bsv-fq-cbsap01, bsv-fq-fisap01, bsv-fq-mbwap01, bsv-fq-fdssv01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - logpresso-agent
+

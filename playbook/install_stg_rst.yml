@@ -1,0 +1,10 @@
+---
+- hosts: bsv-fq-rstsv01
+  port: 22
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - netbackup-agent
+    - ssh-port

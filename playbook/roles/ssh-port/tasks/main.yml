@@ -1,0 +1,8 @@
+---
+# tasks file for ssh_port
+- name: Setup alternate SSH Port
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^Port"
+    line: "Port 2222"
+  notify: "Restart sshd"

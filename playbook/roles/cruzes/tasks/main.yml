@@ -1,0 +1,49 @@
+# 그룹추가
+- name: add group "chn"
+  group: name=chn gid=800 state=present
+
+- name: add user "cruzadm"
+  user: name=cruzadm group=chn uid=804 state=present shell=/usr/bin/ksh home=/home/cruzadm createhome=yes
+
+- name: make cruzadm directory
+  file:
+    path: /sw/cruzes
+    state: directory
+    owner: cruzadm
+    group: chn 
+ 
+- name: make cruzadm log directory
+  file:
+    path: /logs/cruzes
+    state: directory
+    owner: cruzadm
+    group: chn 
+ 
+- name: Extract cruzes.tar from files
+  unarchive: 
+    src: cruzes.tar.gz
+    dest: /sw/
+    owner: cruzadm
+    group: chn
+
+- name: Configure ES.profile
+  template:
+    src: ES.profile
+    dest: /sw/cruzes/cruzlink/bin
+    owner: cruzadm
+    group: chn
+
+- name: Install ksh
+  yum:
+    name: ksh 
+    state: present
+  become: True
+
+- name: cruzadm profile add
+  shell: cat /sw/cruzes/cruzlink/bin/ES.profile > /home/cruzadm/.profile
+  
+- name: cruzadm profile chmod
+  file:
+    path: /home/cruzadm/.profile
+    owner: cruzadm
+    group: chn

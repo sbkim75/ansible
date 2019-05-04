@@ -1,0 +1,11 @@
+---
+- hosts: logpress-agent
+  tasks:
+  - name: logpress-agent log grep
+    shell: "grep -ir 'unhandled exception from' *"
+    args: 
+      chdir: "/sw/answer/sentry/log"
+    register: grep_output
+    become: True
+  - debug:
+      var: grep_output.stdout_lines

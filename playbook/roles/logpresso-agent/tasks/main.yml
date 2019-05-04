@@ -1,0 +1,22 @@
+---
+- name: Make logpresso agent directory
+  file:
+    path: /sw/answer
+    state: directory
+
+- name: unarchive tarball
+  unarchive:
+    src: sentry.tar
+    dest: /sw/answer
+
+- name: copy logpresso.service file
+  copy: src=etc/systemd/system/logpresso.service dest=/lib/systemd/system/logpresso.service mode=0644
+
+- name: register service file to systemd
+  systemd: daemon_reload=yes
+
+- name: make sure the logpresso agent service is running
+  systemd: name=logpresso state=started
+
+- name: enable service logpresso agent and ensure it
+  systemd: name=logpresso enabled=yes

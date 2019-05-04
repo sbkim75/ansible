@@ -1,0 +1,78 @@
+- name: Power Off VM
+  vmware_guest:
+    hostname: "{{ vcenter_host }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcpasswd }}"
+    validate_certs: "{{ validate_certs }}"
+    folder: FINNQ/vm
+    datacenter: "{{ datacenter }}"
+    name: "{{ vm_hostname }}"
+    state: poweredoff
+
+- name: Remove VM
+  vmware_guest:
+    hostname: "{{ vcenter_host }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcpasswd }}"
+    validate_certs: "{{ validate_certs }}"
+    folder: FINNQ/vm
+    datacenter: "{{ datacenter }}"
+    name: "{{ vm_hostname }}"
+    state: absent
+
+- name: "[DEV] Remove hostname /sw/ansible/hosts Delete VM"
+  lineinfile:
+    path: /sw/ansible/hosts
+    state: absent
+    line: "{{ vm_hostname }} ansible_port=22 ansible_user=finadm"
+  when:
+    - vm_hostname | search("^bdv")
+
+- name: "[STG] Remove hostname /sw/ansible/hosts Delete VM"
+  lineinfile:
+    path: /sw/ansible/hosts
+    state: absent
+    line: "{{ vm_hostname }} ansible_port=22 ansible_user=finadm"
+  when:
+    - vm_hostname | search("^bsv")
+
+- name: "[PRD] Remove hostname /sw/ansible/hosts Delete VM"
+  lineinfile:
+    path: /sw/ansible/hosts
+    state: present
+    insertafter: '\[prd-linux\]'
+    line: "{{ vm_hostname }}"
+  when:
+    - vm_hostname | search("^bpv")
+
+- name: "awx inventory update /sw/ansible/hosts"
+  shell: sudo -u awx /opt/awx/bin/awx-manage inventory_import --source /sw/ansible/hosts --inventory-name ansible_hosts --overwrite --overwrite-vars
+
+- name: Remove VM zabbix host
+  local_action: 
+    module: zabbix_host
+    server_url: http://172.27.105.206/zabbix/
+    login_user: admin
+    login_password: "{{ ipa_pass }}"
+    host_name: "{{ vm_hostname }}"
+    visible_name: "{{ vm_hostname }}"
+    state: absent
+
+- name: "{{ vm_hostname }} DNS Remove" 
+  ipa_dnsrecord:
+    ipa_host: ipasv01.finnq.com
+    ipa_pass: "{{ ipa_pass }}"
+    zone_name: finnq.com.
+    record_name: "{{ vm_hostname }}"
+    record_type: 'A'
+    record_value: "{{ vm_ip }}"
+    validate_certs: False
+    state: absent
+
+- name: "{{ vm_hostname }} Host Remove" 
+  ipa_host:
+    ipa_host: ipasv01.finnq.com
+    ipa_pass: "{{ ipa_pass }}"
+    name: "{{ vm_hostname }}.finnq.com"
+    validate_certs: False
+    state: absent

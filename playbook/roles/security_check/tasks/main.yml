@@ -1,0 +1,34 @@
+- name: make security_check directory
+  file:
+    path: /security_check
+    state: directory
+    group: root
+    owner: root
+
+- name: copy check_script.sh
+  copy:
+    src: check_script.sh
+    dest: /security_check/check_script.sh
+    group: root
+    owner: root
+    mode: 0700
+    force: yes
+
+- name: "run check_script.sh"
+  shell: cd /security_check; ./check_script.sh
+  become: True
+
+- name: "security check result file merge to ansible"
+  fetch:
+    src: "{{ '/security_check/' + ansible_hostname +'-linux-result-' + ansible_date_time.date + '.txt' }}"
+    dest: "{{ '/security_check/' + ansible_date_time.date + '/' }}"
+    flat: yes
+  become: True
+
+- name: "security check result summary file merge to ansible"
+  fetch:
+    src: "{{ '/security_check/' + ansible_hostname +'-linux-result-' + ansible_date_time.date + '_sum.txt' }}"
+    dest: "{{ '/security_check/' + ansible_date_time.date + '/' }}"
+    flat: yes
+  become: True
+

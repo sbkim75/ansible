@@ -1,0 +1,9 @@
+---
+- hosts: all
+  remote_user: finadm
+  become: true
+  tasks:
+  - name: remove firefox
+    yum:
+       name: firefox
+       state: removed

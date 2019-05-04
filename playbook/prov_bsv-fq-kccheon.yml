@@ -1,0 +1,9 @@
+---
+- name: VM provisioning
+  hosts: localhost
+  vars_files: 
+    - inventories/common/group_vars/vcenter_info.yml 
+    - inventories/stg/host_vars/bsv-fq-kccheon.yml 
+    - inventories/common/group_vars/passwd-vars.yml
+  roles: 
+    - zabbix-add

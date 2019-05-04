@@ -1,0 +1,21 @@
+---
+- hosts: new-stg-linux
+  remote_user: finadm
+
+  vars:
+    htname: '{{ ansible_hostname }}'
+    htname2: "{{ htname.split('.')[-1] }}"
+
+  tasks:
+
+  - name: Print
+    debug:
+      msg: "{{ htname2 }}"
+
+  - name: change hostname
+    shell: /bin/hostnamectl set-hostname {{ htname2 }}
+    become: true
+  
+  - name: check hostname
+    debug:
+      msg: "{{ ansible_hostname }}"

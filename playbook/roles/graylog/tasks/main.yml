@@ -1,0 +1,59 @@
+---
+- name: add group "sol"
+  group: name=sol gid=1100
+
+- name: add user "graylog"
+  user: name=graylog group=sol uid=1106 state=present shell=/sbin/nologin
+
+ - name: make log directory
+   file:
+       path: /logs/graylog-server
+       state: directory
+       group: graylog
+       owner: graylog
+
+- name: Extract graylog.tar from files
+  unarchive:
+    src: graylog.tar
+    dest: /tmp
+
+- name : Install graylog 
+  yum:
+    name: /tmp/{{ item }}
+    state: present
+  with_items:
+    - graylog-server-2.4.3-1.noarch.rpm
+    - graylog-plugin-slack-3.0.1-1.noarch.rpm
+    - pwgen-2.07-1.el7.x86_64.rpm
+
+- name: password_secret 
+  shell: pwgen -N 1 -s 96
+  register: password_secret
+
+- name: root_password_sha2 
+  shell: echo -n finnq!@34 | sha256sum
+  register: root_password_sha2
+    
+- name: Configure server.conf
+  template:
+    src: server.conf.j2
+    dest: /etc/graylog/server/server.conf
+
+- name: Configure log4j2.xml
+  template:
+    src: log4j2.xml.j2
+    dest: /etc/graylog/server/log4j2.xml.j2
+
+- name: Configure graylog-server
+  template:
+    src: graylog-server.j2
+    dest: /etc/sysconfig/graylog-server
+
+- name: reload service file to systemd
+  systemd: daemon_reload=yes
+
+- name: enable service graylog-server and ensure it
+  systemd: name=graylog-server enabled=yes
+
+- name: make sure the sms service is running
+  systemd: name=graylog-server state=restarted

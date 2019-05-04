@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context path="/jolokia" docBase="/apps/jolokia-1.2.0.war" privileged="true">
+</Context>

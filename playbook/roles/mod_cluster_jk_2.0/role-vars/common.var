@@ -1,0 +1,9 @@
+# DMZ/Internal WEB 연동 설정
+# server.xml
+balancer: "balancer_{{ balancer_id }}"
+loadBalancingGroup: "G_{{ balancer_id }}"
+
+# setmodenv.sh
+docbase: "/apps/{{ balancer_id[-3:] }}"
+lb_worker: "{{ balancer_id }}"
+context_name: /health_check.html

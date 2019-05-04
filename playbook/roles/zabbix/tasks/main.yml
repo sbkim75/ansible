@@ -1,0 +1,22 @@
+---
+- name: "change /etc/zabbix/zabbix_agentd.conf > ServerActive "
+  lineinfile:
+    dest: /etc/zabbix/zabbix_agentd.conf
+    state: present
+    regexp: '^# ServerActive='
+    line: 'ServerActive=172.27.105.206'
+  become: True
+
+- name: "change /etc/zabbix/zabbix_agentd.conf > Hostname "
+  lineinfile:
+    dest: /etc/zabbix/zabbix_agentd.conf
+    state: present
+    regexp: '^Hostname=Zabbix server'
+    line: 'Hostname={{ ansible_hostname }}'
+  become: True
+
+- name: " zabbix's agent restart "
+  service:
+    name: zabbix-agent
+    state: restarted
+  become: True

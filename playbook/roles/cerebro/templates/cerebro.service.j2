@@ -1,0 +1,11 @@
+[Unit]
+Description=Cerebro
+
+[Service]
+Type=simple
+ExecStart=/sw/cerebro/bin/cerebro -Dhttp.port=9100 -Dpidfile.path=/var/run/cerebro.pid
+WorkingDirectory=/sw/cerebro
+
+[Install]
+WantedBy=multi-user.target
+

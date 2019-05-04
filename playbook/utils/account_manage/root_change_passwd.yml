@@ -1,0 +1,32 @@
+---
+- hosts: prd-linux 
+  remote_user: finadm
+
+  vars:
+    hostname: "{{ ansible_hostname }}"
+    lastname: "{{ hostname.split('-')[-1][-7:] }}"
+
+  vars_prompt:
+    - name: "user_id"
+      prompt: "Enter the User, you want to change password"
+      private: no
+    - name: "first_password_var"
+      prompt: "Enter the First Password variable(ex: here --> 'firstvar' +....+ secondvar)"
+      private: no
+    - name: "second_password_var"
+      prompt: "Enter the Second Password variable(ex: firstvar +....+ secondvar <-- here)"
+      private: no
+
+  tasks:
+  - name:  "{{ user_id }} Check if user exists"
+    shell: id -u "{{ user_id }}"
+    register: user_exists
+    ignore_errors: true
+
+  - name: "{{ user_id }} Change password"
+    user:
+      name: "{{ user_id }}"
+      password: "{{ (first_password_var + lastname + second_password_var)| password_hash('sha512') }}"
+    become: true 
+    when:
+      - user_exists.rc == 0

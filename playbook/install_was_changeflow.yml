@@ -1,0 +1,16 @@
+---
+- hosts: all
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  #vars:
+  #  install_user: "jboss"
+  #  install_uid: "701"
+  #  install_group: "was"
+  #  install_gid: "700"
+  #  install_dir: "/sw/changeflow"
+  #  log_dir: "/logs/changeflow/agent"
+
+  roles:
+    - changeflow

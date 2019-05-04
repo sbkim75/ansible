@@ -1,0 +1,11 @@
+---
+- hosts: bsv-fq-kctest01
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  vars_files: 
+    - inventories/common/group_vars/passwd-vars.yml
+
+  roles:
+    - ipa-client

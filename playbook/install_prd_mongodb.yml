@@ -1,0 +1,8 @@
+---
+- hosts: bpv-fq-grylg02, bpv-fq-grylg03
+  remote_user: finadm
+  become: yes
+  become_method: sudo
+
+  roles:
+    - mongodb

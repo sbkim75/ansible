@@ -1,0 +1,27 @@
+- name: add group "chn"
+  group: name=chn gid=800 state=present
+
+- name: add user "cruzeai"
+  user: name=cruzeai group=chn uid=801 state=present shell=/usr/bin/ksh home=/home/cruzeai createhome=yes
+
+- name: make cruzeai directory
+  file:
+    path: /sw/cruzeai/cruzlink
+    state: directory
+    owner: cruzeai
+    group: chn
+
+- name: make cruzeai log directory
+  file:
+    path: /logs/cruzeai/imanager
+    state: directory
+    owner: cruzeai
+    group: chn
+
+- name: Extract imanager.tar.gz from files
+  unarchive:
+    src: imanager.tar.gz
+    dest: /sw/cruzeai/cruzlink
+    owner: cruzeai
+    group: chn
+
