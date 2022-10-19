@@ -1,0 +1,7 @@
+[local]
+cent8   ansible_host=192.168.55.40    ansible_port=22
+
+[oci]
+oriplex ansible_host=146.56.110.251 ansible_port=10022  ansible_user=ansible
+sbplex  ansible_host=146.56.110.251 ansible_port=10022  ansible_user=ansible
+ftw     ansible_host=146.56.110.251 ansible_port=22     ansible_user=ansible
